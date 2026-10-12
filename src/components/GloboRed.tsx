@@ -11,7 +11,7 @@ import { ALTO_MAPA, ANCHO_MAPA, MAPA_TIERRA } from "@/data/tierra";
  *  - un océano azul con borde brillante,
  *  - los continentes hechos de puntos (usando el mapa de src/data/tierra.ts),
  *  - un anillo de órbita de colores con un satélite que da vueltas,
- *  - países conectados por arcos, con "paquetes de datos" viajando por ellos.
+ *  - países conectados por arcos, con datos que fluyen y "cometas" de ida y vuelta.
  * Puedes arrastrarlo con el ratón o el dedo para girarlo.
  * No usamos librerías: es matemática de 3D proyectada en 2D.
  */
@@ -59,6 +59,14 @@ function slerp(a: Vec, b: Vec, t: number): Vec {
   const k1 = Math.sin((1 - t) * ang) / s;
   const k2 = Math.sin(t * ang) / s;
   return [a[0] * k1 + b[0] * k2, a[1] * k1 + b[1] * k2, a[2] * k1 + b[2] * k2];
+}
+
+// Punto intermedio entre dos posiciones del arco, para que el movimiento sea suave.
+function punto(puntos: Vec[], s: number): Vec {
+  const i = Math.min(Math.floor(s), puntos.length - 2);
+  const f = s - i;
+  const [a, b] = [puntos[i], puntos[i + 1]];
+  return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f];
 }
 
 // Lee el mapa de bits y devuelve una función que dice si en esa latitud/longitud hay tierra.
@@ -221,13 +229,11 @@ export function GloboRed() {
       ctx.stroke();
       ctx.restore();
 
-      // 6) Arcos entre países, elevados sobre la superficie, con un paquete viajando.
-      ctx.lineWidth = 1.4;
-      ctx.strokeStyle = "rgba(255,255,255,0.75)";
+      // 6) Arcos entre países, elevados sobre la superficie, con datos en movimiento.
       enlaces.forEach(([a, b], i) => {
         const va = nodos[a];
         const vb = nodos[b];
-        const pasos = 48;
+        const pasos = 64;
         // Los enlaces más largos se elevan más, como una señal de satélite.
         const angulo = Math.acos(va[0] * vb[0] + va[1] * vb[1] + va[2] * vb[2]);
         const altura = 0.05 + 0.25 * (angulo / Math.PI);
@@ -238,27 +244,60 @@ export function GloboRed() {
           const elev = 1 + altura * Math.sin(Math.PI * k);
           puntos.push(proyectar([p[0] * elev, p[1] * elev, p[2] * elev]));
         }
+        // Un solo trazo con todos los tramos visibles (así la línea punteada no se corta).
+        const trazo = new Path2D();
         for (let s = 0; s < pasos; s++) {
           const p1 = puntos[s];
           const p2 = puntos[s + 1];
           if (!seVe(p1)) continue; // tramo oculto detrás del globo
-          ctx.beginPath();
-          ctx.moveTo(ox + p1[0] * R, oy - p1[1] * R);
-          ctx.lineTo(ox + p2[0] * R, oy - p2[1] * R);
-          ctx.stroke();
+          trazo.moveTo(ox + p1[0] * R, oy - p1[1] * R);
+          trazo.lineTo(ox + p2[0] * R, oy - p2[1] * R);
         }
-        // Paquete de datos: avanza por el arco y vuelve a empezar.
-        const avance = ((t / 2400 + i * 0.29) % 1) * pasos;
-        const pq = puntos[Math.floor(avance)];
-        if (seVe(pq)) {
-          ctx.save();
-          ctx.fillStyle = COLOR.borde;
-          ctx.shadowColor = COLOR.borde;
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.arc(ox + pq[0] * R, oy - pq[1] * R, 2.6, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
+        // Línea base tenue.
+        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.stroke(trazo);
+        // Rayas que fluyen a lo largo del enlace: parece una corriente de datos.
+        ctx.save();
+        ctx.setLineDash([3, 7]);
+        ctx.lineDashOffset = -t * 0.03;
+        ctx.lineWidth = 1.4;
+        ctx.strokeStyle = "rgba(120,240,215,0.7)";
+        ctx.stroke(trazo);
+        ctx.restore();
+
+        // Dos "cometas" por enlace, uno de ida y otro de vuelta, con estela brillante.
+        for (const sentido of [1, -1]) {
+          const fase = (t / 2600 + i * 0.29 + (sentido < 0 ? 0.5 : 0)) % 1;
+          const cabeza = (sentido > 0 ? fase : 1 - fase) * pasos;
+          const largo = 20; // tramos que ocupa la estela
+          for (let j = 0; j < largo; j++) {
+            const s1 = cabeza - sentido * j;
+            const s2 = cabeza - sentido * (j + 1);
+            if (s1 < 0 || s1 > pasos || s2 < 0 || s2 > pasos) continue;
+            const p1 = punto(puntos, s1);
+            const p2 = punto(puntos, s2);
+            if (!seVe(p1)) continue;
+            const fuerza = 1 - j / largo;
+            ctx.strokeStyle = sentido > 0 ? `rgba(79,224,200,${fuerza})` : `rgba(255,154,60,${fuerza})`;
+            ctx.lineWidth = 0.8 + 2.4 * fuerza;
+            ctx.beginPath();
+            ctx.moveTo(ox + p1[0] * R, oy - p1[1] * R);
+            ctx.lineTo(ox + p2[0] * R, oy - p2[1] * R);
+            ctx.stroke();
+          }
+          const pq = punto(puntos, cabeza);
+          if (seVe(pq)) {
+            ctx.save();
+            const color = sentido > 0 ? COLOR.borde : "#ff9a3c";
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 14;
+            ctx.beginPath();
+            ctx.arc(ox + pq[0] * R, oy - pq[1] * R, 2.8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
         }
       });
 
