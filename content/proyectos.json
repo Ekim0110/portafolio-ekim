@@ -1,0 +1,67 @@
+{
+  "lista": [
+    {
+      "titulo": "Equipos TSG",
+      "categoria": "HTML",
+      "descripcion": "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
+      "herramientas": [
+        "HTML",
+        "Excel",
+        "Análisis de datos"
+      ],
+      "enlace": null,
+      "imagen": "/proyectos/equipos-tsg.jpg",
+      "ejemplo": false
+    },
+    {
+      "titulo": "Informes preoperacionales Tibacuy",
+      "categoria": "HTML",
+      "descripcion": "Análisis de las inspecciones preoperacionales de una flota: registros por día, placa y conductor, cobertura, licencias y conformidad por ítem.",
+      "herramientas": [
+        "HTML",
+        "Excel",
+        "Análisis de datos"
+      ],
+      "enlace": null,
+      "imagen": "/proyectos/preoperacionales-tibacuy.jpg",
+      "ejemplo": false
+    },
+    {
+      "titulo": "Seguimiento de proyectos",
+      "categoria": "Power BI",
+      "descripcion": "Avance, hitos y riesgos de un portafolio de proyectos.",
+      "herramientas": [
+        "Power BI",
+        "SharePoint"
+      ],
+      "enlace": null,
+      "imagen": null,
+      "ejemplo": true
+    },
+    {
+      "titulo": "Página de presentación",
+      "categoria": "HTML",
+      "descripcion": "Primera página web hecha con HTML y CSS durante el aprendizaje.",
+      "herramientas": [
+        "HTML",
+        "CSS"
+      ],
+      "enlace": null,
+      "imagen": null,
+      "ejemplo": true
+    },
+    {
+      "titulo": "Este portafolio",
+      "categoria": "HTML",
+      "descripcion": "Sitio personal hecho con Next.js, TypeScript y Tailwind, publicado en Vercel.",
+      "herramientas": [
+        "Next.js",
+        "TypeScript",
+        "Tailwind"
+      ],
+      "enlace": null,
+      "imagen": null,
+      "ejemplo": false
+    }
+  ]
+}

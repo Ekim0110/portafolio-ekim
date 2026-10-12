@@ -1,8 +1,8 @@
 /**
- * 📝 ARCHIVO DE CONTENIDO
- * Aquí vive TODO el texto de la página. Si quieres cambiar tu nombre, tus
- * servicios o tus proyectos, solo editas este archivo: los componentes leen
- * estos datos y se actualizan solos.
+ * 📝 DATOS DE LA PÁGINA
+ * Los textos ya no se escriben aquí: se editan desde el panel en /keystatic,
+ * que los guarda en la carpeta /content. Este archivo los lee y les da su
+ * "molde" (type) para que los componentes los usen.
  *
  * `ejemplo: true` marca contenido de relleno (placeholder). La página le pone
  * una etiqueta "Ejemplo" para que se note. Cuando tengas el dato real,
@@ -25,91 +25,22 @@ export type Servicio = {
   descripcion: string;
 };
 
-export const perfil = {
-  nombre: "Mike Bernal Gomez",
-  nombreCorto: "Mike",
-  rol: "Operaciones, procesos y datos",
-  frase:
-    "Conectando estrategia, tecnología y personas para optimizar procesos críticos y liderar operaciones ágiles y de alto rendimiento.",
-  sobreMi: [
-    "Perfil de operaciones, ingeniería de procesos, gestión de proyectos y finanzas.",
-    "Me apasiona ordenar la información para que los equipos decidan mejor, y ahora estoy aprendiendo desarrollo web para construir mis propias herramientas.",
-  ],
-  sobreMiEjemplo: true,
-  ubicacion: "Tu ciudad, País",
-  email: "tu-correo@ejemplo.com",
-  linkedin: "https://www.linkedin.com/",
-  contactoEjemplo: true,
-};
+// El contenido vive en /content (archivos JSON) y se edita desde el panel /keystatic.
+import perfilJson from "../../content/perfil.json";
+import serviciosJson from "../../content/servicios.json";
+import proyectosJson from "../../content/proyectos.json";
 
-export const servicios: Servicio[] = [
-  {
-    titulo: "Tableros en Power BI",
-    descripcion:
-      "Diseño de dashboards que muestran los indicadores clave de tu negocio en un solo lugar, actualizados y fáciles de leer.",
-  },
-  {
-    titulo: "Análisis financiero",
-    descripcion:
-      "Modelos de costos, presupuestos y seguimiento de resultados para entender a dónde va el dinero y por qué.",
-  },
-  {
-    titulo: "Mejora de procesos",
-    descripcion:
-      "Mapeo de procesos, detección de cuellos de botella y propuestas para trabajar con menos pasos y menos errores.",
-  },
-  {
-    titulo: "Gestión de proyectos",
-    descripcion:
-      "Planificación, seguimiento y reportes de avance para que los proyectos lleguen a tiempo y dentro del presupuesto.",
-  },
-  {
-    titulo: "Automatización de reportes",
-    descripcion:
-      "Paso de hojas de cálculo manuales a reportes automáticos que se actualizan solos.",
-  },
-  {
-    titulo: "Páginas web sencillas",
-    descripcion:
-      "Sitios en HTML y Next.js para presentar un negocio, un servicio o un portafolio.",
-  },
-];
+export const perfil = perfilJson;
 
-export const proyectos: Proyecto[] = [
-  {
-    titulo: "Equipos TSG",
-    categoria: "HTML",
-    descripcion:
-      "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
-    herramientas: ["HTML", "Excel", "Análisis de datos"],
-    imagen: "/proyectos/equipos-tsg.jpg",
-  },
-  {
-    titulo: "Informes preoperacionales Tibacuy",
-    categoria: "HTML",
-    descripcion:
-      "Análisis de las inspecciones preoperacionales de una flota: registros por día, placa y conductor, cobertura, licencias y conformidad por ítem.",
-    herramientas: ["HTML", "Excel", "Análisis de datos"],
-    imagen: "/proyectos/preoperacionales-tibacuy.jpg",
-  },
-  {
-    titulo: "Seguimiento de proyectos",
-    categoria: "Power BI",
-    descripcion: "Avance, hitos y riesgos de un portafolio de proyectos.",
-    herramientas: ["Power BI", "SharePoint"],
-    ejemplo: true,
-  },
-  {
-    titulo: "Página de presentación",
-    categoria: "HTML",
-    descripcion: "Primera página web hecha con HTML y CSS durante el aprendizaje.",
-    herramientas: ["HTML", "CSS"],
-    ejemplo: true,
-  },
-  {
-    titulo: "Este portafolio",
-    categoria: "HTML",
-    descripcion: "Sitio personal hecho con Next.js, TypeScript y Tailwind, publicado en Vercel.",
-    herramientas: ["Next.js", "TypeScript", "Tailwind"],
-  },
-];
+export const servicios: Servicio[] = serviciosJson.lista;
+
+// El panel guarda "null" cuando un campo opcional está vacío; aquí lo convertimos en "sin dato".
+export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
+  titulo: p.titulo,
+  categoria: p.categoria as Proyecto["categoria"],
+  descripcion: p.descripcion,
+  herramientas: p.herramientas,
+  enlace: p.enlace ?? undefined,
+  imagen: p.imagen ?? undefined,
+  ejemplo: p.ejemplo,
+}));
