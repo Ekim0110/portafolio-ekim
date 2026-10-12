@@ -48,3 +48,10 @@ body {
   html { scroll-behavior: auto; }
   .animate-marquesina { animation: none; }
 }
+
+/* Accesibilidad: contorno visible al navegar con teclado (Tab), en color de acento
+   para que se vea bien sobre el fondo negro. */
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
+}
