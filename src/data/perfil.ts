@@ -16,6 +16,7 @@ export type Proyecto = {
   descripcion: string;
   herramientas: string[];
   enlace?: string; // el "?" significa que es opcional
+  imagen?: string; // captura del proyecto, guardada en /public/proyectos/
   ejemplo?: boolean;
 };
 
@@ -76,18 +77,20 @@ export const servicios: Servicio[] = [
 
 export const proyectos: Proyecto[] = [
   {
-    titulo: "Tablero de ventas",
-    categoria: "Power BI",
-    descripcion: "Indicadores de ventas por región y mes con filtros interactivos.",
-    herramientas: ["Power BI", "DAX", "Excel"],
-    ejemplo: true,
+    titulo: "Equipos TSG",
+    categoria: "HTML",
+    descripcion:
+      "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
+    herramientas: ["HTML", "Excel", "Análisis de datos"],
+    imagen: "/proyectos/equipos-tsg.jpg",
   },
   {
-    titulo: "Control de costos operativos",
-    categoria: "Power BI",
-    descripcion: "Seguimiento de presupuesto contra gasto real por centro de costo.",
-    herramientas: ["Power BI", "Power Query"],
-    ejemplo: true,
+    titulo: "Informes preoperacionales Tibacuy",
+    categoria: "HTML",
+    descripcion:
+      "Análisis de las inspecciones preoperacionales de una flota: registros por día, placa y conductor, cobertura, licencias y conformidad por ítem.",
+    herramientas: ["HTML", "Excel", "Análisis de datos"],
+    imagen: "/proyectos/preoperacionales-tibacuy.jpg",
   },
   {
     titulo: "Seguimiento de proyectos",
