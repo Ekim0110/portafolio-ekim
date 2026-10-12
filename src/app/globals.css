@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
+/*
+ * 🎨 PALETA DE COLORES
+ * Definimos los colores una sola vez como "variables". Así, si mañana quieres
+ * otro color de acento, lo cambias aquí y cambia en toda la página.
+ * Tema oscuro (fondo negro), elegido por Ekim. Contraste revisado para WCAG AA.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --fondo: #0a0a0a;      /* fondo negro */
+  --superficie: #171717; /* bloques y tarjetas */
+  --tinta: #f5f3ee;      /* texto principal */
+  --tenue: #a8a397;      /* texto secundario */
+  --linea: #2e2d2a;      /* bordes */
+  --acento: #f08a5d;     /* naranja cálido */
 }
 
+/* Le decimos a Tailwind que use esas variables como clases: bg-fondo, text-acento, etc. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-fondo: var(--fondo);
+  --color-superficie: var(--superficie);
+  --color-tinta: var(--tinta);
+  --color-tenue: var(--tenue);
+  --color-linea: var(--linea);
+  --color-acento: var(--acento);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-marquesina: marquesina 30s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes marquesina {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema, paramos animaciones. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquesina { animation: none; }
+}
+
+/* Accesibilidad: contorno visible al navegar con teclado (Tab), en color de acento
+   para que se vea bien sobre el fondo negro. */
+:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 3px;
 }

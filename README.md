@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portafolio de Mike Bernal Gomez
 
-## Getting Started
+Página web personal: perfil, servicios y proyectos (Power BI y HTML). Parte del proyecto **Orbix**.
 
-First, run the development server:
+**Stack:** Next.js 15 · TypeScript · Tailwind CSS 4 · publicado en Vercel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Cómo ejecutarlo en tu computadora
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Instala [Node.js](https://nodejs.org) (versión 20 o superior).
+2. Descarga el código: `git clone https://github.com/Ekim0110/portafolio-ekim.git`
+3. Entra a la carpeta: `cd portafolio-ekim`
+4. Instala las dependencias (las librerías que usa el proyecto): `npm install`
+5. Arranca el servidor de desarrollo: `npm run dev`
+6. Abre http://localhost:3000 en el navegador. Cada vez que guardas un archivo, la página se actualiza sola.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Dónde cambiar cada cosa
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Quiero cambiar…                     | Archivo                              |
+| ----------------------------------- | ------------------------------------ |
+| Nombre, frase, servicios, proyectos | `src/data/perfil.ts`                 |
+| Colores                             | `src/app/globals.css` (`:root`)      |
+| Título para Google                  | `src/app/layout.tsx` (`metadata`)    |
+| Orden de las secciones              | `src/app/page.tsx`                   |
 
-## Learn More
+El contenido marcado con `ejemplo: true` es de relleno y aparece con la etiqueta **Ejemplo** hasta que pongas el dato real.
 
-To learn more about Next.js, take a look at the following resources:
+## Publicación
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Cada pull request genera una **vista previa** en Vercel. Al aprobar y hacer merge a `main`, Vercel publica la versión final.
