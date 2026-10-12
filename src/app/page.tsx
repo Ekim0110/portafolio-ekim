@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { perfil } from "@/data/perfil";
 import { Nav } from "@/components/Nav";
 import { Marquesina } from "@/components/Marquesina";
@@ -44,10 +45,14 @@ export default function Inicio() {
             <h2 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
               Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
             </h2>
-            {/* Espacio para tu foto: reemplaza este bloque por <Image> cuando la tengas */}
-            <div className="mt-8 grid aspect-square max-w-xs place-items-center rounded-2xl bg-superficie text-7xl font-semibold text-tenue" role="img" aria-label="Espacio para tu foto">
-              {perfil.nombre.charAt(0)}
-            </div>
+            {/* next/image optimiza la foto: la comprime y la sirve al tamaño justo para cada pantalla */}
+            <Image
+              src="/ekim.png"
+              alt={`Foto de ${perfil.nombre}`}
+              width={200}
+              height={200}
+              className="mt-8 aspect-square w-full max-w-xs rounded-2xl object-cover"
+            />
           </div>
           <div className="space-y-6 text-lg leading-relaxed md:pt-16">
             {perfil.sobreMi.map((p) => (
