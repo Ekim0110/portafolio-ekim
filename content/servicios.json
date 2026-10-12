@@ -1,0 +1,28 @@
+{
+  "lista": [
+    {
+      "titulo": "Tableros en Power BI",
+      "descripcion": "Diseño de dashboards que muestran los indicadores clave de tu negocio en un solo lugar, actualizados y fáciles de leer."
+    },
+    {
+      "titulo": "Análisis financiero",
+      "descripcion": "Modelos de costos, presupuestos y seguimiento de resultados para entender a dónde va el dinero y por qué."
+    },
+    {
+      "titulo": "Mejora de procesos",
+      "descripcion": "Mapeo de procesos, detección de cuellos de botella y propuestas para trabajar con menos pasos y menos errores."
+    },
+    {
+      "titulo": "Gestión de proyectos",
+      "descripcion": "Planificación, seguimiento y reportes de avance para que los proyectos lleguen a tiempo y dentro del presupuesto."
+    },
+    {
+      "titulo": "Automatización de reportes",
+      "descripcion": "Paso de hojas de cálculo manuales a reportes automáticos que se actualizan solos."
+    },
+    {
+      "titulo": "Páginas web sencillas",
+      "descripcion": "Sitios en HTML y Next.js para presentar un negocio, un servicio o un portafolio."
+    }
+  ]
+}
