@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Proyecto } from "@/data/perfil";
 import { EtiquetaEjemplo } from "./Etiqueta";
 
@@ -41,7 +42,18 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
   const contenido = (
     <article className="group flex h-full flex-col">
       <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-superficie transition-transform duration-300 group-hover:-translate-y-1">
-        <Miniatura categoria={proyecto.categoria} semilla={proyecto.titulo.length} />
+        {/* Si hay captura real, la mostramos; si no, la miniatura dibujada con CSS. */}
+        {proyecto.imagen ? (
+          <Image
+            src={proyecto.imagen}
+            alt={`Captura del proyecto ${proyecto.titulo}`}
+            width={800}
+            height={600}
+            className="h-full w-full object-cover object-top"
+          />
+        ) : (
+          <Miniatura categoria={proyecto.categoria} semilla={proyecto.titulo.length} />
+        )}
       </div>
       <p className="mt-4 text-xs font-medium uppercase tracking-widest text-tenue">
         {proyecto.categoria}
