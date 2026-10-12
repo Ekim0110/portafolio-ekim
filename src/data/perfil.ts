@@ -78,19 +78,19 @@ export const servicios: Servicio[] = [
 export const proyectos: Proyecto[] = [
   {
     titulo: "Equipos TSG",
-    categoria: "Power BI",
-    descripcion: "Tablero con gráficas de seguimiento de los equipos del proyecto TSG.",
-    herramientas: ["Power BI"],
-    // imagen: "/proyectos/equipos-tsg.png", ← activar cuando subamos la captura
-    ejemplo: true,
+    categoria: "HTML",
+    descripcion:
+      "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
+    herramientas: ["HTML", "Excel", "Análisis de datos"],
+    imagen: "/proyectos/equipos-tsg.jpg",
   },
   {
     titulo: "Informes preoperacionales Tibacuy",
-    categoria: "Power BI",
-    descripcion: "Informes de las inspecciones preoperacionales para la operación en Tibacuy.",
-    herramientas: ["Power BI"],
-    // imagen: "/proyectos/preoperacionales-tibacuy.png",
-    ejemplo: true,
+    categoria: "HTML",
+    descripcion:
+      "Análisis de las inspecciones preoperacionales de una flota: registros por día, placa y conductor, cobertura, licencias y conformidad por ítem.",
+    herramientas: ["HTML", "Excel", "Análisis de datos"],
+    imagen: "/proyectos/preoperacionales-tibacuy.jpg",
   },
   {
     titulo: "Seguimiento de proyectos",
