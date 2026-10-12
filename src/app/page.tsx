@@ -16,7 +16,7 @@ export default function Inicio() {
         <section className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pt-28">
           <p className="text-sm font-medium uppercase tracking-widest text-acento">{perfil.rol}</p>
           <h1 className="mt-4 text-6xl font-semibold leading-[0.95] tracking-tighter sm:text-8xl lg:text-9xl">
-            Hola, soy {perfil.nombre}.
+            Hola, soy {perfil.nombreCorto}.
           </h1>
           <p className="mt-8 max-w-2xl text-lg text-tenue sm:text-xl">{perfil.frase}</p>
           <div className="mt-10 flex flex-wrap gap-3">
@@ -62,7 +62,7 @@ export default function Inicio() {
         </section>
 
         {/* 6. Contacto */}
-        <section id="contacto" className="scroll-mt-20 bg-tinta text-fondo">
+        <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
             <p className="text-sm font-medium uppercase tracking-widest text-acento">Contacto</p>
             <h2 className="mt-2 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">

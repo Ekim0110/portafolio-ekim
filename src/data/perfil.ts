@@ -25,10 +25,11 @@ export type Servicio = {
 };
 
 export const perfil = {
-  nombre: "Ekim",
+  nombre: "Mike Bernal Gomez",
+  nombreCorto: "Mike",
   rol: "Operaciones, procesos y datos",
   frase:
-    "Convierto datos y procesos en decisiones claras: tableros en Power BI, mejora de procesos y páginas web sencillas.",
+    "Conectando estrategia, tecnología y personas para optimizar procesos críticos y liderar operaciones ágiles y de alto rendimiento.",
   sobreMi: [
     "Perfil de operaciones, ingeniería de procesos, gestión de proyectos y finanzas.",
     "Me apasiona ordenar la información para que los equipos decidan mejor, y ahora estoy aprendiendo desarrollo web para construir mis propias herramientas.",

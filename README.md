@@ -1,4 +1,4 @@
-# Portafolio de Ekim
+# Portafolio de Mike Bernal Gomez
 
 Página web personal: perfil, servicios y proyectos (Power BI y HTML). Parte del proyecto **Orbix**.
 

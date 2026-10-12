@@ -23,7 +23,9 @@ export function Nav() {
           >
             {perfil.nombre.charAt(0)}
           </span>
-          {perfil.nombre}
+          {/* En móvil mostramos el nombre corto para que no se parta en dos líneas */}
+          <span className="sm:hidden">{perfil.nombreCorto}</span>
+          <span className="hidden sm:inline">{perfil.nombre}</span>
         </a>
         <ul className="flex gap-4 text-sm sm:gap-6">
           {enlaces.map((e) => (

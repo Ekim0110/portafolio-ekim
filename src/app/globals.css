@@ -4,26 +4,15 @@
  * 🎨 PALETA DE COLORES
  * Definimos los colores una sola vez como "variables". Así, si mañana quieres
  * otro color de acento, lo cambias aquí y cambia en toda la página.
- * Contraste revisado para cumplir WCAG AA (legibilidad).
+ * Tema oscuro (fondo negro), elegido por Ekim. Contraste revisado para WCAG AA.
  */
 :root {
-  --fondo: #f6f4ef;      /* fondo crema */
-  --superficie: #ebe7de; /* bloques y tarjetas */
-  --tinta: #141414;      /* texto principal */
-  --tenue: #55524b;      /* texto secundario */
-  --linea: #d6d1c4;      /* bordes */
-  --acento: #b4441d;     /* naranja quemado */
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fondo: #121212;
-    --superficie: #1d1c1a;
-    --tinta: #f2efe8;
-    --tenue: #a8a397;
-    --linea: #33312c;
-    --acento: #f08a5d;
-  }
+  --fondo: #0a0a0a;      /* fondo negro */
+  --superficie: #171717; /* bloques y tarjetas */
+  --tinta: #f5f3ee;      /* texto principal */
+  --tenue: #a8a397;      /* texto secundario */
+  --linea: #2e2d2a;      /* bordes */
+  --acento: #f08a5d;     /* naranja cálido */
 }
 
 /* Le decimos a Tailwind que use esas variables como clases: bg-fondo, text-acento, etc. */

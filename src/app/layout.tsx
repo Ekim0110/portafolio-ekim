@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 // SEO básico: el título y la descripción que muestran Google y las redes sociales.
 export const metadata: Metadata = {
-  title: "Ekim · Operaciones, procesos y datos",
+  title: "Mike Bernal Gomez · Operaciones, procesos y datos",
   description:
-    "Portafolio de Ekim: tableros en Power BI, mejora de procesos, finanzas y páginas web.",
+    "Portafolio de Mike Bernal Gomez: tableros en Power BI, mejora de procesos, finanzas y páginas web.",
   openGraph: {
-    title: "Ekim · Operaciones, procesos y datos",
+    title: "Mike Bernal Gomez · Operaciones, procesos y datos",
     description: "Tableros en Power BI, mejora de procesos, finanzas y páginas web.",
     type: "website",
     locale: "es_ES",
