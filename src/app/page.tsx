@@ -5,6 +5,7 @@ import { Marquesina } from "@/components/Marquesina";
 import { Proyectos } from "@/components/Proyectos";
 import { Servicios } from "@/components/Servicios";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
+import { GloboRed } from "@/components/GloboRed";
 
 // Página principal: junta todas las secciones en orden, de arriba hacia abajo.
 export default function Inicio() {
@@ -13,19 +14,25 @@ export default function Inicio() {
       <Nav />
       <main id="inicio">
         {/* 1. Portada (hero): nombre grande + rol + llamada a la acción */}
-        <section className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pt-28">
-          <p className="text-sm font-medium uppercase tracking-widest text-acento">{perfil.rol}</p>
-          <h1 className="mt-4 text-6xl font-semibold leading-[0.95] tracking-tighter sm:text-8xl lg:text-9xl">
-            Hola, soy {perfil.nombreCorto}.
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg text-tenue sm:text-xl">{perfil.frase}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <a href="#proyectos" className="rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo transition-opacity hover:opacity-85">
-              Ver proyectos
-            </a>
-            <a href="#contacto" className="rounded-full border border-tinta px-6 py-3 text-sm font-medium transition-colors hover:bg-tinta hover:text-fondo">
-              Hablemos
-            </a>
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-12 sm:px-6 sm:pt-20 lg:grid-cols-[1.1fr_1fr]">
+          {/* Columna izquierda: texto. Columna derecha: globo (debajo en móvil). */}
+          <div>
+            <p className="text-sm font-medium uppercase tracking-widest text-acento">{perfil.rol}</p>
+            <h1 className="mt-4 text-5xl font-semibold leading-[0.95] tracking-tighter sm:text-6xl lg:text-7xl">
+              Hola, soy {perfil.nombreCorto}.
+            </h1>
+            <p className="mt-6 max-w-xl text-base text-tenue sm:text-lg">{perfil.frase}</p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <a href="#proyectos" className="rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo transition-opacity hover:opacity-85">
+                Ver proyectos
+              </a>
+              <a href="#contacto" className="rounded-full border border-tinta px-6 py-3 text-sm font-medium transition-colors hover:bg-tinta hover:text-fondo">
+                Hablemos
+              </a>
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <GloboRed />
           </div>
         </section>
 
@@ -42,7 +49,7 @@ export default function Inicio() {
         <section id="sobre-mi" className="mx-auto grid max-w-6xl scroll-mt-20 gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">
           <div>
             <p className="text-sm font-medium uppercase tracking-widest text-acento">Perfil</p>
-            <h2 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
             </h2>
             {/* next/image optimiza la foto: la comprime y la sirve al tamaño justo para cada pantalla */}
@@ -54,7 +61,7 @@ export default function Inicio() {
               className="mt-8 aspect-square w-full max-w-xs rounded-2xl object-cover"
             />
           </div>
-          <div className="space-y-6 text-lg leading-relaxed md:pt-16">
+          <div className="space-y-6 text-base leading-relaxed sm:text-lg md:pt-16">
             {perfil.sobreMi.map((p) => (
               <p key={p}>{p}</p>
             ))}
@@ -65,7 +72,7 @@ export default function Inicio() {
         <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
             <p className="text-sm font-medium uppercase tracking-widest text-acento">Contacto</p>
-            <h2 className="mt-2 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
+            <h2 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
               ¿Tienes un proyecto en mente?
             </h2>
             <div className="mt-10 flex flex-col gap-4 text-lg sm:flex-row sm:gap-10">
