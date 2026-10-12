@@ -19,7 +19,7 @@ export function Proyectos() {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium uppercase tracking-widest text-acento">Trabajo</p>
-          <h2 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">Proyectos</h2>
+          <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Proyectos</h2>
         </div>
         <div role="group" aria-label="Filtrar proyectos" className="flex gap-2">
           {filtros.map((f) => (

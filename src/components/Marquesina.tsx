@@ -6,7 +6,7 @@ export function Marquesina() {
   const lista = [...palabras, ...palabras];
   return (
     <div className="overflow-hidden border-y border-linea bg-acento py-4 text-fondo" aria-hidden="true">
-      <div className="animate-marquesina flex w-max gap-10 whitespace-nowrap text-2xl font-semibold tracking-tight sm:text-4xl">
+      <div className="animate-marquesina flex w-max gap-10 whitespace-nowrap text-xl font-semibold tracking-tight sm:text-3xl">
         {lista.map((p, i) => (
           <span key={i} className="flex items-center gap-10">
             {p}
