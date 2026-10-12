@@ -3,40 +3,45 @@
 // generarse solo en el servidor.
 
 import { useEffect, useRef } from "react";
+import { ALTO_MAPA, ANCHO_MAPA, MAPA_TIERRA } from "@/data/tierra";
 
 /**
  * 🌐 GLOBO DE TELECOMUNICACIONES
  * Dibujamos en un <canvas> (un lienzo donde se pinta con código):
- *  - una esfera hecha de puntos que gira sola,
- *  - ciudades conectadas por arcos, como enlaces de una red,
- *  - "paquetes de datos" (puntos de luz) que viajan por cada arco.
+ *  - un océano azul con borde brillante,
+ *  - los continentes hechos de puntos (usando el mapa de src/data/tierra.ts),
+ *  - un anillo de órbita de colores con un satélite que da vueltas,
+ *  - países conectados por arcos, con "paquetes de datos" viajando por ellos.
  * Puedes arrastrarlo con el ratón o el dedo para girarlo.
- * No usamos librerías: es pura matemática de 3D proyectada en 2D.
+ * No usamos librerías: es matemática de 3D proyectada en 2D.
  */
 
-// Ciudades en [latitud, longitud] (grados).
-const ciudades: [number, number][] = [
-  [4.7, -74.1], // Bogotá
-  [19.4, -99.1], // Ciudad de México
-  [40.7, -74.0], // Nueva York
-  [-23.5, -46.6], // São Paulo
-  [40.4, -3.7], // Madrid
-  [51.5, -0.1], // Londres
-  [43.7, -79.4], // Toronto
-  [6.5, 3.4], // Lagos
-  [25.2, 55.3], // Dubái
-  [35.7, 139.7], // Tokio
-  [1.35, 103.8], // Singapur
-  [-33.9, 151.2], // Sídney
-];
-
-// Qué ciudades se conectan entre sí (índices de la lista de arriba).
-const enlaces: [number, number][] = [
-  [0, 2], [0, 3], [0, 4], [1, 6], [2, 5], [4, 7],
-  [5, 8], [8, 10], [9, 10], [10, 11], [3, 7], [1, 0],
-];
-
 type Vec = [number, number, number];
+type Ciudad = { nombre: string; lat: number; lon: number };
+
+// Países que se muestran con su nombre, como en la referencia.
+const ciudades: Ciudad[] = [
+  { nombre: "México", lat: 19.4, lon: -99.1 },
+  { nombre: "Colombia", lat: 4.7, lon: -74.1 },
+  { nombre: "Brasil", lat: -15.8, lon: -47.9 },
+  { nombre: "Chile", lat: -33.4, lon: -70.6 },
+  { nombre: "España", lat: 40.4, lon: -3.7 },
+  { nombre: "EE. UU.", lat: 40.7, lon: -74.0 },
+];
+
+// Enlaces: Colombia es el centro de la red (índices de la lista de arriba).
+const enlaces: [number, number][] = [
+  [1, 0], [1, 2], [1, 3], [1, 4], [1, 5], [0, 5], [2, 4],
+];
+
+// Colores de la escena (azules y verde azulado, con toques cálidos).
+const COLOR = {
+  oceanoCentro: "#1f5f8f",
+  oceanoBorde: "#071a2e",
+  borde: "#4fe0c8",
+  tierraFria: [120, 220, 170], // verde menta (RGB)
+  tierraCalida: [240, 160, 90], // naranja (desiertos)
+};
 
 // Convierte latitud/longitud en un punto 3D sobre una esfera de radio 1.
 function aVector(lat: number, lon: number): Vec {
@@ -56,14 +61,33 @@ function slerp(a: Vec, b: Vec, t: number): Vec {
   return [a[0] * k1 + b[0] * k2, a[1] * k1 + b[1] * k2, a[2] * k1 + b[2] * k2];
 }
 
-// Puntos repartidos de forma uniforme sobre la esfera ("espiral de Fibonacci").
-function puntosEsfera(n: number): Vec[] {
-  const pts: Vec[] = [];
+// Lee el mapa de bits y devuelve una función que dice si en esa latitud/longitud hay tierra.
+function crearEsTierra() {
+  const bytes = Uint8Array.from(atob(MAPA_TIERRA), (c) => c.charCodeAt(0));
+  return (lat: number, lon: number) => {
+    const x = Math.min(ANCHO_MAPA - 1, Math.floor(lon + 180));
+    const y = Math.min(ALTO_MAPA - 1, Math.floor(90 - lat));
+    const i = y * ANCHO_MAPA + x;
+    return (bytes[i >> 3] & (1 << (i & 7))) !== 0;
+  };
+}
+
+// Puntos de tierra: repartimos muchos puntos uniformes sobre la esfera
+// ("espiral de Fibonacci") y nos quedamos solo con los que caen en tierra.
+function puntosTierra(n: number) {
+  const esTierra = crearEsTierra();
+  const pts: { v: Vec; calido: boolean }[] = [];
   const oro = Math.PI * (3 - Math.sqrt(5));
   for (let i = 0; i < n; i++) {
     const y = 1 - (i / (n - 1)) * 2;
     const r = Math.sqrt(1 - y * y);
-    pts.push([Math.cos(oro * i) * r, y, Math.sin(oro * i) * r]);
+    const v: Vec = [Math.cos(oro * i) * r, y, Math.sin(oro * i) * r];
+    const lat = (Math.asin(v[1]) * 180) / Math.PI;
+    const lon = (Math.atan2(v[0], v[2]) * 180) / Math.PI;
+    if (!esTierra(lat, lon)) continue;
+    // Zona "cálida" aproximada: Sahara y Arabia (para darle color como en la referencia).
+    const calido = lat > 12 && lat < 33 && lon > -17 && lon < 60;
+    pts.push({ v, calido });
   }
   return pts;
 }
@@ -76,19 +100,16 @@ export function GloboRed() {
     const ctx = lienzo?.getContext("2d");
     if (!lienzo || !ctx) return;
 
-    // Leemos los colores de las variables CSS para que el globo combine con la página.
-    const css = getComputedStyle(document.documentElement);
-    const acento = css.getPropertyValue("--acento").trim() || "#f08a5d";
-    const tinta = css.getPropertyValue("--tinta").trim() || "#f5f3ee";
-
     const menosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const esfera = puntosEsfera(900);
-    const nodos = ciudades.map(([la, lo]) => aVector(la, lo));
+    const tierra = puntosTierra(24000);
+    const nodos = ciudades.map((c) => aVector(c.lat, c.lon));
+    const fuente = getComputedStyle(document.body).fontFamily;
 
-    // Estado de la rotación (en radianes).
-    let rotY = 1.6; // empieza mirando a América
-    let rotX = -0.35;
-    let velY = menosMovimiento ? 0 : 0.0025;
+    // Estado de la rotación (en radianes). Empieza mirando a Latinoamérica.
+    let rotY = -1.25; // longitud central ≈ -72° (Colombia)
+    let rotX = -0.12;
+    const giroBase = menosMovimiento ? 0 : 0.0018;
+    let velY = giroBase;
     let arrastrando = false;
     let ultimoX = 0;
     let ultimoY = 0;
@@ -121,37 +142,95 @@ export function GloboRed() {
     // Un punto se ve si está delante (z ≥ 0) o si, estando detrás, sobresale del borde del globo.
     const seVe = (p: Vec) => p[2] >= 0 || p[0] * p[0] + p[1] * p[1] > 1;
 
+    // Anillo de órbita: una elipse inclinada alrededor del globo.
+    // La mitad de arriba pasa por detrás del globo y la de abajo por delante,
+    // por eso se dibuja en dos partes: antes y después del globo.
+    const dibujarOrbita = (ox: number, oy: number, R: number, t: number, mitad: "atras" | "delante") => {
+      const rx = R * 1.32;
+      const ry = R * 0.36;
+      ctx.save();
+      ctx.translate(ox, oy);
+      ctx.rotate(-0.32);
+      const grad = ctx.createLinearGradient(-rx, 0, rx, 0);
+      grad.addColorStop(0, "#ff9a3c");
+      grad.addColorStop(0.5, "#ff5fa2");
+      grad.addColorStop(1, COLOR.borde);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 2.2;
+      ctx.shadowColor = COLOR.borde;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      if (mitad === "atras") ctx.ellipse(0, 0, rx, ry, 0, Math.PI, Math.PI * 2);
+      else ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI);
+      ctx.stroke();
+      // Satélite que recorre la órbita.
+      const a = (t / 4000) * Math.PI * 2;
+      const delante = Math.sin(a) > 0;
+      if ((mitad === "delante") === delante) {
+        ctx.shadowBlur = 16;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(Math.cos(a) * rx, Math.sin(a) * ry, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    };
+
     const dibujar = (t: number) => {
-      const R = Math.min(ancho, alto) * 0.42;
+      const R = Math.min(ancho, alto) * 0.34;
       const ox = ancho / 2;
       const oy = alto / 2;
       ctx.clearRect(0, 0, ancho, alto);
 
-      // Halo suave detrás del globo.
-      const halo = ctx.createRadialGradient(ox, oy, R * 0.6, ox, oy, R * 1.35);
-      halo.addColorStop(0, acento + "22");
-      halo.addColorStop(1, "transparent");
+      // 1) Halo exterior de luz.
+      const halo = ctx.createRadialGradient(ox, oy, R * 0.9, ox, oy, R * 1.45);
+      halo.addColorStop(0, "rgba(79,224,200,0.28)");
+      halo.addColorStop(1, "rgba(79,224,200,0)");
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, ancho, alto);
 
-      // 1) Puntos de la esfera: más brillantes los de delante.
-      ctx.fillStyle = tinta;
-      for (const p of esfera) {
-        const [x, y, z] = proyectar(p);
+      // 2) Parte trasera de la órbita (queda tapada por el globo).
+      dibujarOrbita(ox, oy, R, t, "atras");
+
+      // 3) Océano: un círculo con degradado para dar volumen.
+      const oceano = ctx.createRadialGradient(ox - R * 0.35, oy - R * 0.35, R * 0.1, ox, oy, R);
+      oceano.addColorStop(0, COLOR.oceanoCentro);
+      oceano.addColorStop(1, COLOR.oceanoBorde);
+      ctx.fillStyle = oceano;
+      ctx.beginPath();
+      ctx.arc(ox, oy, R, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 4) Continentes de puntos: más brillantes los del centro.
+      for (const p of tierra) {
+        const [x, y, z] = proyectar(p.v);
         if (z < 0) continue;
-        ctx.globalAlpha = 0.18 + z * 0.6;
-        ctx.fillRect(ox + x * R, oy - y * R, 1.6, 1.6);
+        const [r1, g1, b1] = p.calido ? COLOR.tierraCalida : COLOR.tierraFria;
+        ctx.fillStyle = `rgba(${r1},${g1},${b1},${0.35 + z * 0.65})`;
+        ctx.fillRect(ox + x * R - 1, oy - y * R - 1, 2, 2);
       }
 
-      // 2) Arcos entre ciudades, elevados sobre la superficie, con un paquete viajando.
-      ctx.lineWidth = 1.2;
+      // 5) Borde brillante del globo.
+      ctx.save();
+      ctx.strokeStyle = COLOR.borde;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = COLOR.borde;
+      ctx.shadowBlur = 18;
+      ctx.beginPath();
+      ctx.arc(ox, oy, R, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // 6) Arcos entre países, elevados sobre la superficie, con un paquete viajando.
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = "rgba(255,255,255,0.75)";
       enlaces.forEach(([a, b], i) => {
         const va = nodos[a];
         const vb = nodos[b];
         const pasos = 48;
-        // Los enlaces más largos se elevan más, como un satélite.
+        // Los enlaces más largos se elevan más, como una señal de satélite.
         const angulo = Math.acos(va[0] * vb[0] + va[1] * vb[1] + va[2] * vb[2]);
-        const altura = 0.06 + 0.22 * (angulo / Math.PI);
+        const altura = 0.05 + 0.25 * (angulo / Math.PI);
         const puntos: Vec[] = [];
         for (let s = 0; s <= pasos; s++) {
           const k = s / pasos;
@@ -159,48 +238,62 @@ export function GloboRed() {
           const elev = 1 + altura * Math.sin(Math.PI * k);
           puntos.push(proyectar([p[0] * elev, p[1] * elev, p[2] * elev]));
         }
-        ctx.strokeStyle = acento;
         for (let s = 0; s < pasos; s++) {
           const p1 = puntos[s];
           const p2 = puntos[s + 1];
           if (!seVe(p1)) continue; // tramo oculto detrás del globo
-          ctx.globalAlpha = 0.25 + Math.max(0, p1[2]) * 0.45;
           ctx.beginPath();
           ctx.moveTo(ox + p1[0] * R, oy - p1[1] * R);
           ctx.lineTo(ox + p2[0] * R, oy - p2[1] * R);
           ctx.stroke();
         }
         // Paquete de datos: avanza por el arco y vuelve a empezar.
-        const avance = ((t / 2600 + i * 0.37) % 1) * pasos;
+        const avance = ((t / 2400 + i * 0.29) % 1) * pasos;
         const pq = puntos[Math.floor(avance)];
         if (seVe(pq)) {
-          ctx.globalAlpha = 1;
-          ctx.fillStyle = tinta;
+          ctx.save();
+          ctx.fillStyle = COLOR.borde;
+          ctx.shadowColor = COLOR.borde;
+          ctx.shadowBlur = 10;
           ctx.beginPath();
-          ctx.arc(ox + pq[0] * R, oy - pq[1] * R, 2.4, 0, Math.PI * 2);
+          ctx.arc(ox + pq[0] * R, oy - pq[1] * R, 2.6, 0, Math.PI * 2);
           ctx.fill();
+          ctx.restore();
         }
       });
 
-      // 3) Ciudades: un punto con un anillo que "late".
+      // 7) Países: punto, anillo que "late" y nombre.
+      ctx.font = `600 ${Math.max(11, R * 0.085)}px ${fuente}`;
+      ctx.textBaseline = "middle";
       nodos.forEach((n, i) => {
         const [x, y, z] = proyectar(n);
-        if (z < 0) return;
+        if (z < 0.05) return;
         const px = ox + x * R;
         const py = oy - y * R;
-        const pulso = ((t / 1800 + i * 0.21) % 1);
-        ctx.globalAlpha = (1 - pulso) * 0.7;
-        ctx.strokeStyle = acento;
+        const pulso = (t / 1800 + i * 0.21) % 1;
+        ctx.globalAlpha = (1 - pulso) * 0.8;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(px, py, 3 + pulso * 10, 0, Math.PI * 2);
+        ctx.arc(px, py, 3 + pulso * 9, 0, Math.PI * 2);
         ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = acento;
+        ctx.globalAlpha = Math.min(1, z * 3);
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(px, py, 3, 0, Math.PI * 2);
         ctx.fill();
+        // El nombre va a la izquierda o a la derecha según el lado del globo.
+        const derecha = x >= 0;
+        ctx.textAlign = derecha ? "left" : "right";
+        ctx.shadowColor = "rgba(0,0,0,0.9)";
+        ctx.shadowBlur = 4;
+        ctx.fillText(ciudades[i].nombre, px + (derecha ? 8 : -8), py);
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
       });
-      ctx.globalAlpha = 1;
+
+      // 8) Parte delantera de la órbita (pasa por encima del globo).
+      dibujarOrbita(ox, oy, R, t, "delante");
     };
 
     // Bucle de animación: unas 60 veces por segundo.
@@ -208,8 +301,7 @@ export function GloboRed() {
       if (!arrastrando) {
         rotY += velY;
         // Tras soltar, la velocidad vuelve poco a poco al giro automático.
-        const base = menosMovimiento ? 0 : 0.0025;
-        velY += (base - velY) * 0.02;
+        velY += (giroBase - velY) * 0.02;
       }
       dibujar(t);
       if (visible) frame = requestAnimationFrame(animar);
@@ -229,7 +321,7 @@ export function GloboRed() {
       ultimoX = e.clientX;
       ultimoY = e.clientY;
       rotY += dx * 0.006;
-      rotX = Math.max(-1.2, Math.min(1.2, rotX + dy * 0.006));
+      rotX = Math.max(-1.0, Math.min(1.0, rotX + dy * 0.006));
       velY = dx * 0.006; // al soltar, conserva un poco de impulso
       if (menosMovimiento) dibujar(performance.now());
     };
@@ -274,8 +366,8 @@ export function GloboRed() {
     <canvas
       ref={lienzoRef}
       role="img"
-      aria-label="Globo terráqueo animado con ciudades conectadas por enlaces de telecomunicaciones. Puedes arrastrarlo para girarlo."
-      className="aspect-square w-full max-w-[520px] cursor-grab touch-pan-y active:cursor-grabbing"
+      aria-label="Globo terráqueo animado con México, Colombia, Brasil, Chile, España y Estados Unidos conectados por enlaces de telecomunicaciones y un anillo de órbita. Puedes arrastrarlo para girarlo."
+      className="aspect-square w-full max-w-[560px] cursor-grab touch-pan-y active:cursor-grabbing"
     />
   );
 }
