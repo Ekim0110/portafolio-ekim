@@ -1,103 +1,87 @@
-import Image from "next/image";
+import { perfil } from "@/data/perfil";
+import { Nav } from "@/components/Nav";
+import { Marquesina } from "@/components/Marquesina";
+import { Proyectos } from "@/components/Proyectos";
+import { Servicios } from "@/components/Servicios";
+import { EtiquetaEjemplo } from "@/components/Etiqueta";
 
-export default function Home() {
+// Página principal: junta todas las secciones en orden, de arriba hacia abajo.
+export default function Inicio() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      <Nav />
+      <main id="inicio">
+        {/* 1. Portada (hero): nombre grande + rol + llamada a la acción */}
+        <section className="mx-auto max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pt-28">
+          <p className="text-sm font-medium uppercase tracking-widest text-acento">{perfil.rol}</p>
+          <h1 className="mt-4 text-6xl font-semibold leading-[0.95] tracking-tighter sm:text-8xl lg:text-9xl">
+            Hola, soy {perfil.nombre}.
+          </h1>
+          <p className="mt-8 max-w-2xl text-lg text-tenue sm:text-xl">{perfil.frase}</p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <a href="#proyectos" className="rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo transition-opacity hover:opacity-85">
+              Ver proyectos
+            </a>
+            <a href="#contacto" className="rounded-full border border-tinta px-6 py-3 text-sm font-medium transition-colors hover:bg-tinta hover:text-fondo">
+              Hablemos
+            </a>
+          </div>
+        </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+        {/* 2. Banda animada */}
+        <Marquesina />
+
+        {/* 3. Proyectos con filtro */}
+        <Proyectos />
+
+        {/* 4. Servicios */}
+        <Servicios />
+
+        {/* 5. Sobre mí */}
+        <section id="sobre-mi" className="mx-auto grid max-w-6xl scroll-mt-20 gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">
+          <div>
+            <p className="text-sm font-medium uppercase tracking-widest text-acento">Perfil</p>
+            <h2 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+              Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
+            </h2>
+            {/* Espacio para tu foto: reemplaza este bloque por <Image> cuando la tengas */}
+            <div className="mt-8 grid aspect-square max-w-xs place-items-center rounded-2xl bg-superficie text-7xl font-semibold text-tenue" role="img" aria-label="Espacio para tu foto">
+              {perfil.nombre.charAt(0)}
+            </div>
+          </div>
+          <div className="space-y-6 text-lg leading-relaxed md:pt-16">
+            {perfil.sobreMi.map((p) => (
+              <p key={p}>{p}</p>
+            ))}
+          </div>
+        </section>
+
+        {/* 6. Contacto */}
+        <section id="contacto" className="scroll-mt-20 bg-tinta text-fondo">
+          <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+            <p className="text-sm font-medium uppercase tracking-widest text-acento">Contacto</p>
+            <h2 className="mt-2 max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
+              ¿Tienes un proyecto en mente?
+            </h2>
+            <div className="mt-10 flex flex-col gap-4 text-lg sm:flex-row sm:gap-10">
+              <a href={`mailto:${perfil.email}`} className="underline decoration-acento underline-offset-4 hover:text-acento">
+                {perfil.email}
+              </a>
+              <a href={perfil.linkedin} target="_blank" rel="noopener noreferrer" className="underline decoration-acento underline-offset-4 hover:text-acento">
+                LinkedIn
+              </a>
+              {perfil.contactoEjemplo && <EtiquetaEjemplo />}
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="border-t border-linea">
+        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-2 px-4 py-8 text-sm text-tenue sm:flex-row sm:px-6">
+          <p>© {new Date().getFullYear()} {perfil.nombre}</p>
+          <p>Hecho con Next.js y Tailwind · Proyecto Orbix</p>
+        </div>
       </footer>
-    </div>
+    </>
   );
 }

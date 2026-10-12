@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
+/*
+ * 🎨 PALETA DE COLORES
+ * Definimos los colores una sola vez como "variables". Así, si mañana quieres
+ * otro color de acento, lo cambias aquí y cambia en toda la página.
+ * Contraste revisado para cumplir WCAG AA (legibilidad).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --fondo: #f6f4ef;      /* fondo crema */
+  --superficie: #ebe7de; /* bloques y tarjetas */
+  --tinta: #141414;      /* texto principal */
+  --tenue: #55524b;      /* texto secundario */
+  --linea: #d6d1c4;      /* bordes */
+  --acento: #b4441d;     /* naranja quemado */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --fondo: #121212;
+    --superficie: #1d1c1a;
+    --tinta: #f2efe8;
+    --tenue: #a8a397;
+    --linea: #33312c;
+    --acento: #f08a5d;
   }
 }
 
+/* Le decimos a Tailwind que use esas variables como clases: bg-fondo, text-acento, etc. */
+@theme inline {
+  --color-fondo: var(--fondo);
+  --color-superficie: var(--superficie);
+  --color-tinta: var(--tinta);
+  --color-tenue: var(--tenue);
+  --color-linea: var(--linea);
+  --color-acento: var(--acento);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --animate-marquesina: marquesina 30s linear infinite;
+}
+
+@keyframes marquesina {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema, paramos animaciones. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquesina { animation: none; }
 }
