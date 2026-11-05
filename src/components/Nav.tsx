@@ -38,7 +38,7 @@ export function Nav() {
               </li>
             ))}
           </ul>
-          <a
+          <Link
             href="/#contacto"
             className="presionable inline-flex min-h-10 items-center rounded-full bg-tinta px-4 text-sm font-medium text-fondo hover:bg-acento"
           >
