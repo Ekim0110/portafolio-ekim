@@ -37,7 +37,7 @@ export default function Inicio() {
                 <span className="mascara"><span className="sube text-acento" style={orden(1)}>{perfil.esloganAcento}</span></span>
               </h1>
               <p className="entrada mt-8 max-w-[34ch] font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl" style={orden(4)}>
-                Soy {perfil.nombre.split(" ").slice(0, 2).join(" ")} <span className="text-tenue">· {perfil.rol}.</span>
+                {perfil.rol}.
               </p>
               <p className="entrada mt-4 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(5)}>{perfil.frase}</p>
               <div className="entrada mt-10 flex flex-wrap gap-3" style={orden(6)}>
