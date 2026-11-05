@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Proyecto } from "@/data/perfil";
 import { EtiquetaEjemplo } from "./Etiqueta";
-import { IconoFlechaDiagonal } from "./Iconos";
+import { IconoFlecha, IconoFlechaDiagonal } from "./Iconos";
 import { ImagenAmpliable } from "./ImagenAmpliable";
 
 // Mientras no tengamos capturas reales, dibujamos una "miniatura" con CSS:
@@ -81,6 +81,13 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
         {proyecto.ejemplo && <EtiquetaEjemplo />}
       </h3>
       <p className={`mt-2 max-w-[62ch] text-tenue ${destacado ? "text-base" : "text-sm"}`}>{proyecto.descripcion}</p>
+      {/* Si el proyecto tiene caso de estudio, un enlace a su página completa. */}
+      {proyecto.caso && !proyecto.enlace && (
+        <a href={proyecto.caso} className="mt-3 inline-flex min-h-10 items-center gap-2 self-start text-sm font-medium text-acento">
+          <span className="subrayado pb-0.5">Ver caso de estudio</span>
+          <IconoFlecha className="flecha h-4 w-4" />
+        </a>
+      )}
       <ul className="mt-4 flex flex-wrap gap-2" aria-label="Herramientas">
         {proyecto.herramientas.map((h) => (
           <li key={h} className="rounded-full border border-linea px-2.5 py-0.5 text-xs text-tenue">

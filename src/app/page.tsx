@@ -8,6 +8,7 @@ import { GloboRed } from "@/components/GloboRed";
 import { FondoConstelaciones } from "@/components/FondoConstelaciones";
 import { FlujoDatos } from "@/components/FlujoDatos";
 import { CicloSenal } from "@/components/CicloSenal";
+import { Pie } from "@/components/Pie";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
 import { IconoFlechaAbajo, IconoFlechaDiagonal } from "@/components/Iconos";
 
@@ -114,19 +115,7 @@ export default function Inicio() {
         </section>
       </main>
 
-      <footer className="overflow-hidden border-t border-linea">
-        <div className="mx-auto flex max-w-6xl flex-col justify-between gap-2 px-4 pt-8 text-sm text-tenue sm:flex-row sm:px-6">
-          <p>© {new Date().getFullYear()} {perfil.nombre}</p>
-          <p>Hecho con Next.js y Tailwind · Proyecto Orbix</p>
-        </div>
-        {/* Firma gigante: el nombre como cierre visual de la página */}
-        <p
-          aria-hidden="true"
-          className="mx-auto max-w-6xl select-none px-4 pt-6 font-display text-[clamp(3.5rem,14vw,12rem)] font-semibold leading-[0.78] tracking-[-0.04em] text-linea sm:px-6"
-        >
-          {perfil.nombre.split(" ").slice(0, 2).join(" ")}
-        </p>
-      </footer>
+      <Pie />
     </>
   );
 }
