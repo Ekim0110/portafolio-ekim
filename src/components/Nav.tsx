@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { perfil } from "@/data/perfil";
+import { LogoMarca } from "./LogoMarca";
 
 // Menú superior. Es "sticky": se queda pegado arriba al hacer scroll.
 const enlaces = [
@@ -16,17 +17,17 @@ export function Nav() {
         aria-label="Navegación principal"
         className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <Link href="/#inicio" className="presionable flex items-center gap-2.5 font-semibold">
-          {/* Logo simple: la inicial dentro de un cuadro */}
-          <span
-            aria-hidden="true"
-            className="grid h-8 w-8 place-items-center rounded-lg bg-acento font-display text-base font-bold text-fondo"
-          >
-            {perfil.nombre.charAt(0)}
+        <Link
+          href="/#inicio"
+          aria-label={`${perfil.marca}, por ${perfil.nombre}: ir al inicio`}
+          className="logo-rumbo presionable flex items-center gap-2.5"
+        >
+          {/* Logo de la marca: aguja de brújula + nombre; "por Mike Bernal" solo en pantallas anchas */}
+          <LogoMarca />
+          <span className="font-display text-lg font-semibold tracking-[-0.02em]">{perfil.marca}</span>
+          <span className="hidden border-l border-linea pl-2.5 text-xs text-tenue md:inline">
+            por {perfil.nombre.split(" ").slice(0, 2).join(" ")}
           </span>
-          {/* En móvil mostramos el nombre corto para que no se parta en dos líneas */}
-          <span className="sm:hidden">{perfil.nombreCorto}</span>
-          <span className="hidden sm:inline">{perfil.nombre}</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-7">
           <ul className="flex items-center gap-4 text-sm sm:gap-7">

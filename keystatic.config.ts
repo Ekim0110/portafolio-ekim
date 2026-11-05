@@ -28,6 +28,7 @@ export default config({
       schema: {
         nombre: fields.text({ label: "Nombre completo" }),
         nombreCorto: fields.text({ label: "Nombre corto", description: "Se usa en el saludo y en el menú del celular." }),
+        marca: fields.text({ label: "Marca", description: "Nombre de marca que va en el menú y en el pie de página." }),
         rol: fields.text({ label: "Rol", description: "La línea pequeña en naranja encima del saludo." }),
         frase: fields.text({ label: "Frase principal", multiline: true }),
         sobreMi: fields.array(fields.text({ label: "Párrafo", multiline: true }), {

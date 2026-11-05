@@ -22,11 +22,11 @@ const bricolage = Bricolage_Grotesque({
 
 // SEO básico: el título y la descripción que muestran Google y las redes sociales.
 export const metadata: Metadata = {
-  title: "Mike Bernal Gomez · Operaciones, procesos y datos",
+  title: "RumboLab · Mike Bernal Gomez · Operaciones, procesos y datos",
   description:
     "Portafolio de Mike Bernal Gomez: tableros en Power BI, mejora de procesos, finanzas y páginas web.",
   openGraph: {
-    title: "Mike Bernal Gomez · Operaciones, procesos y datos",
+    title: "RumboLab · Mike Bernal Gomez · Operaciones, procesos y datos",
     description: "Tableros en Power BI, mejora de procesos, finanzas y páginas web.",
     type: "website",
     locale: "es_ES",
