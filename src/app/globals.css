@@ -241,3 +241,30 @@ p { text-wrap: pretty; }
 .fondo-cielo {
   mask-image: radial-gradient(ellipse 95% 100% at 60% 45%, #000 45%, transparent 100%);
 }
+
+/* DIAGRAMA: íconos de línea de los entregables y el nodo final "Decisión". */
+.flujo-icono path { fill: none; stroke: var(--tenue); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.flujo-destacado { fill: var(--acento); font-weight: 600; font-size: 18px; }
+
+/* CICLO SEÑAL: un pulso de luz recorre la onda de ruido a señal cada 4 s. */
+.pulso-onda {
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 6 100;
+  stroke-dashoffset: 6;
+  animation: pulso-onda 4s var(--ease-in-out) infinite;
+}
+@keyframes pulso-onda {
+  0% { stroke-dashoffset: 6; }
+  75%, 100% { stroke-dashoffset: -100; }
+}
+/* Al pasar el mouse por un paso, se ilumina su fondo. */
+.paso-ciclo { transition: background-color 200ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .paso-ciclo:hover { background-color: var(--superficie); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulso-onda { animation: none; stroke-opacity: 0; }
+}

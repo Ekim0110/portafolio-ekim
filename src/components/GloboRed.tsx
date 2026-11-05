@@ -265,7 +265,7 @@ export function GloboRed() {
       }
 
       // El satélite: cuerpo blanco con dos paneles solares.
-      const s = Math.max(1.4, R * 0.013);
+      const s = Math.max(1.8, R * 0.018);
       for (const p of sats) {
         if (tapado(p) || !enCapa(p[2])) continue;
         const x = px(p), y = py(p);

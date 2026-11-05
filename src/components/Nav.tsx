@@ -4,6 +4,7 @@ import { perfil } from "@/data/perfil";
 const enlaces = [
   { href: "#proyectos", texto: "Proyectos" },
   { href: "#servicios", texto: "Servicios" },
+  { href: "#metodo", texto: "Método" },
   { href: "#sobre-mi", texto: "Sobre mí" },
 ];
 

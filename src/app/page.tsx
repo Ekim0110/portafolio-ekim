@@ -7,6 +7,7 @@ import { EtiquetaEjemplo } from "@/components/Etiqueta";
 import { GloboRed } from "@/components/GloboRed";
 import { FondoConstelaciones } from "@/components/FondoConstelaciones";
 import { FlujoDatos } from "@/components/FlujoDatos";
+import { CicloSenal } from "@/components/CicloSenal";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
 import { IconoFlechaAbajo, IconoFlechaDiagonal } from "@/components/Iconos";
 
@@ -66,7 +67,10 @@ export default function Inicio() {
         {/* 5. Servicios */}
         <Servicios />
 
-        {/* 5. Sobre mí */}
+        {/* 6. Mi método: Ciclo Señal */}
+        <CicloSenal />
+
+        {/* 7. Sobre mí */}
         <section id="sobre-mi" className="scroll-mt-20">
           <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16 lg:py-32">
             <h2 className="titulo-seccion">
@@ -81,7 +85,7 @@ export default function Inicio() {
           </div>
         </section>
 
-        {/* 6. Contacto */}
+        {/* 8. Contacto */}
         <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
             <h2 className="max-w-4xl font-display text-[clamp(2.75rem,8vw,6rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
