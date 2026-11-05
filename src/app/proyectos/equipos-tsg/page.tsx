@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { casoTsg as caso, perfil } from "@/data/perfil";
 import { Nav } from "@/components/Nav";
@@ -34,10 +35,10 @@ export default function CasoEquiposTsg() {
       <main>
         {/* 1. Encabezado: título, resumen y datos rápidos */}
         <header className="mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 lg:pt-16">
-          <a href="/#proyectos" className="group inline-flex min-h-10 items-center gap-2 text-sm text-tenue transition-colors duration-200 hover:text-tinta">
+          <Link href="/#proyectos" className="group inline-flex min-h-10 items-center gap-2 text-sm text-tenue transition-colors duration-200 hover:text-tinta">
             <IconoFlecha className="h-4 w-4 rotate-180" />
             <span className="subrayado pb-0.5">Volver a proyectos</span>
-          </a>
+          </Link>
           <h1 className="entrada mt-8 font-display text-[clamp(3rem,9vw,6rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
             {caso.titulo}
             {caso.ejemplo && <EtiquetaEjemplo />}
@@ -84,10 +85,10 @@ export default function CasoEquiposTsg() {
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <h2 className="titulo-seccion">Cómo lo resolví</h2>
-              <a href="/#metodo" className="group inline-flex min-h-10 items-center gap-2 text-sm text-tenue transition-colors duration-200 hover:text-tinta">
+              <Link href="/#metodo" className="group inline-flex min-h-10 items-center gap-2 text-sm text-tenue transition-colors duration-200 hover:text-tinta">
                 <span className="subrayado pb-0.5">Así funciona el Ciclo Señal</span>
                 <IconoFlecha className="flecha h-4 w-4" />
-              </a>
+              </Link>
             </div>
             <ol className="mt-14 border-t border-linea">
               {pasos.map((p, i) => (
@@ -135,13 +136,13 @@ export default function CasoEquiposTsg() {
               ¿Tienes un proyecto <span className="text-acento">parecido?</span>
             </h2>
             <div className="flex flex-wrap gap-3">
-              <a href="/#contacto" className="presionable inline-flex min-h-12 items-center gap-2 rounded-full bg-acento px-6 text-sm font-semibold text-fondo hover:bg-tinta">
+              <Link href="/#contacto" className="presionable inline-flex min-h-12 items-center gap-2 rounded-full bg-acento px-6 text-sm font-semibold text-fondo hover:bg-tinta">
                 Hablemos
                 <IconoFlecha className="flecha h-4 w-4" />
-              </a>
-              <a href="/#proyectos" className="presionable inline-flex min-h-12 items-center rounded-full border border-linea px-6 text-sm font-medium hover:border-tinta">
+              </Link>
+              <Link href="/#proyectos" className="presionable inline-flex min-h-12 items-center rounded-full border border-linea px-6 text-sm font-medium hover:border-tinta">
                 Ver más proyectos
-              </a>
+              </Link>
             </div>
           </div>
         </section>

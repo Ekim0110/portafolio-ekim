@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Proyecto } from "@/data/perfil";
 import { EtiquetaEjemplo } from "./Etiqueta";
 import { IconoFlecha, IconoFlechaDiagonal } from "./Iconos";
@@ -83,10 +84,10 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
       <p className={`mt-2 max-w-[62ch] text-tenue ${destacado ? "text-base" : "text-sm"}`}>{proyecto.descripcion}</p>
       {/* Si el proyecto tiene caso de estudio, un enlace a su página completa. */}
       {proyecto.caso && !proyecto.enlace && (
-        <a href={proyecto.caso} className="mt-3 inline-flex min-h-10 items-center gap-2 self-start text-sm font-medium text-acento">
+        <Link href={proyecto.caso} className="mt-3 inline-flex min-h-10 items-center gap-2 self-start text-sm font-medium text-acento">
           <span className="subrayado pb-0.5">Ver caso de estudio</span>
           <IconoFlecha className="flecha h-4 w-4" />
-        </a>
+        </Link>
       )}
       <ul className="mt-4 flex flex-wrap gap-2" aria-label="Herramientas">
         {proyecto.herramientas.map((h) => (

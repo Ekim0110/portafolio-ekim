@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { perfil } from "@/data/perfil";
 
 // Menú superior. Es "sticky": se queda pegado arriba al hacer scroll.
@@ -15,7 +16,7 @@ export function Nav() {
         aria-label="Navegación principal"
         className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <a href="/#inicio" className="presionable flex items-center gap-2.5 font-semibold">
+        <Link href="/#inicio" className="presionable flex items-center gap-2.5 font-semibold">
           {/* Logo simple: la inicial dentro de un cuadro */}
           <span
             aria-hidden="true"
@@ -26,14 +27,14 @@ export function Nav() {
           {/* En móvil mostramos el nombre corto para que no se parta en dos líneas */}
           <span className="sm:hidden">{perfil.nombreCorto}</span>
           <span className="hidden sm:inline">{perfil.nombre}</span>
-        </a>
+        </Link>
         <div className="flex items-center gap-3 sm:gap-7">
           <ul className="flex items-center gap-4 text-sm sm:gap-7">
             {enlaces.map((e) => (
               <li key={e.href} className={e.href === "/#proyectos" ? "" : "hidden sm:block"}>
-                <a href={e.href} className="group inline-flex min-h-10 items-center text-tenue transition-colors duration-200 hover:text-tinta">
+                <Link href={e.href} className="group inline-flex min-h-10 items-center text-tenue transition-colors duration-200 hover:text-tinta">
                   <span className="subrayado pb-0.5">{e.texto}</span>
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -42,7 +43,7 @@ export function Nav() {
             className="presionable inline-flex min-h-10 items-center rounded-full bg-tinta px-4 text-sm font-medium text-fondo hover:bg-acento"
           >
             Hablemos
-          </a>
+          </Link>
         </div>
       </nav>
     </header>
