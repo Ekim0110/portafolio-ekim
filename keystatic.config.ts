@@ -85,7 +85,7 @@ export default config({
             enlace: fields.url({ label: "Enlace (opcional)" }),
             caso: fields.text({
               label: "Caso de estudio (opcional)",
-              description: "Ruta de la página del caso, por ejemplo /proyectos/equipos-tsg. Déjalo vacío si no tiene.",
+              description: "Ruta de la página del caso, por ejemplo /proyectos/instalacion-equipos. Déjalo vacío si no tiene.",
             }),
             imagen: fields.image({
               label: "Imagen (opcional)",
@@ -99,9 +99,9 @@ export default config({
         ),
       },
     }),
-    casoTsg: singleton({
-      label: "Caso de estudio: Equipos TSG",
-      path: "content/casos/equipos-tsg",
+    casoInstalacion: singleton({
+      label: "Caso de estudio: Instalación de equipos",
+      path: "content/casos/instalacion-equipos",
       format: { data: "json" },
       schema: {
         titulo: fields.text({ label: "Título" }),

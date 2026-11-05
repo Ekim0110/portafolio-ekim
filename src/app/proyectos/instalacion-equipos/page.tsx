@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { casoTsg as caso, perfil } from "@/data/perfil";
+import { casoInstalacion as caso, perfil } from "@/data/perfil";
 import { Nav } from "@/components/Nav";
 import { Pie } from "@/components/Pie";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
@@ -8,10 +8,10 @@ import { ImagenAmpliable } from "@/components/ImagenAmpliable";
 import { IconoCheck, IconoFlecha } from "@/components/Iconos";
 
 /**
- * 📄 CASO DE ESTUDIO: EQUIPOS TSG
+ * 📄 CASO DE ESTUDIO: INSTALACIÓN DE EQUIPOS
  * La historia completa de un proyecto: el reto, cómo se resolvió paso a paso
  * con el Ciclo Señal, qué resultó y qué se aprendió.
- * Los textos se editan en el panel /keystatic → "Caso de estudio: Equipos TSG".
+ * Los textos se editan en el panel /keystatic → "Caso de estudio: Instalación de equipos".
  */
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ const pasos = [
   { nombre: "Ajustar", clave: "ajustar" },
 ] as const;
 
-export default function CasoEquiposTsg() {
+export default function CasoInstalacionEquipos() {
   return (
     <>
       <Nav />
@@ -70,7 +70,7 @@ export default function CasoEquiposTsg() {
         {/* 2. La captura en grande (se puede ampliar) */}
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="group aspect-[16/10] overflow-hidden rounded-3xl bg-superficie ring-1 ring-linea">
-            <ImagenAmpliable src="/proyectos/equipos-tsg.png" alt={`Captura del informe ${caso.titulo}`} titulo={caso.titulo} />
+            <ImagenAmpliable src="/proyectos/instalacion-equipos.png" alt={`Captura del informe ${caso.titulo}`} titulo={caso.titulo} />
           </div>
         </div>
 

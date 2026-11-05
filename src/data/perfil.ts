@@ -30,7 +30,7 @@ export type Servicio = {
 import perfilJson from "../../content/perfil.json";
 import serviciosJson from "../../content/servicios.json";
 import proyectosJson from "../../content/proyectos.json";
-import casoTsgJson from "../../content/casos/equipos-tsg.json";
+import casoInstalacionJson from "../../content/casos/instalacion-equipos.json";
 
 export const perfil = perfilJson;
 
@@ -48,5 +48,5 @@ export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
   ejemplo: p.ejemplo,
 }));
 
-// Caso de estudio de Equipos TSG (se edita en el panel: "Caso de estudio: Equipos TSG").
-export const casoTsg = casoTsgJson;
+// Caso de estudio de instalación de equipos (se edita en el panel: "Caso de estudio: Instalación de equipos").
+export const casoInstalacion = casoInstalacionJson;
