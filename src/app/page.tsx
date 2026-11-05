@@ -23,7 +23,7 @@ export default function Inicio() {
     <>
       <Nav />
       <main id="inicio">
-        {/* 1. Portada (hero): nombre gigante + rol + globo + llamada a la acción */}
+        {/* 1. Portada (hero): eslogan gigante + quién soy + globo + llamada a la acción */}
         <section className="relative isolate overflow-hidden">
           {/* Fondo: cielo con constelaciones en movimiento + brillo cálido detrás del globo */}
           <FondoConstelaciones />
@@ -33,11 +33,11 @@ export default function Inicio() {
             {/* Columna izquierda: texto. Columna derecha: globo (debajo en móvil). */}
             <div>
               <h1 className="font-display text-[clamp(3rem,7.5vw,5.5rem)] font-semibold leading-[0.9] tracking-[-0.04em]">
-                <span className="mascara"><span className="sube" style={orden(0)}>Hola, soy</span></span>
-                <span className="mascara"><span className="sube text-acento" style={orden(1)}>{perfil.nombreCorto}.</span></span>
+                <span className="mascara"><span className="sube" style={orden(0)}>{perfil.eslogan}</span></span>
+                <span className="mascara"><span className="sube text-acento" style={orden(1)}>{perfil.esloganAcento}</span></span>
               </h1>
-              <p className="entrada mt-8 max-w-[26ch] font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl" style={orden(4)}>
-                {perfil.rol}.
+              <p className="entrada mt-8 max-w-[34ch] font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl" style={orden(4)}>
+                Soy {perfil.nombre.split(" ").slice(0, 2).join(" ")} <span className="text-tenue">· {perfil.rol}.</span>
               </p>
               <p className="entrada mt-4 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(5)}>{perfil.frase}</p>
               <div className="entrada mt-10 flex flex-wrap gap-3" style={orden(6)}>

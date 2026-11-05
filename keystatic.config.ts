@@ -29,7 +29,9 @@ export default config({
         nombre: fields.text({ label: "Nombre completo" }),
         nombreCorto: fields.text({ label: "Nombre corto", description: "Se usa en el saludo y en el menú del celular." }),
         marca: fields.text({ label: "Marca", description: "Nombre de marca que va en el menú y en el pie de página." }),
-        rol: fields.text({ label: "Rol", description: "La línea pequeña en naranja encima del saludo." }),
+        eslogan: fields.text({ label: "Eslogan (primera línea)", description: "Va en grande en la portada, en blanco." }),
+        esloganAcento: fields.text({ label: "Eslogan (segunda línea)", description: "Va debajo, en naranja." }),
+        rol: fields.text({ label: "Rol", description: "Va en la portada debajo del eslogan, junto a tu nombre." }),
         frase: fields.text({ label: "Frase principal", multiline: true }),
         sobreMi: fields.array(fields.text({ label: "Párrafo", multiline: true }), {
           label: "Sobre mí",
