@@ -27,13 +27,16 @@
   --color-acento: var(--acento);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --animate-marquesina: marquesina 30s linear infinite;
+  --font-display: var(--font-bricolage);
+  --animate-marquesina: marquesina 40s linear infinite;
 }
 
 /*
  * ✨ MOVIMIENTO (principios de Emil Kowalski)
  * - "ease-out" fuerte: arranca rápido y frena suave. Se siente ágil y natural.
- * - Duraciones cortas (150–600 ms): la animación acompaña, no hace esperar.
+ * - Respuestas a la persona (hover, clic) cortas: 160–300 ms.
+ * - Una sola escena "de autor": la entrada de la portada. El resto de la página
+ *   ya está visible al llegar, sin esperar animaciones al hacer scroll.
  * - Nunca animamos desde scale(0): todo aparece desde casi su tamaño real.
  */
 :root {
@@ -48,14 +51,23 @@
 
 html {
   scroll-behavior: smooth;
+  /* Barra de scroll con los colores de la marca (Firefox). */
+  scrollbar-color: var(--linea) var(--fondo);
 }
 
 body {
   background: var(--fondo);
   color: var(--tinta);
+  caret-color: var(--acento);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+/* Barra de scroll con los colores de la marca (Chrome, Edge, Safari). */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--fondo); }
+::-webkit-scrollbar-thumb { background: var(--linea); border-radius: 999px; border: 2px solid var(--fondo); }
+::-webkit-scrollbar-thumb:hover { background: var(--tenue); }
 
 /* TIPOGRAFÍA
    - Títulos "balanceados": el navegador reparte las palabras para que no quede
@@ -66,14 +78,44 @@ h1, h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
 .tabular { font-variant-numeric: tabular-nums; }
 
+/* Títulos de sección: grandes y apretados, con la letra de display. */
+.titulo-seccion {
+  font-family: var(--font-bricolage), var(--font-geist-sans), sans-serif;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
 /* Selección de texto con el color de la marca, en vez del azul del sistema. */
 ::selection { background: var(--acento); color: var(--fondo); }
 
 /*
- * ENTRADA: el contenido aparece subiendo un poquito y pasando de borroso a nítido.
- * --i es el número de orden del elemento: cada uno espera 70 ms más que el anterior
- * (efecto "escalonado" o stagger), así la vista sigue el orden de lectura.
+ * FONDO DE LA PORTADA: un brillo cálido detrás del globo.
  */
+.brillo {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--acento) 22%, transparent), transparent);
+  filter: blur(40px);
+}
+
+/*
+ * ENTRADA DE LA PORTADA (la escena principal)
+ * 1) Cada línea del nombre sube desde detrás de una "máscara" (como un telón).
+ * 2) El resto aparece subiendo un poquito y pasando de borroso a nítido.
+ * --i es el número de orden: cada elemento espera un poco más que el anterior
+ * (efecto "escalonado"), así la vista sigue el orden de lectura.
+ */
+.mascara { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+@keyframes sube {
+  from { transform: translateY(105%); }
+  to   { transform: none; }
+}
+.sube {
+  display: block;
+  animation: sube 1000ms var(--ease-out) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+
 @keyframes entrada {
   from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
   to   { opacity: 1; transform: none; filter: none; }
@@ -83,10 +125,12 @@ p { text-wrap: pretty; }
   animation-delay: calc(var(--i, 0) * 70ms);
 }
 
-/* REVELAR AL HACER SCROLL: el componente <Revelar> pone data-visible cuando la
-   sección entra en pantalla. Antes de eso los hijos .entrada esperan en pausa. */
-[data-revelar] .entrada { animation-play-state: paused; }
-[data-revelar][data-visible] .entrada { animation-play-state: running; }
+/* El globo llega desde un poco más pequeño y desenfocado. */
+@keyframes llega-globo {
+  from { opacity: 0; transform: scale(0.92); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+.llega-globo { animation: llega-globo 1400ms var(--ease-out) 250ms both; }
 
 /* BOTONES: al presionar se "hunden" un 3 %. Da la sensación de botón físico. */
 .presionable {
@@ -95,22 +139,58 @@ p { text-wrap: pretty; }
 }
 .presionable:active { transform: scale(0.97); }
 
+/* Flecha dentro de un botón o enlace: se adelanta un poco al pasar el mouse. */
+.flecha { transition: transform 250ms var(--ease-out); }
+
 /* ENLACES: una línea que crece de izquierda a derecha al pasar el mouse. */
 .subrayado {
   background: linear-gradient(currentColor, currentColor) left bottom / 0% 1px no-repeat;
   transition: background-size 300ms var(--ease-out), color 200ms var(--ease-out);
 }
-@media (hover: hover) {
-  .subrayado:hover, .group:hover > .subrayado { background-size: 100% 1px; }
+/* Versión gruesa para el correo gigante del contacto: la línea ya está y se "rellena". */
+.subrayado-grueso {
+  background:
+    linear-gradient(var(--acento), var(--acento)) left bottom / 0% 3px no-repeat,
+    linear-gradient(var(--linea), var(--linea)) left bottom / 100% 3px no-repeat;
+  transition: background-size 450ms var(--ease-out), color 200ms var(--ease-out);
 }
 
-/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema, paramos animaciones. */
+/*
+ * SERVICIOS: al pasar el mouse por una fila, un bloque naranja la "llena"
+ * de abajo hacia arriba (clip-path) y el texto cambia a oscuro.
+ */
+.fila-servicio { position: relative; isolation: isolate; }
+.fila-servicio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--acento);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 320ms var(--ease-out);
+}
+
+/* Solo en pantallas con mouse: en el celular el "hover" se dispara al tocar. */
+@media (hover: hover) and (pointer: fine) {
+  .subrayado:hover, .group:hover > .subrayado { background-size: 100% 1px; }
+  .subrayado-grueso:hover { background-size: 100% 3px, 100% 3px; }
+  .group:hover .flecha, .presionable:hover .flecha { transform: translateX(3px); }
+  .group:hover .flecha-diagonal { transform: translate(2px, -2px); }
+
+  .fila-servicio:hover::before { clip-path: inset(0 0 0 0); }
+  .fila-servicio:hover .flecha { transform: translateX(6px); }
+  .fila-servicio:hover, .fila-servicio:hover * { color: var(--fondo); }
+}
+
+/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema,
+   quitamos los desplazamientos pero dejamos los cambios de color. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .animate-marquesina { animation: none; }
-  .entrada { animation: none; }
+  .entrada, .sube, .llega-globo { animation: none; }
   .presionable:active { transform: none; }
-  *, *::before, *::after { transition-duration: 0.01ms !important; }
+  .fila-servicio::before { transition: none; }
+  .flecha { transition: none; }
 }
 
 /* Accesibilidad: contorno visible al navegar con teclado (Tab), en color de acento

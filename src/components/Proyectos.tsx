@@ -5,7 +5,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { proyectos, type Proyecto } from "@/data/perfil";
 import { TarjetaProyecto } from "./TarjetaProyecto";
-import { Revelar } from "./Revelar";
 
 type Filtro = "Todos" | Proyecto["categoria"];
 const filtros: Filtro[] = ["Todos", "Power BI", "HTML"];
@@ -14,6 +13,11 @@ export function Proyectos() {
   // useState guarda qué filtro está activo; al cambiarlo, React redibuja la lista.
   const [activo, setActivo] = useState<Filtro>("Todos");
   const visibles = activo === "Todos" ? proyectos : proyectos.filter((p) => p.categoria === activo);
+
+  // Los proyectos con captura real van "destacados" (más grandes, dos por fila).
+  // Los demás se reparten en filas de tres, o de dos si así no queda un hueco.
+  const restantes = visibles.filter((p) => !p.imagen).length;
+  const anchoResto = restantes % 3 !== 0 && restantes % 2 === 0 ? "lg:col-span-3" : "lg:col-span-2";
 
   // "Píldora" que se desliza detrás del botón activo. Medimos dónde está ese
   // botón y movemos la píldora hasta allí con una transición suave.
@@ -31,17 +35,19 @@ export function Proyectos() {
 
   return (
     <section id="proyectos" className="scroll-mt-20">
-      <Revelar className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div className="entrada">
-            <p className="text-sm font-medium uppercase tracking-widest text-acento">Trabajo</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Proyectos</h2>
-          </div>
+      <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
+        <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="titulo-seccion">
+            Proyectos
+            {/* Cuántos proyectos se ven con el filtro actual */}
+            <sup className="tabular ml-2 align-super font-mono text-base font-normal tracking-normal text-acento sm:text-lg">
+              ({String(visibles.length).padStart(2, "0")})
+            </sup>
+          </h2>
           <div
             role="group"
             aria-label="Filtrar proyectos"
-            className="entrada relative flex gap-1 self-start rounded-full border border-linea p-1"
-            style={{ "--i": 1 } as React.CSSProperties}
+            className="relative flex gap-1 self-start rounded-full border border-linea p-1 sm:self-auto"
           >
             <span
               aria-hidden="true"
@@ -67,15 +73,19 @@ export function Proyectos() {
           </div>
         </div>
         {/* key={activo}: al cambiar el filtro React crea la lista de nuevo,
-            y así las tarjetas vuelven a entrar una tras otra. */}
-        <div key={activo} className="mt-12 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+            y así las tarjetas vuelven a entrar una tras otra (muestra el cambio). */}
+        <div key={activo} className="mt-14 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-6">
           {visibles.map((p, i) => (
-            <div key={p.titulo} className="entrada" style={{ "--i": i + 2 } as React.CSSProperties}>
-              <TarjetaProyecto proyecto={p} />
+            <div
+              key={p.titulo}
+              className={`entrada ${p.imagen ? "sm:col-span-2 lg:col-span-3" : anchoResto}`}
+              style={{ "--i": i } as React.CSSProperties}
+            >
+              <TarjetaProyecto proyecto={p} destacado={!!p.imagen} />
             </div>
           ))}
         </div>
-      </Revelar>
+      </div>
     </section>
   );
 }
