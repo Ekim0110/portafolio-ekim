@@ -1,6 +1,6 @@
 # Portafolio de Mike Bernal Gomez
 
-Página web personal: perfil, servicios y proyectos (Power BI y HTML). Parte del proyecto **Orbix**.
+Página web personal: perfil, servicios y proyectos (Power BI y HTML). Parte de la marca **RumboLab**.
 
 **Stack:** Next.js 15 · TypeScript · Tailwind CSS 4 · publicado en Vercel.
 

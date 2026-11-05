@@ -28,7 +28,10 @@ export default config({
       schema: {
         nombre: fields.text({ label: "Nombre completo" }),
         nombreCorto: fields.text({ label: "Nombre corto", description: "Se usa en el saludo y en el menú del celular." }),
-        rol: fields.text({ label: "Rol", description: "La línea pequeña en naranja encima del saludo." }),
+        marca: fields.text({ label: "Marca", description: "Nombre de marca que va en el menú y en el pie de página." }),
+        eslogan: fields.text({ label: "Eslogan (primera línea)", description: "Va en grande en la portada, en blanco." }),
+        esloganAcento: fields.text({ label: "Eslogan (segunda línea)", description: "Va debajo, en naranja." }),
+        rol: fields.text({ label: "Rol", description: "Va en la portada debajo del eslogan." }),
         frase: fields.text({ label: "Frase principal", multiline: true }),
         sobreMi: fields.array(fields.text({ label: "Párrafo", multiline: true }), {
           label: "Sobre mí",
@@ -83,6 +86,10 @@ export default config({
               itemLabel: (h) => h.value || "Herramienta",
             }),
             enlace: fields.url({ label: "Enlace (opcional)" }),
+            caso: fields.text({
+              label: "Caso de estudio (opcional)",
+              description: "Ruta de la página del caso, por ejemplo /proyectos/instalacion-equipos. Déjalo vacío si no tiene.",
+            }),
             imagen: fields.image({
               label: "Imagen (opcional)",
               description: "Captura del proyecto. Mejor horizontal, en proporción 4:3. Revisa que no muestre datos privados.",
@@ -93,6 +100,42 @@ export default config({
           }),
           { label: "Proyectos", itemLabel: (p) => p.fields.titulo.value || "Proyecto" },
         ),
+      },
+    }),
+    casoInstalacion: singleton({
+      label: "Caso de estudio: Instalación de equipos",
+      path: "content/casos/instalacion-equipos",
+      format: { data: "json" },
+      schema: {
+        titulo: fields.text({ label: "Título" }),
+        resumen: fields.text({ label: "Resumen", description: "Una o dos frases bajo el título.", multiline: true }),
+        contexto: fields.text({ label: "Contexto", description: "Tipo de proyecto o empresa (sin datos privados)." }),
+        rol: fields.text({ label: "Mi rol" }),
+        herramientas: fields.array(fields.text({ label: "Herramienta" }), {
+          label: "Herramientas",
+          itemLabel: (h) => h.value || "Herramienta",
+        }),
+        reto: fields.text({ label: "El reto", description: "Qué problema había antes.", multiline: true }),
+        pasos: fields.object(
+          {
+            escuchar: fields.text({ label: "1. Escuchar", multiline: true }),
+            captar: fields.text({ label: "2. Captar", multiline: true }),
+            filtrar: fields.text({ label: "3. Filtrar", multiline: true }),
+            transmitir: fields.text({ label: "4. Transmitir", multiline: true }),
+            ajustar: fields.text({ label: "5. Ajustar", multiline: true }),
+          },
+          { label: "Cómo lo resolví (Ciclo Señal)" },
+        ),
+        resultados: fields.array(fields.text({ label: "Resultado" }), {
+          label: "Resultados",
+          description: "Si tienes cifras reales (horas ahorradas, % de avance), ponlas aquí.",
+          itemLabel: (r) => r.value || "Resultado",
+        }),
+        aprendizaje: fields.text({ label: "Lo que aprendí", multiline: true }),
+        ejemplo: fields.checkbox({
+          label: "Mostrar etiqueta \"Ejemplo\"",
+          description: "Desmárcala cuando los textos ya sean los reales.",
+        }),
       },
     }),
   },

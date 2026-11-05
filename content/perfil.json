@@ -1,11 +1,14 @@
 {
   "nombre": "Mike Bernal Gomez",
   "nombreCorto": "Mike",
+  "marca": "RumboLab",
+  "eslogan": "Del ruido",
+  "esloganAcento": "a la decisión.",
   "rol": "Operaciones, procesos y datos",
   "frase": "Pruebas",
   "sobreMi": [
     "Perfil de operaciones, ingeniería de procesos, gestión de proyectos y finanzas.",
-    "Me apasiona ordenar la información para que los equipos decidan mejor, y ahora estoy aprendiendo desarrollo web para construir mis propias herramientas."
+    "Me apasiona ordenar la información para que los equipos decidan mejor y construir mis propias herramientas."
   ],
   "sobreMiEjemplo": true,
   "ubicacion": "Tu ciudad, País",

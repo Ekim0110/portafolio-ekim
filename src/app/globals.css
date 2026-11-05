@@ -7,8 +7,10 @@
  * Tema oscuro (fondo negro), elegido por Ekim. Contraste revisado para WCAG AA.
  */
 :root {
-  --fondo: #0a0a0a;      /* fondo negro */
-  --superficie: #171717; /* bloques y tarjetas */
+  /* Negros "tintados" hacia el naranja de la marca: un negro puro (#000) o gris
+     neutro se ve frío y genérico; con un toque cálido todo combina mejor. */
+  --fondo: #0c0b0a;      /* fondo negro cálido */
+  --superficie: #181614; /* bloques y tarjetas */
   --tinta: #f5f3ee;      /* texto principal */
   --tenue: #a8a397;      /* texto secundario */
   --linea: #2e2d2a;      /* bordes */
@@ -25,7 +27,22 @@
   --color-acento: var(--acento);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --animate-marquesina: marquesina 30s linear infinite;
+  --font-display: var(--font-bricolage);
+  --animate-marquesina: marquesina 40s linear infinite;
+  --animate-herramientas: marquesina 36s linear infinite;
+}
+
+/*
+ * ✨ MOVIMIENTO (principios de Emil Kowalski)
+ * - "ease-out" fuerte: arranca rápido y frena suave. Se siente ágil y natural.
+ * - Respuestas a la persona (hover, clic) cortas: 160–300 ms.
+ * - Una sola escena "de autor": la entrada de la portada. El resto de la página
+ *   ya está visible al llegar, sin esperar animaciones al hacer scroll.
+ * - Nunca animamos desde scale(0): todo aparece desde casi su tamaño real.
+ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 @keyframes marquesina {
@@ -33,20 +50,183 @@
   to { transform: translateX(-50%); }
 }
 
+/* BANDA DE PALABRAS: letras huecas (solo contorno). */
+.palabra-hueca {
+  color: transparent;
+  -webkit-text-stroke: 1.25px color-mix(in oklab, var(--tinta) 40%, transparent);
+}
+
+/* FILA DE HERRAMIENTAS: los bordes se desvanecen y se pausa al pasar el mouse. */
+.fila-herramientas {
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.fila-herramientas:hover .animate-herramientas { animation-play-state: paused; }
+
+/* DIAGRAMA "DE DATO A DECISIÓN" */
+.nodo { fill: var(--superficie); stroke: var(--linea); stroke-width: 1; }
+.nodo-destacado { stroke: color-mix(in oklab, var(--acento) 55%, transparent); }
+.flujo-t { fill: var(--tinta); font: 500 16px var(--font-geist-sans), sans-serif; }
+.flujo-ts { fill: var(--tenue); font: 12px var(--font-geist-mono), monospace; }
+.via { fill: none; stroke: var(--linea); stroke-width: 1.5; }
+/* El pulso es un trazo corto (12 de 100) que recorre la línea y desaparece al final. */
+.pulso {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 12 100;
+  stroke-dashoffset: 12;
+  animation: pulso 3.2s var(--ease-in-out) infinite;
+}
+.pulso-acento { stroke: var(--acento); }
+.pulso-teal { stroke: #4fe0c8; }
+@keyframes pulso {
+  0% { stroke-dashoffset: 12; }
+  60%, 100% { stroke-dashoffset: -100; }
+}
+
 html {
   scroll-behavior: smooth;
+  /* Barra de scroll con los colores de la marca (Firefox). */
+  scrollbar-color: var(--linea) var(--fondo);
 }
 
 body {
   background: var(--fondo);
   color: var(--tinta);
+  caret-color: var(--acento);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema, paramos animaciones. */
+/* Barra de scroll con los colores de la marca (Chrome, Edge, Safari). */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--fondo); }
+::-webkit-scrollbar-thumb { background: var(--linea); border-radius: 999px; border: 2px solid var(--fondo); }
+::-webkit-scrollbar-thumb:hover { background: var(--tenue); }
+
+/* TIPOGRAFÍA
+   - Títulos "balanceados": el navegador reparte las palabras para que no quede
+     una sola palabra huérfana en la última línea.
+   - Párrafos "pretty": evita líneas finales de una palabra.
+   - Números tabulares: todos los dígitos miden lo mismo y se alinean (01, 02…). */
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Títulos de sección: grandes y apretados, con la letra de display. */
+.titulo-seccion {
+  font-family: var(--font-bricolage), var(--font-geist-sans), sans-serif;
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+/* Selección de texto con el color de la marca, en vez del azul del sistema. */
+::selection { background: var(--acento); color: var(--fondo); }
+
+/*
+ * FONDO DE LA PORTADA: un brillo cálido detrás del globo.
+ */
+.brillo {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--acento) 22%, transparent), transparent);
+  filter: blur(40px);
+}
+
+/*
+ * ENTRADA DE LA PORTADA (la escena principal)
+ * 1) Cada línea del nombre sube desde detrás de una "máscara" (como un telón).
+ * 2) El resto aparece subiendo un poquito y pasando de borroso a nítido.
+ * --i es el número de orden: cada elemento espera un poco más que el anterior
+ * (efecto "escalonado"), así la vista sigue el orden de lectura.
+ */
+.mascara { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+@keyframes sube {
+  from { transform: translateY(105%); }
+  to   { transform: none; }
+}
+.sube {
+  display: block;
+  animation: sube 1000ms var(--ease-out) both;
+  animation-delay: calc(120ms + var(--i, 0) * 90ms);
+}
+
+@keyframes entrada {
+  from { opacity: 0; transform: translateY(12px); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+.entrada {
+  animation: entrada 700ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* El globo llega desde un poco más pequeño y desenfocado. */
+@keyframes llega-globo {
+  from { opacity: 0; transform: scale(0.92); filter: blur(10px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+.llega-globo { animation: llega-globo 1400ms var(--ease-out) 250ms both; }
+
+/* BOTONES: al presionar se "hunden" un 3 %. Da la sensación de botón físico. */
+.presionable {
+  transition: transform 160ms var(--ease-out), background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out), border-color 200ms var(--ease-out), opacity 200ms var(--ease-out);
+}
+.presionable:active { transform: scale(0.97); }
+
+/* Flecha dentro de un botón o enlace: se adelanta un poco al pasar el mouse. */
+.flecha { transition: transform 250ms var(--ease-out); }
+
+/* ENLACES: una línea que crece de izquierda a derecha al pasar el mouse. */
+.subrayado {
+  background: linear-gradient(currentColor, currentColor) left bottom / 0% 1px no-repeat;
+  transition: background-size 300ms var(--ease-out), color 200ms var(--ease-out);
+}
+/* Versión gruesa para el correo gigante del contacto: la línea ya está y se "rellena". */
+.subrayado-grueso {
+  background:
+    linear-gradient(var(--acento), var(--acento)) left bottom / 0% 3px no-repeat,
+    linear-gradient(var(--linea), var(--linea)) left bottom / 100% 3px no-repeat;
+  transition: background-size 450ms var(--ease-out), color 200ms var(--ease-out);
+}
+
+/*
+ * SERVICIOS: al pasar el mouse por una fila, un bloque naranja la "llena"
+ * de abajo hacia arriba (clip-path) y el texto cambia a oscuro.
+ */
+.fila-servicio { position: relative; isolation: isolate; }
+.fila-servicio::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--acento);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 320ms var(--ease-out);
+}
+
+/* Solo en pantallas con mouse: en el celular el "hover" se dispara al tocar. */
+@media (hover: hover) and (pointer: fine) {
+  .subrayado:hover, .group:hover > .subrayado { background-size: 100% 1px; }
+  .subrayado-grueso:hover { background-size: 100% 3px, 100% 3px; }
+  .group:hover .flecha, .presionable:hover .flecha { transform: translateX(3px); }
+  .group:hover .flecha-diagonal { transform: translate(2px, -2px); }
+
+  .fila-servicio:hover::before { clip-path: inset(0 0 0 0); }
+  .fila-servicio:hover .flecha { transform: translateX(6px); }
+  .fila-servicio:hover, .fila-servicio:hover * { color: var(--fondo); }
+}
+
+/* Accesibilidad: si la persona pidió "menos movimiento" en su sistema,
+   quitamos los desplazamientos pero dejamos los cambios de color. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .animate-marquesina { animation: none; }
+  .animate-marquesina, .animate-herramientas { animation: none; }
+  .pulso { animation: none; stroke-dasharray: none; stroke-opacity: 0.35; }
+  .entrada, .sube, .llega-globo { animation: none; }
+  .presionable:active { transform: none; }
+  .fila-servicio::before { transition: none; }
+  .flecha { transition: none; }
 }
 
 /* Accesibilidad: contorno visible al navegar con teclado (Tab), en color de acento
@@ -55,3 +235,87 @@ body {
   outline: 2px solid var(--acento);
   outline-offset: 3px;
 }
+
+/* FONDO DE CONSTELACIONES: se desvanece suave hacia los bordes,
+   para que el cielo acompañe sin estorbar la lectura. */
+.fondo-cielo {
+  mask-image: radial-gradient(ellipse 95% 100% at 60% 45%, #000 45%, transparent 100%);
+}
+
+/* DIAGRAMA: íconos de línea de los entregables y el nodo final "Decisión". */
+.flujo-icono path { fill: none; stroke: var(--tenue); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.flujo-destacado { fill: var(--acento); font-weight: 600; font-size: 18px; }
+
+/* CICLO SEÑAL: un pulso de luz recorre la onda de ruido a señal cada 4 s. */
+.pulso-onda {
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 6 100;
+  stroke-dashoffset: 6;
+  animation: pulso-onda 4s var(--ease-in-out) infinite;
+}
+@keyframes pulso-onda {
+  0% { stroke-dashoffset: 6; }
+  75%, 100% { stroke-dashoffset: -100; }
+}
+/* Al pasar el mouse por un paso, se ilumina su fondo. */
+.paso-ciclo { transition: background-color 200ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .paso-ciclo:hover { background-color: var(--superficie); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulso-onda { animation: none; stroke-opacity: 0; }
+}
+
+/* CAPTURAS DE PROYECTOS: pista "Ampliar" y visor a pantalla completa. */
+.ampliar-pista { opacity: 0; transform: translateY(4px); transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.group:hover .ampliar-pista, button:focus-visible > .ampliar-pista { opacity: 1; transform: none; }
+@media (hover: none) { .ampliar-pista { opacity: 1; transform: none; } } /* en celular siempre visible */
+
+.visor { opacity: 1; transform: none; transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out), overlay 220ms allow-discrete, display 220ms allow-discrete; }
+.visor:not([open]) { opacity: 0; transform: scale(0.96); }
+@starting-style { .visor[open] { opacity: 0; transform: scale(0.96); } }
+.visor::backdrop { background: rgb(12 11 10 / 0.85); backdrop-filter: blur(6px); transition: opacity 220ms var(--ease-out), overlay 220ms allow-discrete, display 220ms allow-discrete; }
+@starting-style { .visor[open]::backdrop { opacity: 0; } }
+/* El acercamiento sigue al mouse con un pequeño retraso suave. */
+.visor-imagen { transition: transform 300ms var(--ease-out), transform-origin 120ms linear; }
+
+@media (prefers-reduced-motion: reduce) {
+  .visor, .visor::backdrop, .visor-imagen, .ampliar-pista { transition: none; }
+}
+
+/* MINI-TABLEROS de las tarjetas sin captura (MiniTableros.tsx). Bucles de 3–4 s. */
+.mini-t { font-family: var(--font-geist-sans), sans-serif; }
+.mini-crece { transform-box: fill-box; transform-origin: left center; animation: mini-crece 3.6s var(--ease-out) infinite both; }
+@keyframes mini-crece { 0% { transform: scaleX(0.04); } 32%, 86% { transform: scaleX(1); } 100% { transform: scaleX(0.04); } }
+
+.mini-cursor { animation: mini-cursor 4s var(--ease-in-out) infinite; }
+@keyframes mini-cursor {
+  0%, 8% { transform: translate(330px, 262px); }
+  46%, 70% { transform: translate(92px, 160px); }
+  100% { transform: translate(330px, 262px); }
+}
+.mini-boton { transform-box: fill-box; transform-origin: center; animation: mini-boton 4s ease-out infinite; }
+@keyframes mini-boton { 0%, 50% { transform: none; } 54% { transform: scale(0.92); } 60%, 100% { transform: none; } }
+
+.mini-estrella { animation: mini-titila 3s ease-in-out infinite alternate; }
+@keyframes mini-titila { from { opacity: 0.25; } to { opacity: 1; } }
+.mini-flujo { animation: mini-flujo 1.2s linear infinite; }
+@keyframes mini-flujo { to { stroke-dashoffset: -14; } }
+.mini-satelite-quieto { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-crece, .mini-cursor, .mini-boton, .mini-estrella, .mini-flujo { animation: none; }
+  .mini-cursor { transform: translate(92px, 160px); }
+  .mini-satelite { display: none; }
+  .mini-satelite-quieto { display: inline; }
+}
+
+/* LOGO RUMBOLAB: al pasar el mouse, la aguja gira un poco "buscando el rumbo" y vuelve. */
+.aguja-rumbo { transform-box: view-box; transform-origin: 16px 16px; transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+@media (hover: hover) and (pointer: fine) {
+  .logo-rumbo:hover .aguja-rumbo { transform: rotate(-25deg); }
+}
+@media (prefers-reduced-motion: reduce) { .aguja-rumbo { transition: none; } }

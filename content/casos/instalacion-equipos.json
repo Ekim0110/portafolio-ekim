@@ -1,0 +1,24 @@
+{
+  "titulo": "Instalación de equipos",
+  "resumen": "Informe de cierre de un proyecto de instalación de equipos, construido en HTML a partir de los registros en Excel.",
+  "contexto": "Proyecto de instalación de equipos",
+  "rol": "Análisis de datos y diseño del informe",
+  "herramientas": ["HTML", "Excel", "Análisis de datos"],
+  "reto": "Al cierre del proyecto, la información del avance estaba repartida en varias hojas de Excel. Hacía falta una sola vista que mostrara cuánto se instaló, a qué ritmo, cuál fue el resultado económico y qué riesgos quedaban abiertos.",
+  "pasos": {
+    "escuchar": "Definí con el equipo las preguntas del cierre: avance por tipo de equipo, ritmo semanal, resultado económico y riesgos pendientes.",
+    "captar": "Reuní los registros de instalación y los datos económicos que estaban en distintas hojas de Excel.",
+    "filtrar": "Unifiqué los registros, corregí duplicados y fechas, y calculé el avance por semana y por tipo de equipo.",
+    "transmitir": "Construí un informe en HTML con el avance por tipo, la curva de aprendizaje, el volumen semanal proyectado, el resultado económico y la matriz de riesgos.",
+    "ajustar": "Revisé el informe con los responsables del proyecto y ajusté las vistas según sus preguntas."
+  },
+  "resultados": [
+    "Avance por tipo de equipo en una sola vista",
+    "Curva de aprendizaje medida semana a semana",
+    "Volumen semanal proyectado hasta el cierre",
+    "Resultado económico del proyecto",
+    "Matriz de riesgos para el cierre"
+  ],
+  "aprendizaje": "Un informe de cierre sirve más cuando responde las preguntas que el equipo ya se hacía, en el orden en que se las hace.",
+  "ejemplo": true
+}

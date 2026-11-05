@@ -1,7 +1,7 @@
 {
   "lista": [
     {
-      "titulo": "Equipos TSG",
+      "titulo": "Instalación de equipos",
       "categoria": "HTML",
       "descripcion": "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
       "herramientas": [
@@ -10,11 +10,12 @@
         "Análisis de datos"
       ],
       "enlace": null,
-      "imagen": "/proyectos/equipos-tsg.jpg",
+      "caso": "/proyectos/instalacion-equipos",
+      "imagen": "/proyectos/instalacion-equipos.png",
       "ejemplo": false
     },
     {
-      "titulo": "Informes preoperacionales Tibacuy",
+      "titulo": "Preoperacionales de flota",
       "categoria": "HTML",
       "descripcion": "Análisis de las inspecciones preoperacionales de una flota: registros por día, placa y conductor, cobertura, licencias y conformidad por ítem.",
       "herramientas": [
@@ -23,7 +24,7 @@
         "Análisis de datos"
       ],
       "enlace": null,
-      "imagen": "/proyectos/preoperacionales-tibacuy.jpg",
+      "imagen": "/proyectos/preoperacionales-flota.png",
       "ejemplo": false
     },
     {
@@ -41,7 +42,7 @@
     {
       "titulo": "Página de presentación",
       "categoria": "HTML",
-      "descripcion": "Primera página web hecha con HTML y CSS durante el aprendizaje.",
+      "descripcion": "Página web de presentación hecha con HTML y CSS.",
       "herramientas": [
         "HTML",
         "CSS"

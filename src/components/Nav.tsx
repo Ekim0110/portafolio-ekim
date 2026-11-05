@@ -1,41 +1,51 @@
+import Link from "next/link";
 import { perfil } from "@/data/perfil";
+import { LogoMarca } from "./LogoMarca";
 
 // Menú superior. Es "sticky": se queda pegado arriba al hacer scroll.
 const enlaces = [
-  { href: "#proyectos", texto: "Proyectos" },
-  { href: "#servicios", texto: "Servicios" },
-  { href: "#sobre-mi", texto: "Sobre mí" },
-  { href: "#contacto", texto: "Contacto" },
+  { href: "/#proyectos", texto: "Proyectos" },
+  { href: "/#servicios", texto: "Servicios" },
+  { href: "/#metodo", texto: "Método" },
+  { href: "/#sobre-mi", texto: "Sobre mí" },
 ];
 
 export function Nav() {
   return (
-    <header className="sticky top-0 z-20 border-b border-linea bg-fondo/85 backdrop-blur">
+    <header className="sticky top-0 z-20 border-b border-linea/70 bg-fondo/75 backdrop-blur-md">
       <nav
         aria-label="Navegación principal"
-        className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6"
+        className="mx-auto flex h-[4.5rem] max-w-6xl items-center justify-between px-4 sm:px-6"
       >
-        <a href="#inicio" className="flex items-center gap-2 font-semibold">
-          {/* Logo simple: la inicial dentro de un cuadro */}
-          <span
-            aria-hidden="true"
-            className="grid h-8 w-8 place-items-center rounded-md bg-tinta text-sm text-fondo"
-          >
-            {perfil.nombre.charAt(0)}
+        <Link
+          href="/#inicio"
+          aria-label={`${perfil.marca}, por ${perfil.nombre}: ir al inicio`}
+          className="logo-rumbo presionable flex items-center gap-2.5"
+        >
+          {/* Logo de la marca: aguja de brújula + nombre; "por Mike Bernal" solo en pantallas anchas */}
+          <LogoMarca />
+          <span className="font-display text-lg font-semibold tracking-[-0.02em]">{perfil.marca}</span>
+          <span className="hidden border-l border-linea pl-2.5 text-xs text-tenue md:inline">
+            por {perfil.nombre.split(" ").slice(0, 2).join(" ")}
           </span>
-          {/* En móvil mostramos el nombre corto para que no se parta en dos líneas */}
-          <span className="sm:hidden">{perfil.nombreCorto}</span>
-          <span className="hidden sm:inline">{perfil.nombre}</span>
-        </a>
-        <ul className="flex gap-4 text-sm sm:gap-6">
-          {enlaces.map((e) => (
-            <li key={e.href} className={e.href === "#sobre-mi" ? "hidden sm:block" : ""}>
-              <a href={e.href} className="text-tenue transition-colors hover:text-tinta">
-                {e.texto}
-              </a>
-            </li>
-          ))}
-        </ul>
+        </Link>
+        <div className="flex items-center gap-3 sm:gap-7">
+          <ul className="flex items-center gap-4 text-sm sm:gap-7">
+            {enlaces.map((e) => (
+              <li key={e.href} className={e.href === "/#proyectos" ? "" : "hidden sm:block"}>
+                <Link href={e.href} className="group inline-flex min-h-10 items-center text-tenue transition-colors duration-200 hover:text-tinta">
+                  <span className="subrayado pb-0.5">{e.texto}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/#contacto"
+            className="presionable inline-flex min-h-10 items-center rounded-full bg-tinta px-4 text-sm font-medium text-fondo hover:bg-acento"
+          >
+            Hablemos
+          </Link>
+        </div>
       </nav>
     </header>
   );

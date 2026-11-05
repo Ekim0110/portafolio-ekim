@@ -16,6 +16,7 @@ export type Proyecto = {
   descripcion: string;
   herramientas: string[];
   enlace?: string; // el "?" significa que es opcional
+  caso?: string; // ruta de la página del caso de estudio, si tiene
   imagen?: string; // captura del proyecto, guardada en /public/proyectos/
   ejemplo?: boolean;
 };
@@ -29,6 +30,7 @@ export type Servicio = {
 import perfilJson from "../../content/perfil.json";
 import serviciosJson from "../../content/servicios.json";
 import proyectosJson from "../../content/proyectos.json";
+import casoInstalacionJson from "../../content/casos/instalacion-equipos.json";
 
 export const perfil = perfilJson;
 
@@ -41,6 +43,10 @@ export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
   descripcion: p.descripcion,
   herramientas: p.herramientas,
   enlace: p.enlace ?? undefined,
+  caso: ("caso" in p && typeof p.caso === "string" && p.caso) || undefined,
   imagen: p.imagen ?? undefined,
   ejemplo: p.ejemplo,
 }));
+
+// Caso de estudio de instalación de equipos (se edita en el panel: "Caso de estudio: Instalación de equipos").
+export const casoInstalacion = casoInstalacionJson;
