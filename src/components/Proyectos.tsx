@@ -17,7 +17,7 @@ export function Proyectos() {
   // Los proyectos con captura real van "destacados" (más grandes, dos por fila).
   // Los demás se reparten en filas de tres, o de dos si así no queda un hueco.
   const restantes = visibles.filter((p) => !p.imagen).length;
-  const anchoResto = restantes % 3 !== 0 && restantes % 2 === 0 ? "lg:col-span-3" : "lg:col-span-2";
+  const anchoResto = restantes % 3 !== 0 && restantes % 2 === 0 ? "sm:col-span-3" : "sm:col-span-2";
 
   // "Píldora" que se desliza detrás del botón activo. Medimos dónde está ese
   // botón y movemos la píldora hasta allí con una transición suave.
@@ -74,11 +74,11 @@ export function Proyectos() {
         </div>
         {/* key={activo}: al cambiar el filtro React crea la lista de nuevo,
             y así las tarjetas vuelven a entrar una tras otra (muestra el cambio). */}
-        <div key={activo} className="mt-14 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-6">
+        <div key={activo} className="mt-14 grid gap-x-6 gap-y-14 sm:grid-cols-6 lg:gap-x-8">
           {visibles.map((p, i) => (
             <div
               key={p.titulo}
-              className={`entrada ${p.imagen ? "sm:col-span-2 lg:col-span-3" : anchoResto}`}
+              className={`entrada ${p.imagen ? "sm:col-span-3" : anchoResto}`}
               style={{ "--i": i } as React.CSSProperties}
             >
               <TarjetaProyecto proyecto={p} destacado={!!p.imagen} />

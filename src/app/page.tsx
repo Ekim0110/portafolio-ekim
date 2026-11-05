@@ -32,11 +32,11 @@ export default function Inicio() {
           <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-6xl items-center gap-6 px-4 pb-14 pt-10 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-10 lg:pt-6">
             {/* Columna izquierda: texto. Columna derecha: globo (debajo en móvil). */}
             <div>
-              <h1 className="font-display text-[clamp(3.5rem,11vw,6rem)] font-semibold leading-[0.9] tracking-[-0.04em]">
+              <h1 className="font-display text-[clamp(3rem,7.5vw,5.5rem)] font-semibold leading-[0.9] tracking-[-0.04em]">
                 <span className="mascara"><span className="sube" style={orden(0)}>Hola, soy</span></span>
                 <span className="mascara"><span className="sube text-acento" style={orden(1)}>{perfil.nombreCorto}.</span></span>
               </h1>
-              <p className="entrada mt-8 max-w-[22ch] font-display text-2xl font-medium leading-tight tracking-tight sm:text-3xl" style={orden(4)}>
+              <p className="entrada mt-8 max-w-[26ch] font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl" style={orden(4)}>
                 {perfil.rol}.
               </p>
               <p className="entrada mt-4 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(5)}>{perfil.frase}</p>
@@ -78,7 +78,7 @@ export default function Inicio() {
               Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
             </h2>
             <div className="max-w-[60ch] md:pt-3">
-              <p className="font-display text-2xl font-medium leading-snug tracking-tight sm:text-3xl">{primerParrafo}</p>
+              <p className="font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl">{primerParrafo}</p>
               {restoSobreMi.map((p) => (
                 <p key={p} className="mt-6 text-base leading-relaxed text-tenue sm:text-lg">{p}</p>
               ))}
@@ -89,12 +89,12 @@ export default function Inicio() {
         {/* 8. Contacto */}
         <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
-            <h2 className="max-w-4xl font-display text-[clamp(2.75rem,8vw,6rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
+            <h2 className="max-w-4xl font-display text-[clamp(2.5rem,5.5vw,4.25rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
               ¿Tienes un proyecto <span className="text-acento">en mente?</span>
             </h2>
             <a
               href={`mailto:${perfil.email}`}
-              className="subrayado-grueso mt-12 inline-block break-all pb-2 font-display text-[clamp(1.5rem,4.5vw,3rem)] font-medium tracking-tight hover:text-acento"
+              className="subrayado-grueso mt-12 inline-block break-all pb-2 font-display text-[clamp(1.25rem,3vw,2rem)] font-medium tracking-tight hover:text-acento"
             >
               {perfil.email}
             </a>

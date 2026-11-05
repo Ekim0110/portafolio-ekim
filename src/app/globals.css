@@ -116,10 +116,10 @@ p { text-wrap: pretty; }
 /* Títulos de sección: grandes y apretados, con la letra de display. */
 .titulo-seccion {
   font-family: var(--font-bricolage), var(--font-geist-sans), sans-serif;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
   font-weight: 600;
   line-height: 0.95;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
 }
 
 /* Selección de texto con el color de la marca, en vez del azul del sistema. */

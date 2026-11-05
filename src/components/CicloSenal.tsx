@@ -88,9 +88,9 @@ export function CicloSenal() {
         {/* Los cinco pasos */}
         <ol className="mt-12 grid gap-px overflow-hidden rounded-3xl border border-linea bg-linea sm:grid-cols-2 lg:grid-cols-5">
           {pasos.map((p, i) => (
-            <li key={p.nombre} className="paso-ciclo flex flex-col bg-fondo p-6 lg:p-7">
+            <li key={p.nombre} className="paso-ciclo flex flex-col bg-fondo p-6 sm:max-lg:last:col-span-2 lg:p-7">
               <span className="tabular font-mono text-sm text-acento">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight">{p.nombre}</h3>
+              <h3 className="mt-6 font-display text-xl font-semibold tracking-tight">{p.nombre}</h3>
               <p className="mt-3 text-sm leading-relaxed text-tenue">{p.texto}</p>
               <p className="mt-auto pt-6 text-xs text-tenue">
                 <span className="block font-mono uppercase tracking-widest text-tinta/70">Entrega</span>

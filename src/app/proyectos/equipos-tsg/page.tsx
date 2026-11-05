@@ -39,11 +39,11 @@ export default function CasoEquiposTsg() {
             <IconoFlecha className="h-4 w-4 rotate-180" />
             <span className="subrayado pb-0.5">Volver a proyectos</span>
           </Link>
-          <h1 className="entrada mt-8 font-display text-[clamp(3rem,9vw,6rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
+          <h1 className="entrada mt-8 font-display text-[clamp(2.5rem,5.5vw,4.25rem)] font-semibold leading-[0.92] tracking-[-0.04em]">
             {caso.titulo}
             {caso.ejemplo && <EtiquetaEjemplo />}
           </h1>
-          <p className="entrada mt-6 max-w-[38ch] font-display text-2xl font-medium leading-snug tracking-tight text-tinta/90 sm:text-3xl" style={{ "--i": 1 } as React.CSSProperties}>
+          <p className="entrada mt-6 max-w-[46ch] font-display text-xl font-medium leading-snug tracking-tight text-tinta/90 sm:text-2xl" style={{ "--i": 1 } as React.CSSProperties}>
             {caso.resumen}
           </p>
 
@@ -95,7 +95,7 @@ export default function CasoEquiposTsg() {
                 <li key={p.clave} className="grid gap-3 border-b border-linea py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] sm:gap-10">
                   <div className="flex items-baseline gap-4">
                     <span className="tabular font-mono text-sm text-acento">{String(i + 1).padStart(2, "0")}</span>
-                    <h3 className="font-display text-2xl font-semibold tracking-tight sm:text-3xl">{p.nombre}</h3>
+                    <h3 className="font-display text-xl font-semibold tracking-tight sm:text-2xl">{p.nombre}</h3>
                   </div>
                   <p className="max-w-[60ch] text-base leading-relaxed text-tenue sm:text-lg">{caso.pasos[p.clave]}</p>
                 </li>
@@ -123,7 +123,7 @@ export default function CasoEquiposTsg() {
         <section className="border-t border-linea">
           <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
             <h2 className="font-mono text-sm uppercase tracking-widest text-acento">Lo que aprendí</h2>
-            <p className="mt-6 max-w-[30ch] font-display text-[clamp(2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.03em]">
+            <p className="mt-6 max-w-[36ch] font-display text-[clamp(1.5rem,3vw,2.25rem)] font-medium leading-[1.05] tracking-[-0.03em]">
               {caso.aprendizaje}
             </p>
           </div>
@@ -132,7 +132,7 @@ export default function CasoEquiposTsg() {
         {/* 7. Cierre: invitación a hablar */}
         <section className="border-t border-linea bg-superficie">
           <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-20 sm:px-6 md:flex-row md:items-end md:justify-between">
-            <h2 className="max-w-[16ch] font-display text-[clamp(2.25rem,6vw,4rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
+            <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4vw,3rem)] font-semibold leading-[0.95] tracking-[-0.04em]">
               ¿Tienes un proyecto <span className="text-acento">parecido?</span>
             </h2>
             <div className="flex flex-wrap gap-3">

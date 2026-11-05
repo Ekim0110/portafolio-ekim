@@ -77,7 +77,7 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
         <span className="h-1.5 w-1.5 rounded-full bg-acento" aria-hidden="true" />
         {proyecto.categoria}
       </div>
-      <h3 className={`mt-2 font-display font-semibold tracking-tight ${destacado ? "text-2xl sm:text-3xl" : "text-xl"}`}>
+      <h3 className={`mt-2 font-display font-semibold tracking-tight ${destacado ? "text-xl sm:text-2xl" : "text-lg"}`}>
         {proyecto.titulo}
         {proyecto.ejemplo && <EtiquetaEjemplo />}
       </h3>

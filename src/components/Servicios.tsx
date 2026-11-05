@@ -14,7 +14,7 @@ export function Servicios() {
               key={s.titulo}
               className="fila-servicio grid gap-3 border-b border-linea px-1 py-8 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] sm:items-center sm:gap-10 sm:px-4"
             >
-              <h3 className="font-display text-2xl font-semibold tracking-tight transition-colors duration-200 sm:text-3xl">
+              <h3 className="font-display text-xl font-semibold tracking-tight transition-colors duration-200 sm:text-2xl">
                 {s.titulo}
               </h3>
               <p className="max-w-[56ch] text-tenue transition-colors duration-200">{s.descripcion}</p>

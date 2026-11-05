@@ -11,7 +11,7 @@ export function Pie() {
       {/* Firma gigante: el nombre como cierre visual de la página */}
       <p
         aria-hidden="true"
-        className="mx-auto max-w-6xl select-none px-4 pt-6 font-display text-[clamp(3.5rem,14vw,12rem)] font-semibold leading-[0.78] tracking-[-0.04em] text-linea sm:px-6"
+        className="mx-auto max-w-6xl select-none px-4 pt-6 font-display text-[clamp(3rem,11vw,9rem)] font-semibold leading-[0.78] tracking-[-0.04em] text-linea sm:px-6"
       >
         {perfil.nombre.split(" ").slice(0, 2).join(" ")}
       </p>
