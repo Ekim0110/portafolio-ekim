@@ -4,42 +4,7 @@ import type { Proyecto } from "@/data/perfil";
 import { EtiquetaEjemplo } from "./Etiqueta";
 import { IconoFlecha, IconoFlechaDiagonal } from "./Iconos";
 import { ImagenAmpliable } from "./ImagenAmpliable";
-
-// Mientras no tengamos capturas reales, dibujamos una "miniatura" con CSS:
-// barras para Power BI y una ventana de navegador para HTML.
-function Miniatura({ categoria, semilla }: { categoria: Proyecto["categoria"]; semilla: number }) {
-  if (categoria === "Power BI") {
-    // Rotamos la lista según la "semilla" para que cada tarjeta tenga barras distintas.
-    const base = [40, 65, 50, 85, 60, 95, 75];
-    const alturas = base.map((_, i) => base[(i + semilla) % base.length]);
-    return (
-      <div className="flex h-full items-end gap-2 p-6">
-        {alturas.map((h, i) => (
-          <div
-            key={i}
-            className="flex-1 origin-bottom rounded-t bg-acento/70 transition-[transform,background-color] duration-500 ease-[var(--ease-out)] group-hover:scale-y-[1.06] group-hover:bg-acento"
-            style={{ height: `${h}%`, transitionDelay: `${i * 30}ms` }}
-          />
-        ))}
-      </div>
-    );
-  }
-  return (
-    <div className="m-6 flex h-[calc(100%-3rem)] flex-col overflow-hidden rounded-lg border border-linea bg-fondo">
-      <div className="flex gap-1.5 border-b border-linea p-2">
-        <span className="h-2 w-2 rounded-full bg-linea" />
-        <span className="h-2 w-2 rounded-full bg-linea" />
-        <span className="h-2 w-2 rounded-full bg-linea" />
-      </div>
-      <div className="space-y-2 p-3">
-        <div className="h-3 w-2/3 rounded bg-tinta/80" />
-        <div className="h-2 w-full rounded bg-linea" />
-        <div className="h-2 w-5/6 rounded bg-linea" />
-        <div className="mt-3 h-6 w-1/3 rounded bg-acento/80" />
-      </div>
-    </div>
-  );
-}
+import { MiniTablero } from "./MiniTableros";
 
 export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Proyecto; destacado?: boolean }) {
   const contenido = (
@@ -50,7 +15,7 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
         }`}
       >
         {/* Si hay captura real, la mostramos (y se puede ampliar); si no, la miniatura
-            dibujada con CSS. Si toda la tarjeta ya es un enlace, la captura no lleva
+            dibujado en SVG. Si toda la tarjeta ya es un enlace, la captura no lleva
             botón propio (un botón dentro de un enlace no es válido). */}
         {proyecto.imagen && !proyecto.enlace ? (
           <ImagenAmpliable src={proyecto.imagen} alt={`Captura del proyecto ${proyecto.titulo}`} titulo={proyecto.titulo} />
@@ -64,7 +29,7 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
             className="h-full w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.03]"
           />
         ) : (
-          <Miniatura categoria={proyecto.categoria} semilla={proyecto.titulo.length} />
+          <MiniTablero titulo={proyecto.titulo} categoria={proyecto.categoria} />
         )}
         {/* Si el proyecto tiene enlace, aparece una flecha en la esquina al pasar el mouse. */}
         {proyecto.enlace && (

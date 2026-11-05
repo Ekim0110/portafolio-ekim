@@ -285,3 +285,30 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .visor, .visor::backdrop, .visor-imagen, .ampliar-pista { transition: none; }
 }
+
+/* MINI-TABLEROS de las tarjetas sin captura (MiniTableros.tsx). Bucles de 3–4 s. */
+.mini-t { font-family: var(--font-geist-sans), sans-serif; }
+.mini-crece { transform-box: fill-box; transform-origin: left center; animation: mini-crece 3.6s var(--ease-out) infinite both; }
+@keyframes mini-crece { 0% { transform: scaleX(0.04); } 32%, 86% { transform: scaleX(1); } 100% { transform: scaleX(0.04); } }
+
+.mini-cursor { animation: mini-cursor 4s var(--ease-in-out) infinite; }
+@keyframes mini-cursor {
+  0%, 8% { transform: translate(330px, 262px); }
+  46%, 70% { transform: translate(92px, 160px); }
+  100% { transform: translate(330px, 262px); }
+}
+.mini-boton { transform-box: fill-box; transform-origin: center; animation: mini-boton 4s ease-out infinite; }
+@keyframes mini-boton { 0%, 50% { transform: none; } 54% { transform: scale(0.92); } 60%, 100% { transform: none; } }
+
+.mini-estrella { animation: mini-titila 3s ease-in-out infinite alternate; }
+@keyframes mini-titila { from { opacity: 0.25; } to { opacity: 1; } }
+.mini-flujo { animation: mini-flujo 1.2s linear infinite; }
+@keyframes mini-flujo { to { stroke-dashoffset: -14; } }
+.mini-satelite-quieto { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-crece, .mini-cursor, .mini-boton, .mini-estrella, .mini-flujo { animation: none; }
+  .mini-cursor { transform: translate(92px, 160px); }
+  .mini-satelite { display: none; }
+  .mini-satelite-quieto { display: inline; }
+}
