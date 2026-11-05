@@ -27,11 +27,11 @@ export function Nav() {
           <span className="sm:hidden">{perfil.nombreCorto}</span>
           <span className="hidden sm:inline">{perfil.nombre}</span>
         </a>
-        <ul className="flex gap-4 text-sm sm:gap-6">
+        <ul className="flex items-center gap-4 text-sm sm:gap-6">
           {enlaces.map((e) => (
             <li key={e.href} className={e.href === "#sobre-mi" ? "hidden sm:block" : ""}>
-              <a href={e.href} className="subrayado pb-0.5 text-tenue hover:text-tinta">
-                {e.texto}
+              <a href={e.href} className="group inline-flex min-h-10 items-center text-tenue transition-colors duration-200 hover:text-tinta">
+                <span className="subrayado pb-0.5">{e.texto}</span>
               </a>
             </li>
           ))}

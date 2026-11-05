@@ -15,9 +15,9 @@ export function Servicios() {
               className="entrada group grid gap-2 py-8 sm:grid-cols-[4rem_1fr_1.5fr] sm:gap-8"
               style={{ "--i": i } as React.CSSProperties}
             >
-              <span className="font-mono text-sm text-tenue transition-colors duration-300 group-hover:text-acento">{String(i + 1).padStart(2, "0")}</span>
+              <span className="tabular font-mono text-sm text-tenue transition-colors duration-300 group-hover:text-acento">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="text-lg font-semibold transition-transform duration-300 ease-[var(--ease-out)] group-hover:translate-x-1">{s.titulo}</h3>
-              <p className="text-tenue">{s.descripcion}</p>
+              <p className="max-w-[60ch] text-tenue">{s.descripcion}</p>
             </li>
           ))}
         </ol>

@@ -57,7 +57,7 @@ export function Proyectos() {
                 type="button"
                 onClick={() => setActivo(f)}
                 aria-pressed={activo === f}
-                className={`presionable relative rounded-full px-4 py-1.5 text-sm ${
+                className={`presionable relative min-h-10 rounded-full px-4 text-sm ${
                   activo === f ? "text-fondo" : "text-tenue hover:text-tinta"
                 }`}
               >

@@ -7,8 +7,10 @@
  * Tema oscuro (fondo negro), elegido por Ekim. Contraste revisado para WCAG AA.
  */
 :root {
-  --fondo: #0a0a0a;      /* fondo negro */
-  --superficie: #171717; /* bloques y tarjetas */
+  /* Negros "tintados" hacia el naranja de la marca: un negro puro (#000) o gris
+     neutro se ve frío y genérico; con un toque cálido todo combina mejor. */
+  --fondo: #0c0b0a;      /* fondo negro cálido */
+  --superficie: #181614; /* bloques y tarjetas */
   --tinta: #f5f3ee;      /* texto principal */
   --tenue: #a8a397;      /* texto secundario */
   --linea: #2e2d2a;      /* bordes */
@@ -52,7 +54,20 @@ body {
   background: var(--fondo);
   color: var(--tinta);
   font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* TIPOGRAFÍA
+   - Títulos "balanceados": el navegador reparte las palabras para que no quede
+     una sola palabra huérfana en la última línea.
+   - Párrafos "pretty": evita líneas finales de una palabra.
+   - Números tabulares: todos los dígitos miden lo mismo y se alinean (01, 02…). */
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.tabular { font-variant-numeric: tabular-nums; }
+
+/* Selección de texto con el color de la marca, en vez del azul del sistema. */
+::selection { background: var(--acento); color: var(--fondo); }
 
 /*
  * ENTRADA: el contenido aparece subiendo un poquito y pasando de borroso a nítido.
@@ -86,7 +101,7 @@ body {
   transition: background-size 300ms var(--ease-out), color 200ms var(--ease-out);
 }
 @media (hover: hover) {
-  .subrayado:hover { background-size: 100% 1px; }
+  .subrayado:hover, .group:hover > .subrayado { background-size: 100% 1px; }
 }
 
 /* Accesibilidad: si la persona pidió "menos movimiento" en su sistema, paramos animaciones. */

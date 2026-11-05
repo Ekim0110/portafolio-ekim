@@ -22,15 +22,15 @@ export default function Inicio() {
           {/* Columna izquierda: texto. Columna derecha: globo (debajo en móvil). */}
           <div>
             <p className="entrada text-sm font-medium uppercase tracking-widest text-acento" style={orden(0)}>{perfil.rol}</p>
-            <h1 style={orden(1)} className="entrada mt-4 text-5xl font-semibold leading-[0.95] tracking-tighter sm:text-6xl lg:text-7xl">
+            <h1 style={orden(1)} className="entrada mt-4 text-[clamp(2.75rem,7vw,4.75rem)] font-semibold leading-[0.95] tracking-tighter">
               Hola, soy {perfil.nombreCorto}.
             </h1>
-            <p className="entrada mt-6 max-w-xl text-base text-tenue sm:text-lg" style={orden(2)}>{perfil.frase}</p>
+            <p className="entrada mt-6 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(2)}>{perfil.frase}</p>
             <div className="entrada mt-10 flex flex-wrap gap-3" style={orden(3)}>
-              <a href="#proyectos" className="presionable rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo hover:opacity-85">
+              <a href="#proyectos" className="presionable inline-flex min-h-11 items-center rounded-full bg-tinta px-6 text-sm font-medium text-fondo hover:opacity-85">
                 Ver proyectos
               </a>
-              <a href="#contacto" className="presionable rounded-full border border-tinta px-6 py-3 text-sm font-medium hover:bg-tinta hover:text-fondo">
+              <a href="#contacto" className="presionable inline-flex min-h-11 items-center rounded-full border border-tinta px-6 text-sm font-medium hover:bg-tinta hover:text-fondo">
                 Hablemos
               </a>
             </div>
@@ -66,7 +66,7 @@ export default function Inicio() {
               className="mt-8 aspect-square w-full max-w-xs rounded-2xl object-cover"
             />
           </div>
-          <div className="space-y-6 text-base leading-relaxed sm:text-lg md:pt-16">
+          <div className="max-w-[65ch] space-y-6 text-base leading-relaxed sm:text-lg md:pt-16">
             {perfil.sobreMi.map((p, i) => (
               <p key={p} className="entrada" style={orden(i + 1)}>{p}</p>
             ))}
@@ -78,7 +78,7 @@ export default function Inicio() {
         <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
           <Revelar className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
             <p className="entrada text-sm font-medium uppercase tracking-widest text-acento" style={orden(0)}>Contacto</p>
-            <h2 style={orden(1)} className="entrada mt-2 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
+            <h2 style={orden(1)} className="entrada mt-2 max-w-3xl text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.05] tracking-tight">
               ¿Tienes un proyecto en mente?
             </h2>
             <div className="entrada mt-10 flex flex-col gap-4 text-lg sm:flex-row sm:gap-10" style={orden(2)}>
