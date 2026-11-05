@@ -104,7 +104,7 @@ export function FlujoDatos() {
 
   return (
     <section id="como-trabajo" className="scroll-mt-20">
-      <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
+      <div className="mx-auto max-w-6xl px-4 pb-10 pt-24 sm:px-6 lg:pb-12 lg:pt-32">
         <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-end">
           <h2 id="flujo-titulo" className="titulo-seccion">De dato a decisión</h2>
           <p className="max-w-[48ch] text-base text-tenue sm:text-lg">
@@ -120,7 +120,7 @@ export function FlujoDatos() {
       </div>
 
       {/* Fila de herramientas: logos oficiales, se pausa al pasar el mouse */}
-      <div className="fila-herramientas overflow-hidden pb-24 lg:pb-32">
+      <div className="fila-herramientas overflow-hidden py-2">
         <ul aria-label="Herramientas con las que trabajo" className="animate-herramientas flex w-max gap-4">
           {fila.map((h, i) => (
             <li
