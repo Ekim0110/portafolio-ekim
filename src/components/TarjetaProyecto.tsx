@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { Proyecto } from "@/data/perfil";
 import { EtiquetaEjemplo } from "./Etiqueta";
 import { IconoFlechaDiagonal } from "./Iconos";
+import { ImagenAmpliable } from "./ImagenAmpliable";
 
 // Mientras no tengamos capturas reales, dibujamos una "miniatura" con CSS:
 // barras para Power BI y una ventana de navegador para HTML.
@@ -47,8 +48,12 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
           destacado ? "aspect-[16/10]" : "aspect-[4/3]"
         }`}
       >
-        {/* Si hay captura real, la mostramos; si no, la miniatura dibujada con CSS. */}
-        {proyecto.imagen ? (
+        {/* Si hay captura real, la mostramos (y se puede ampliar); si no, la miniatura
+            dibujada con CSS. Si toda la tarjeta ya es un enlace, la captura no lleva
+            botón propio (un botón dentro de un enlace no es válido). */}
+        {proyecto.imagen && !proyecto.enlace ? (
+          <ImagenAmpliable src={proyecto.imagen} alt={`Captura del proyecto ${proyecto.titulo}`} titulo={proyecto.titulo} />
+        ) : proyecto.imagen ? (
           <Image
             src={proyecto.imagen}
             alt={`Captura del proyecto ${proyecto.titulo}`}

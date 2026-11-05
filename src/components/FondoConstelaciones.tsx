@@ -6,10 +6,10 @@ import { useEffect, useRef } from "react";
 /**
  * ✨ FONDO DE CONSTELACIONES (detrás de la portada)
  *  - Un cielo de estrellas pequeñas que titilan y se desplazan muy despacio.
- *  - Constelaciones reales (Cruz del Sur, Orión, Osa Mayor, Casiopea, Escorpio):
+ *  - Constelaciones reales (Cruz del Sur, Orión, Osa Mayor, Casiopea, Escorpio, Leo y Lira):
  *    sus líneas se dibujan, se quedan un rato con su nombre y se desvanecen,
  *    cada una a su propio ritmo.
- *  - De vez en cuando, una estrella fugaz.
+ *  - Cometas con cola de color que cruzan el cielo cada pocos segundos.
  * Todo es tenue a propósito: acompaña al globo sin competir con el texto.
  * Se detiene fuera de pantalla y queda quieto si la persona pidió menos movimiento.
  */
@@ -58,6 +58,20 @@ const CONSTELACIONES: Constelacion[] = [
     estrellas: [[0, 0.1], [0.12, 0.24], [0.22, 0.34], [0.3, 0.5], [0.32, 0.66], [0.42, 0.8], [0.56, 0.9], [0.7, 0.86], [0.78, 0.72], [0.72, 0.62]],
     lineas: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9]],
   },
+  {
+    // Leo: la "hoz" (melena) y el triángulo del cuerpo.
+    nombre: "Leo",
+    x: 0.04, y: 0.78, tam: 0.13, desfase: 0.32,
+    estrellas: [[0.22, 0.05], [0.08, 0.12], [0.04, 0.3], [0.14, 0.45], [0.28, 0.55], [0.3, 0.75], [0.8, 0.5], [0.95, 0.72], [0.72, 0.68]],
+    lineas: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [4, 6], [6, 7], [7, 8], [8, 5]],
+  },
+  {
+    // Lira: la brillante Vega y un pequeño paralelogramo.
+    nombre: "Lira",
+    x: 0.92, y: 0.3, tam: 0.06, desfase: 0.55,
+    estrellas: [[0.5, 0], [0.35, 0.3], [0.62, 0.36], [0.3, 0.75], [0.58, 0.82]],
+    lineas: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [3, 4]],
+  },
 ];
 
 // Ciclo de cada constelación: se dibuja, se queda, se apaga y descansa.
@@ -68,12 +82,13 @@ const APAGADO = 0.76; // hasta aquí termina de desvanecerse
 
 const TINTA = "245,243,238";
 const ACENTO = "240,138,93";
+const TEAL = "79,224,200";
 
 // "ease-out" fuerte: el trazo arranca rápido y frena suave.
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 3);
 
 type Estrella = { x: number; y: number; r: number; brillo: number; fase: number; vel: number };
-type Fugaz = { x: number; y: number; vx: number; vy: number; vida: number };
+type Cometa = { x: number; y: number; vx: number; vy: number; vida: number; dura: number; largo: number; color: string };
 
 export function FondoConstelaciones() {
   const lienzoRef = useRef<HTMLCanvasElement>(null);
@@ -88,8 +103,8 @@ export function FondoConstelaciones() {
     let ancho = 0;
     let alto = 0;
     let estrellas: Estrella[] = [];
-    let fugaz: Fugaz | null = null;
-    let proximaFugaz = 4000;
+    let cometas: Cometa[] = [];
+    let proximoCometa = 1500;
     let frame = 0;
     let visible = true;
 
@@ -188,29 +203,58 @@ export function FondoConstelaciones() {
         }
       }
 
-      // 3) Estrella fugaz cada 6 a 11 segundos.
+      // 3) Cometas: uno cada 2,5 a 5 segundos (hasta tres a la vez), con cola
+      //    larga en blanco, naranja o verde agua y una cabeza brillante.
       if (!quieto) {
-        if (!fugaz && t > proximaFugaz) {
-          fugaz = { x: ancho * (0.3 + Math.random() * 0.6), y: alto * Math.random() * 0.35, vx: -0.9, vy: 0.45, vida: 0 };
-          proximaFugaz = t + 6000 + Math.random() * 5000;
+        if (cometas.length < 3 && t > proximoCometa) {
+          const angulo = 0.35 + Math.random() * 0.35; // inclinación hacia abajo
+          const rapidez = 0.7 + Math.random() * 0.5; // px por ms
+          cometas.push({
+            x: ancho * (0.25 + Math.random() * 0.75),
+            y: alto * Math.random() * 0.45,
+            vx: -Math.cos(angulo) * rapidez,
+            vy: Math.sin(angulo) * rapidez,
+            vida: 0,
+            dura: 900 + Math.random() * 700,
+            largo: 140 + Math.random() * 120,
+            color: [TINTA, ACENTO, TEAL][Math.floor(Math.random() * 3)],
+          });
+          proximoCometa = t + 2500 + Math.random() * 2500;
         }
-        if (fugaz) {
-          fugaz.vida += 16;
-          const avance = fugaz.vida / 900; // dura 0,9 s
-          const x = fugaz.x + fugaz.vx * fugaz.vida;
-          const y = fugaz.y + fugaz.vy * fugaz.vida;
-          const largo = 90;
-          const grad = ctx.createLinearGradient(x, y, x - fugaz.vx * largo, y - fugaz.vy * largo);
-          grad.addColorStop(0, `rgba(${TINTA},${0.9 * (1 - avance)})`);
-          grad.addColorStop(1, `rgba(${TINTA},0)`);
+        cometas = cometas.filter((c) => c.vida < c.dura);
+        for (const c of cometas) {
+          c.vida += 16;
+          const avance = c.vida / c.dura;
+          // Aparece y se apaga suave, más brillante a mitad de camino.
+          const luz = Math.sin(Math.PI * Math.min(1, avance));
+          const x = c.x + c.vx * c.vida;
+          const y = c.y + c.vy * c.vida;
+          const rapidez = Math.hypot(c.vx, c.vy);
+          const colaX = x - (c.vx / rapidez) * c.largo;
+          const colaY = y - (c.vy / rapidez) * c.largo;
+          const grad = ctx.createLinearGradient(x, y, colaX, colaY);
+          grad.addColorStop(0, `rgba(${c.color},${0.95 * luz})`);
+          grad.addColorStop(0.25, `rgba(${c.color},${0.45 * luz})`);
+          grad.addColorStop(1, `rgba(${c.color},0)`);
           ctx.strokeStyle = grad;
-          ctx.lineWidth = 1.4;
+          ctx.lineCap = "round";
+          ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.moveTo(x, y);
-          ctx.lineTo(x - fugaz.vx * largo, y - fugaz.vy * largo);
+          ctx.lineTo(colaX, colaY);
           ctx.stroke();
-          if (avance >= 1) fugaz = null;
+          // Cabeza: un núcleo blanco con un resplandor del color del cometa.
+          const halo = ctx.createRadialGradient(x, y, 0, x, y, 10);
+          halo.addColorStop(0, `rgba(${c.color},${0.7 * luz})`);
+          halo.addColorStop(1, `rgba(${c.color},0)`);
+          ctx.fillStyle = halo;
+          ctx.fillRect(x - 10, y - 10, 20, 20);
+          ctx.fillStyle = `rgba(255,255,255,${luz})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+          ctx.fill();
         }
+        ctx.lineCap = "butt";
       }
     };
 

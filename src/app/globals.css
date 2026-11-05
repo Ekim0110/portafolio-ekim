@@ -268,3 +268,20 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   .pulso-onda { animation: none; stroke-opacity: 0; }
 }
+
+/* CAPTURAS DE PROYECTOS: pista "Ampliar" y visor a pantalla completa. */
+.ampliar-pista { opacity: 0; transform: translateY(4px); transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out); }
+.group:hover .ampliar-pista, button:focus-visible > .ampliar-pista { opacity: 1; transform: none; }
+@media (hover: none) { .ampliar-pista { opacity: 1; transform: none; } } /* en celular siempre visible */
+
+.visor { opacity: 1; transform: none; transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out), overlay 220ms allow-discrete, display 220ms allow-discrete; }
+.visor:not([open]) { opacity: 0; transform: scale(0.96); }
+@starting-style { .visor[open] { opacity: 0; transform: scale(0.96); } }
+.visor::backdrop { background: rgb(12 11 10 / 0.85); backdrop-filter: blur(6px); transition: opacity 220ms var(--ease-out), overlay 220ms allow-discrete, display 220ms allow-discrete; }
+@starting-style { .visor[open]::backdrop { opacity: 0; } }
+/* El acercamiento sigue al mouse con un pequeño retraso suave. */
+.visor-imagen { transition: transform 300ms var(--ease-out), transform-origin 120ms linear; }
+
+@media (prefers-reduced-motion: reduce) {
+  .visor, .visor::backdrop, .visor-imagen, .ampliar-pista { transition: none; }
+}
