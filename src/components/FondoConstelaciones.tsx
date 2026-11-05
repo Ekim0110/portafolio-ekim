@@ -24,6 +24,7 @@ type Constelacion = {
   estrellas: [number, number][];
   lineas: [number, number][];
   desfase: number; // en qué momento del ciclo arranca
+  destacada?: boolean; // siempre trazada, más brillante y con un brillo que late
 };
 
 // Formas simplificadas de constelaciones reales.
@@ -54,7 +55,7 @@ const CONSTELACIONES: Constelacion[] = [
   },
   {
     nombre: "Escorpio",
-    x: 0.36, y: 0.79, tam: 0.12, desfase: 0.85,
+    x: 0.3, y: 0.79, tam: 0.12, desfase: 0.85,
     estrellas: [[0, 0.1], [0.12, 0.24], [0.22, 0.34], [0.3, 0.5], [0.32, 0.66], [0.42, 0.8], [0.56, 0.9], [0.7, 0.86], [0.78, 0.72], [0.72, 0.62]],
     lineas: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8], [8, 9]],
   },
@@ -71,6 +72,14 @@ const CONSTELACIONES: Constelacion[] = [
     x: 0.92, y: 0.3, tam: 0.06, desfase: 0.55,
     estrellas: [[0.5, 0], [0.35, 0.3], [0.62, 0.36], [0.3, 0.75], [0.58, 0.82]],
     lineas: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [3, 4]],
+  },
+  {
+    // Libra, la constelación de Mike: la balanza (triángulo de arriba y sus dos platos).
+    // Va junto a Escorpio, su vecina en el cielo real, y siempre se ve resaltada.
+    nombre: "Libra",
+    x: 0.47, y: 0.74, tam: 0.11, desfase: 0, destacada: true,
+    estrellas: [[0.55, 0], [0.12, 0.42], [0.88, 0.36], [0.2, 0.92], [0.8, 0.8], [0.92, 1]],
+    lineas: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [4, 5]],
   },
 ];
 
@@ -156,16 +165,26 @@ export function FondoConstelaciones() {
       ctx.textBaseline = "top";
       for (const c of CONSTELACIONES) {
         // p: momento del ciclo (0 a 1). Con menos movimiento, todas visibles y fijas.
-        const p = quieto ? DIBUJO + 0.01 : (t / CICLO + c.desfase) % 1;
+        // La destacada (Libra) no hace el ciclo: siempre trazada, con un brillo que late.
+        const p = quieto || c.destacada ? DIBUJO + 0.01 : (t / CICLO + c.desfase) % 1;
         const trazo = p < DIBUJO ? easeOut(p / DIBUJO) : p < APAGADO ? 1 : 0;
         const opacidad =
           p < PERMANENCIA ? 1 : p < APAGADO ? 1 - (p - PERMANENCIA) / (APAGADO - PERMANENCIA) : 0;
+        const late = c.destacada && !quieto ? 0.75 + 0.25 * Math.sin(t / 900) : 1;
         const puntos = c.estrellas.map((e) => aPixel(c, e));
 
         // Líneas: se van trazando una tras otra.
         if (trazo > 0 && opacidad > 0) {
-          ctx.strokeStyle = `rgba(${ACENTO},${0.45 * opacidad})`;
-          ctx.lineWidth = 1;
+          ctx.save();
+          if (c.destacada) {
+            ctx.strokeStyle = `rgba(${ACENTO},${0.9 * late})`;
+            ctx.lineWidth = 1.6;
+            ctx.shadowColor = `rgba(${ACENTO},0.9)`;
+            ctx.shadowBlur = 10 * late;
+          } else {
+            ctx.strokeStyle = `rgba(${ACENTO},${0.45 * opacidad})`;
+            ctx.lineWidth = 1;
+          }
           const total = c.lineas.length;
           c.lineas.forEach(([a, b], i) => {
             const avance = Math.min(1, Math.max(0, trazo * total - i));
@@ -177,28 +196,38 @@ export function FondoConstelaciones() {
             ctx.lineTo(x1 + (x2 - x1) * avance, y1 + (y2 - y1) * avance);
             ctx.stroke();
           });
+          ctx.restore();
           // Nombre de la constelación, junto a su primera estrella. Si no cabe a la
           // derecha (constelación pegada al borde), va a la izquierda de la estrella.
           const nombre = c.nombre.toUpperCase();
           const [nx, ny] = puntos[0];
           const cabe = nx + 10 + ctx.measureText(nombre).width < ancho - 8;
           ctx.textAlign = cabe ? "left" : "right";
-          ctx.fillStyle = `rgba(${TINTA},${0.35 * opacidad * trazo})`;
+          if (c.destacada) {
+            ctx.font = `600 12px ${fuente}`;
+            ctx.fillStyle = `rgba(${ACENTO},${0.95 * late})`;
+          } else {
+            ctx.font = `11px ${fuente}`;
+            ctx.fillStyle = `rgba(${TINTA},${0.35 * opacidad * trazo})`;
+          }
           ctx.fillText(nombre, cabe ? nx + 10 : nx - 10, ny + 6);
           ctx.textAlign = "left";
         }
 
         // Estrellas de la constelación: siempre visibles, más brillantes cuando está trazada.
+        // Las de la destacada son más grandes y con un halo cálido.
         const brillo = 0.55 + 0.45 * opacidad * trazo;
+        const radioHalo = c.destacada ? 13 : 7;
+        const colorHalo = c.destacada ? ACENTO : TINTA;
         for (const [x, y] of puntos) {
-          const halo = ctx.createRadialGradient(x, y, 0, x, y, 7);
-          halo.addColorStop(0, `rgba(${TINTA},${0.35 * brillo})`);
-          halo.addColorStop(1, `rgba(${TINTA},0)`);
+          const halo = ctx.createRadialGradient(x, y, 0, x, y, radioHalo);
+          halo.addColorStop(0, `rgba(${colorHalo},${(c.destacada ? 0.55 * late : 0.35) * brillo})`);
+          halo.addColorStop(1, `rgba(${colorHalo},0)`);
           ctx.fillStyle = halo;
-          ctx.fillRect(x - 7, y - 7, 14, 14);
+          ctx.fillRect(x - radioHalo, y - radioHalo, radioHalo * 2, radioHalo * 2);
           ctx.fillStyle = `rgba(${TINTA},${brillo})`;
           ctx.beginPath();
-          ctx.arc(x, y, 1.6, 0, Math.PI * 2);
+          ctx.arc(x, y, c.destacada ? 2.4 : 1.6, 0, Math.PI * 2);
           ctx.fill();
         }
       }
