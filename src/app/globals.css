@@ -236,8 +236,8 @@ p { text-wrap: pretty; }
   outline-offset: 3px;
 }
 
-/* FONDO DE TELECOMUNICACIONES: se desvanece hacia los bordes y bajo el texto,
-   para que la red se note detrás del globo sin estorbar la lectura. */
-.fondo-telecom {
-  mask-image: radial-gradient(ellipse 75% 85% at 68% 50%, #000 25%, transparent 78%);
+/* FONDO DE CONSTELACIONES: se desvanece suave hacia los bordes,
+   para que el cielo acompañe sin estorbar la lectura. */
+.fondo-cielo {
+  mask-image: radial-gradient(ellipse 95% 100% at 60% 45%, #000 45%, transparent 100%);
 }

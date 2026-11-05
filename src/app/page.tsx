@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { perfil } from "@/data/perfil";
 import { Nav } from "@/components/Nav";
 import { Marquesina } from "@/components/Marquesina";
@@ -6,7 +5,7 @@ import { Proyectos } from "@/components/Proyectos";
 import { Servicios } from "@/components/Servicios";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
 import { GloboRed } from "@/components/GloboRed";
-import { FondoTelecom } from "@/components/FondoTelecom";
+import { FondoConstelaciones } from "@/components/FondoConstelaciones";
 import { FlujoDatos } from "@/components/FlujoDatos";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
 import { IconoFlechaAbajo, IconoFlechaDiagonal } from "@/components/Iconos";
@@ -24,8 +23,8 @@ export default function Inicio() {
       <main id="inicio">
         {/* 1. Portada (hero): nombre gigante + rol + globo + llamada a la acción */}
         <section className="relative isolate overflow-hidden">
-          {/* Fondo: red de telecomunicaciones en movimiento + brillo cálido detrás del globo */}
-          <FondoTelecom />
+          {/* Fondo: cielo con constelaciones en movimiento + brillo cálido detrás del globo */}
+          <FondoConstelaciones />
           <div aria-hidden="true" className="brillo pointer-events-none absolute -z-10 right-[-10%] top-[8%] h-[640px] w-[640px] max-w-full opacity-70" />
 
           <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-6xl items-center gap-6 px-4 pb-14 pt-10 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-10 lg:pt-6">
@@ -70,22 +69,10 @@ export default function Inicio() {
         {/* 5. Sobre mí */}
         <section id="sobre-mi" className="scroll-mt-20">
           <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16 lg:py-32">
-            <div>
-              <h2 className="titulo-seccion">
-                Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
-              </h2>
-              {/* next/image optimiza la foto: la comprime y la sirve al tamaño justo para cada pantalla */}
-              <div className="group mt-10 max-w-sm overflow-hidden rounded-3xl ring-1 ring-linea">
-                <Image
-                  src="/ekim.png"
-                  alt={`Foto de ${perfil.nombre}`}
-                  width={480}
-                  height={480}
-                  className="aspect-square w-full object-cover grayscale-[35%] transition-[filter,transform] duration-500 ease-[var(--ease-out)] group-hover:scale-[1.03] group-hover:grayscale-0"
-                />
-              </div>
-            </div>
-            <div className="max-w-[60ch] md:pt-28">
+            <h2 className="titulo-seccion">
+              Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
+            </h2>
+            <div className="max-w-[60ch] md:pt-3">
               <p className="font-display text-2xl font-medium leading-snug tracking-tight sm:text-3xl">{primerParrafo}</p>
               {restoSobreMi.map((p) => (
                 <p key={p} className="mt-6 text-base leading-relaxed text-tenue sm:text-lg">{p}</p>
