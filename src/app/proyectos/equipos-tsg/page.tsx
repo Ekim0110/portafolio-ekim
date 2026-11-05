@@ -70,7 +70,7 @@ export default function CasoEquiposTsg() {
         {/* 2. La captura en grande (se puede ampliar) */}
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="group aspect-[16/10] overflow-hidden rounded-3xl bg-superficie ring-1 ring-linea">
-            <ImagenAmpliable src="/proyectos/equipos-tsg.jpg" alt={`Captura del informe ${caso.titulo}`} titulo={caso.titulo} />
+            <ImagenAmpliable src="/proyectos/equipos-tsg.png" alt={`Captura del informe ${caso.titulo}`} titulo={caso.titulo} />
           </div>
         </div>
 
