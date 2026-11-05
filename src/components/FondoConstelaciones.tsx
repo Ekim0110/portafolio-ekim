@@ -162,9 +162,15 @@ export function FondoConstelaciones() {
             ctx.lineTo(x1 + (x2 - x1) * avance, y1 + (y2 - y1) * avance);
             ctx.stroke();
           });
-          // Nombre de la constelación, junto a su primera estrella.
+          // Nombre de la constelación, junto a su primera estrella. Si no cabe a la
+          // derecha (constelación pegada al borde), va a la izquierda de la estrella.
+          const nombre = c.nombre.toUpperCase();
+          const [nx, ny] = puntos[0];
+          const cabe = nx + 10 + ctx.measureText(nombre).width < ancho - 8;
+          ctx.textAlign = cabe ? "left" : "right";
           ctx.fillStyle = `rgba(${TINTA},${0.35 * opacidad * trazo})`;
-          ctx.fillText(c.nombre.toUpperCase(), puntos[0][0] + 10, puntos[0][1] + 6);
+          ctx.fillText(nombre, cabe ? nx + 10 : nx - 10, ny + 6);
+          ctx.textAlign = "left";
         }
 
         // Estrellas de la constelación: siempre visibles, más brillantes cuando está trazada.
