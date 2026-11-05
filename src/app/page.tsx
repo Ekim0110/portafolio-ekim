@@ -6,6 +6,10 @@ import { Proyectos } from "@/components/Proyectos";
 import { Servicios } from "@/components/Servicios";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
 import { GloboRed } from "@/components/GloboRed";
+import { Revelar } from "@/components/Revelar";
+
+// Atajo para dar el orden de entrada (--i) a cada elemento animado.
+const orden = (i: number) => ({ "--i": i }) as React.CSSProperties;
 
 // Página principal: junta todas las secciones en orden, de arriba hacia abajo.
 export default function Inicio() {
@@ -17,21 +21,21 @@ export default function Inicio() {
         <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-12 sm:px-6 sm:pt-20 lg:grid-cols-[1.1fr_1fr]">
           {/* Columna izquierda: texto. Columna derecha: globo (debajo en móvil). */}
           <div>
-            <p className="text-sm font-medium uppercase tracking-widest text-acento">{perfil.rol}</p>
-            <h1 className="mt-4 text-5xl font-semibold leading-[0.95] tracking-tighter sm:text-6xl lg:text-7xl">
+            <p className="entrada text-sm font-medium uppercase tracking-widest text-acento" style={orden(0)}>{perfil.rol}</p>
+            <h1 style={orden(1)} className="entrada mt-4 text-5xl font-semibold leading-[0.95] tracking-tighter sm:text-6xl lg:text-7xl">
               Hola, soy {perfil.nombreCorto}.
             </h1>
-            <p className="mt-6 max-w-xl text-base text-tenue sm:text-lg">{perfil.frase}</p>
-            <div className="mt-10 flex flex-wrap gap-3">
-              <a href="#proyectos" className="rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo transition-opacity hover:opacity-85">
+            <p className="entrada mt-6 max-w-xl text-base text-tenue sm:text-lg" style={orden(2)}>{perfil.frase}</p>
+            <div className="entrada mt-10 flex flex-wrap gap-3" style={orden(3)}>
+              <a href="#proyectos" className="presionable rounded-full bg-tinta px-6 py-3 text-sm font-medium text-fondo hover:opacity-85">
                 Ver proyectos
               </a>
-              <a href="#contacto" className="rounded-full border border-tinta px-6 py-3 text-sm font-medium transition-colors hover:bg-tinta hover:text-fondo">
+              <a href="#contacto" className="presionable rounded-full border border-tinta px-6 py-3 text-sm font-medium hover:bg-tinta hover:text-fondo">
                 Hablemos
               </a>
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="entrada flex justify-center" style={orden(2)}>
             <GloboRed />
           </div>
         </section>
@@ -46,8 +50,9 @@ export default function Inicio() {
         <Servicios />
 
         {/* 5. Sobre mí */}
-        <section id="sobre-mi" className="mx-auto grid max-w-6xl scroll-mt-20 gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">
-          <div>
+        <section id="sobre-mi" className="scroll-mt-20">
+          <Revelar className="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_1.5fr]">
+          <div className="entrada" style={orden(0)}>
             <p className="text-sm font-medium uppercase tracking-widest text-acento">Perfil</p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
               Sobre mí{perfil.sobreMiEjemplo && <EtiquetaEjemplo />}
@@ -62,29 +67,30 @@ export default function Inicio() {
             />
           </div>
           <div className="space-y-6 text-base leading-relaxed sm:text-lg md:pt-16">
-            {perfil.sobreMi.map((p) => (
-              <p key={p}>{p}</p>
+            {perfil.sobreMi.map((p, i) => (
+              <p key={p} className="entrada" style={orden(i + 1)}>{p}</p>
             ))}
           </div>
+          </Revelar>
         </section>
 
         {/* 6. Contacto */}
         <section id="contacto" className="scroll-mt-20 border-t border-linea bg-superficie">
-          <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-            <p className="text-sm font-medium uppercase tracking-widest text-acento">Contacto</p>
-            <h2 className="mt-2 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
+          <Revelar className="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+            <p className="entrada text-sm font-medium uppercase tracking-widest text-acento" style={orden(0)}>Contacto</p>
+            <h2 style={orden(1)} className="entrada mt-2 max-w-3xl text-3xl font-semibold tracking-tight sm:text-5xl">
               ¿Tienes un proyecto en mente?
             </h2>
-            <div className="mt-10 flex flex-col gap-4 text-lg sm:flex-row sm:gap-10">
-              <a href={`mailto:${perfil.email}`} className="underline decoration-acento underline-offset-4 hover:text-acento">
+            <div className="entrada mt-10 flex flex-col gap-4 text-lg sm:flex-row sm:gap-10" style={orden(2)}>
+              <a href={`mailto:${perfil.email}`} className="underline decoration-acento underline-offset-4 transition-colors duration-200 hover:text-acento">
                 {perfil.email}
               </a>
-              <a href={perfil.linkedin} target="_blank" rel="noopener noreferrer" className="underline decoration-acento underline-offset-4 hover:text-acento">
+              <a href={perfil.linkedin} target="_blank" rel="noopener noreferrer" className="underline decoration-acento underline-offset-4 transition-colors duration-200 hover:text-acento">
                 LinkedIn
               </a>
               {perfil.contactoEjemplo && <EtiquetaEjemplo />}
             </div>
-          </div>
+          </Revelar>
         </section>
       </main>
 

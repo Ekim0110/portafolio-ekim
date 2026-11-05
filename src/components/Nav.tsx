@@ -15,7 +15,7 @@ export function Nav() {
         aria-label="Navegación principal"
         className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6"
       >
-        <a href="#inicio" className="flex items-center gap-2 font-semibold">
+        <a href="#inicio" className="presionable flex items-center gap-2 font-semibold">
           {/* Logo simple: la inicial dentro de un cuadro */}
           <span
             aria-hidden="true"
@@ -30,7 +30,7 @@ export function Nav() {
         <ul className="flex gap-4 text-sm sm:gap-6">
           {enlaces.map((e) => (
             <li key={e.href} className={e.href === "#sobre-mi" ? "hidden sm:block" : ""}>
-              <a href={e.href} className="text-tenue transition-colors hover:text-tinta">
+              <a href={e.href} className="subrayado pb-0.5 text-tenue hover:text-tinta">
                 {e.texto}
               </a>
             </li>

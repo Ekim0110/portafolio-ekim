@@ -14,7 +14,7 @@ function Miniatura({ categoria, semilla }: { categoria: Proyecto["categoria"]; s
         {alturas.map((h, i) => (
           <div
             key={i}
-            className="flex-1 rounded-t bg-acento/80 transition-all duration-500 group-hover:bg-acento"
+            className="flex-1 rounded-t bg-acento/80 transition-colors duration-500 group-hover:bg-acento"
             style={{ height: `${h}%` }}
           />
         ))}
@@ -41,7 +41,7 @@ function Miniatura({ categoria, semilla }: { categoria: Proyecto["categoria"]; s
 export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
   const contenido = (
     <article className="group flex h-full flex-col">
-      <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-superficie transition-transform duration-300 group-hover:-translate-y-1">
+      <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-superficie ring-1 ring-linea transition-[transform,box-shadow] duration-500 ease-[var(--ease-out)] group-hover:-translate-y-1 group-hover:ring-acento/40 group-hover:shadow-[0_20px_40px_-20px_rgba(240,138,93,0.35)]">
         {/* Si hay captura real, la mostramos; si no, la miniatura dibujada con CSS. */}
         {proyecto.imagen ? (
           <Image
@@ -49,7 +49,7 @@ export function TarjetaProyecto({ proyecto }: { proyecto: Proyecto }) {
             alt={`Captura del proyecto ${proyecto.titulo}`}
             width={800}
             height={600}
-            className="h-full w-full object-cover object-top"
+            className="h-full w-full object-cover object-top transition-transform duration-700 ease-[var(--ease-out)] group-hover:scale-[1.03]"
           />
         ) : (
           <Miniatura categoria={proyecto.categoria} semilla={proyecto.titulo.length} />
