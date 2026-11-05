@@ -184,6 +184,104 @@ export function GloboRed() {
       ctx.restore();
     };
 
+    // 🛰️ SATÉLITES: tres órbitas inclinadas con tres satélites cada una.
+    // Se unen entre sí cuando están cerca (enlaces entre satélites) y los que
+    // pasan por delante bajan una señal a la ciudad más cercana.
+    const ORBITAS = [
+      { inclinacion: 0.95, nodo: 0.4, radio: 1.22, vuelta: 16000 },
+      { inclinacion: -0.7, nodo: 2.1, radio: 1.3, vuelta: 19000 },
+      { inclinacion: 1.35, nodo: -0.9, radio: 1.16, vuelta: 14000 },
+    ];
+    const posicionesSatelites = (t: number): Vec[] =>
+      ORBITAS.flatMap((o) =>
+        [0, 1, 2].map((k): Vec => {
+          const a = Math.PI * 2 * (t / o.vuelta + k / 3);
+          // Círculo en el plano de la órbita...
+          const x0 = Math.cos(a) * o.radio;
+          const z0 = Math.sin(a) * o.radio;
+          // ...inclinado sobre el ecuador...
+          const y1 = -z0 * Math.sin(o.inclinacion);
+          const z1 = z0 * Math.cos(o.inclinacion);
+          // ...y girado alrededor del eje vertical.
+          const cn = Math.cos(o.nodo), sn = Math.sin(o.nodo);
+          return [x0 * cn + z1 * sn, y1, -x0 * sn + z1 * cn];
+        }),
+      );
+    // Tapado por la Tierra: está detrás y dentro del disco.
+    const tapado = (p: Vec) => p[2] < 0 && p[0] * p[0] + p[1] * p[1] < 1;
+
+    const dibujarSatelites = (ox: number, oy: number, R: number, t: number, capa: "atras" | "delante") => {
+      const sats = posicionesSatelites(t);
+      const enCapa = (z: number) => (capa === "delante" ? z >= 0 : z < 0);
+      const px = (p: Vec) => ox + p[0] * R;
+      const py = (p: Vec) => oy - p[1] * R;
+
+      // Enlaces entre satélites cercanos: línea con datos que fluyen.
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 6]);
+      ctx.lineDashOffset = -t * 0.02;
+      for (let i = 0; i < sats.length; i++) {
+        for (let j = i + 1; j < sats.length; j++) {
+          const a = sats[i], b = sats[j];
+          const d = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+          if (d > 1.05 || tapado(a) || tapado(b) || !enCapa((a[2] + b[2]) / 2)) continue;
+          ctx.strokeStyle = `rgba(79,224,200,${capa === "delante" ? 0.55 * (1 - d / 1.05) + 0.15 : 0.18})`;
+          ctx.beginPath();
+          ctx.moveTo(px(a), py(a));
+          ctx.lineTo(px(b), py(b));
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+
+      // Señal hacia la Tierra: de cada satélite visible a la ciudad más cercana.
+      if (capa === "delante") {
+        sats.forEach((s, i) => {
+          if (s[2] < 0) return;
+          let mejor: Vec | null = null;
+          let menor = 0.8;
+          for (const n of nodos) {
+            const c = proyectar(n);
+            if (c[2] < 0.05) continue;
+            const d = Math.hypot(s[0] - c[0], s[1] - c[1]);
+            if (d < menor) { menor = d; mejor = c; }
+          }
+          if (!mejor) return;
+          const c = mejor;
+          ctx.strokeStyle = "rgba(255,154,60,0.35)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(px(s), py(s));
+          ctx.lineTo(px(c), py(c));
+          ctx.stroke();
+          // Un pulso que baja del satélite a la ciudad.
+          const f = (t / 1400 + i * 0.37) % 1;
+          ctx.fillStyle = "rgba(255,190,120,0.95)";
+          ctx.beginPath();
+          ctx.arc(px(s) + (px(c) - px(s)) * f, py(s) + (py(c) - py(s)) * f, 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      // El satélite: cuerpo blanco con dos paneles solares.
+      const s = Math.max(1.4, R * 0.013);
+      for (const p of sats) {
+        if (tapado(p) || !enCapa(p[2])) continue;
+        const x = px(p), y = py(p);
+        ctx.save();
+        ctx.globalAlpha = capa === "delante" ? 1 : 0.5;
+        ctx.shadowColor = COLOR.borde;
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = "rgba(79,224,200,0.9)";
+        ctx.fillRect(x - s * 3.4, y - s * 0.7, s * 2.2, s * 1.4);
+        ctx.fillRect(x + s * 1.2, y - s * 0.7, s * 2.2, s * 1.4);
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(x - s * 0.9, y - s * 0.9, s * 1.8, s * 1.8);
+        ctx.restore();
+      }
+    };
+
     const dibujar = (t: number) => {
       const R = Math.min(ancho, alto) * 0.34;
       const ox = ancho / 2;
@@ -199,6 +297,7 @@ export function GloboRed() {
 
       // 2) Parte trasera de la órbita (queda tapada por el globo).
       dibujarOrbita(ox, oy, R, t, "atras");
+      dibujarSatelites(ox, oy, R, t, "atras");
 
       // 3) Océano: un círculo con degradado para dar volumen.
       const oceano = ctx.createRadialGradient(ox - R * 0.35, oy - R * 0.35, R * 0.1, ox, oy, R);
@@ -333,6 +432,9 @@ export function GloboRed() {
 
       // 8) Parte delantera de la órbita (pasa por encima del globo).
       dibujarOrbita(ox, oy, R, t, "delante");
+
+      // 9) Satélites que pasan por delante, con sus enlaces y señales.
+      dibujarSatelites(ox, oy, R, t, "delante");
     };
 
     // Bucle de animación: unas 60 veces por segundo.
@@ -405,7 +507,7 @@ export function GloboRed() {
     <canvas
       ref={lienzoRef}
       role="img"
-      aria-label="Globo terráqueo animado con México, Colombia, Brasil, Chile, España y Estados Unidos conectados por enlaces de telecomunicaciones y un anillo de órbita. Puedes arrastrarlo para girarlo."
+      aria-label="Globo terráqueo animado con México, Colombia, Brasil, Chile, España y Estados Unidos conectados por enlaces de telecomunicaciones, un anillo de órbita y nueve satélites unidos entre sí que envían señales a las ciudades. Puedes arrastrarlo para girarlo."
       className="aspect-square w-full max-w-[560px] cursor-grab touch-pan-y active:cursor-grabbing"
     />
   );
