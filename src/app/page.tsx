@@ -6,6 +6,8 @@ import { Proyectos } from "@/components/Proyectos";
 import { Servicios } from "@/components/Servicios";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
 import { GloboRed } from "@/components/GloboRed";
+import { FondoTelecom } from "@/components/FondoTelecom";
+import { FlujoDatos } from "@/components/FlujoDatos";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
 import { IconoFlechaAbajo, IconoFlechaDiagonal } from "@/components/Iconos";
 
@@ -22,7 +24,8 @@ export default function Inicio() {
       <main id="inicio">
         {/* 1. Portada (hero): nombre gigante + rol + globo + llamada a la acción */}
         <section className="relative isolate overflow-hidden">
-          {/* Fondo: un brillo cálido detrás del globo */}
+          {/* Fondo: red de telecomunicaciones en movimiento + brillo cálido detrás del globo */}
+          <FondoTelecom />
           <div aria-hidden="true" className="brillo pointer-events-none absolute -z-10 right-[-10%] top-[8%] h-[640px] w-[640px] max-w-full opacity-70" />
 
           <div className="mx-auto grid min-h-[calc(100svh-4.5rem)] max-w-6xl items-center gap-6 px-4 pb-14 pt-10 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:gap-10 lg:pt-6">
@@ -55,10 +58,13 @@ export default function Inicio() {
         {/* 2. Banda animada */}
         <Marquesina />
 
-        {/* 3. Proyectos con filtro */}
+        {/* 3. De dato a decisión: diagrama + herramientas */}
+        <FlujoDatos />
+
+        {/* 4. Proyectos con filtro */}
         <Proyectos />
 
-        {/* 4. Servicios */}
+        {/* 5. Servicios */}
         <Servicios />
 
         {/* 5. Sobre mí */}
