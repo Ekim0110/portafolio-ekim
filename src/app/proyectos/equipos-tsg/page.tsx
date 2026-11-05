@@ -109,7 +109,7 @@ export default function CasoEquiposTsg() {
           <h2 className="titulo-seccion">Resultados</h2>
           <ul className="grid gap-px overflow-hidden rounded-3xl border border-linea bg-linea sm:grid-cols-2">
             {caso.resultados.map((r) => (
-              <li key={r} className="flex items-start gap-3 bg-fondo p-6">
+              <li key={r} className="flex items-start gap-3 bg-fondo p-6 sm:odd:last:col-span-2">
                 <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-acento/15 text-acento">
                   <IconoCheck className="h-4 w-4" />
                 </span>
