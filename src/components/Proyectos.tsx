@@ -38,7 +38,7 @@ export function Proyectos() {
       <div className="mx-auto max-w-6xl px-4 py-24 sm:px-6 lg:py-32">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="titulo-seccion">
-            Proyectos
+            Lo que he construido
             {/* Cuántos proyectos se ven con el filtro actual */}
             <sup className="tabular ml-2 align-super font-mono text-base font-normal tracking-normal text-acento sm:text-lg">
               ({String(visibles.length).padStart(2, "0")})
