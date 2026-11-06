@@ -1,90 +1,104 @@
 {
-  "lista": [
-    {
-      "titulo": "Instalación de equipos",
-      "categoria": "Informes",
-      "descripcion": "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
-      "herramientas": [
-        "HTML",
-        "Excel",
-        "Análisis de datos"
-      ],
-      "metricas": [
-        { "valor": "768", "etiqueta": "equipos instalados" },
-        { "valor": "130", "etiqueta": "en la mejor semana" },
-        { "valor": "905", "etiqueta": "requeridos al cierre" }
-      ],
-      "enlace": null,
-      "caso": "/proyectos/instalacion-equipos",
-      "demo": null,
-      "imagen": "/proyectos/instalacion-equipos.png",
-      "ejemplo": false
-    },
-    {
-      "titulo": "Preoperacionales de flota",
-      "categoria": "Tableros",
-      "descripcion": "Tablero de cumplimiento de las inspecciones preoperacionales de una flota: reportes por mes, cumplimiento frente a días hábiles, hallazgos por categoría y ranking por placa y conductor.",
-      "herramientas": [
-        "HTML",
-        "Excel",
-        "Chart.js"
-      ],
-      "metricas": [
-        { "valor": "998", "etiqueta": "inspecciones analizadas" },
-        { "valor": "29", "etiqueta": "vehículos" },
-        { "valor": "68,7 %", "etiqueta": "cumplimiento promedio" }
-      ],
-      "enlace": null,
-      "caso": null,
-      "demo": "/demos/flota.html",
-      "imagen": "/proyectos/preoperacionales-flota.png",
-      "ejemplo": false
-    },
-    {
-      "titulo": "Seguimiento de proyectos",
-      "categoria": "Tableros",
-      "descripcion": "Avance, hitos y riesgos de un portafolio de proyectos.",
-      "herramientas": [
-        "Power BI",
-        "SharePoint"
-      ],
-      "metricas": [],
-      "enlace": null,
-      "caso": null,
-      "demo": null,
-      "imagen": null,
-      "ejemplo": true
-    },
-    {
-      "titulo": "Página de presentación",
-      "categoria": "Web",
-      "descripcion": "Página web de presentación hecha con HTML y CSS.",
-      "herramientas": [
-        "HTML",
-        "CSS"
-      ],
-      "metricas": [],
-      "enlace": null,
-      "caso": null,
-      "demo": null,
-      "imagen": null,
-      "ejemplo": true
-    },
-    {
-      "titulo": "Este portafolio",
-      "categoria": "Web",
-      "descripcion": "Sitio personal hecho con Next.js, TypeScript y Tailwind, publicado en Vercel.",
-      "herramientas": [
-        "Next.js",
-        "TypeScript",
-        "Tailwind"
-      ],
-      "metricas": [],
-      "enlace": null,
-      "caso": null,
-      "demo": null,
-      "imagen": null,
-      "ejemplo": false
-    }
-  ]
+    "lista":  [
+                  {
+                      "titulo":  "Instalación de equipos",
+                      "categoria":  "Informes",
+                      "descripcion":  "Informe de cierre de un proyecto de instalación de equipos: avance por tipo, curva de aprendizaje, volumen semanal proyectado, resultado económico y matriz de riesgos.",
+                      "herramientas":  [
+                                           "HTML",
+                                           "Excel",
+                                           "Análisis de datos"
+                                       ],
+                      "metricas":  [
+                                       {
+                                           "valor":  "768",
+                                           "etiqueta":  "equipos instalados"
+                                       },
+                                       {
+                                           "valor":  "130",
+                                           "etiqueta":  "en la mejor semana"
+                                       },
+                                       {
+                                           "valor":  "905",
+                                           "etiqueta":  "requeridos al cierre"
+                                       }
+                                   ],
+                      "enlace":  null,
+                      "caso":  "/proyectos/instalacion-equipos",
+                      "demo":  null,
+                      "imagen":  "/proyectos/instalacion-equipos.png",
+                      "ejemplo":  false
+                  },
+                  {
+                      "titulo":  "Preoperacionales de flota",
+                      "categoria":  "Tableros",
+                      "descripcion":  "Tablero de cumplimiento de las inspecciones preoperacionales de una flota: reportes por mes, cumplimiento frente a días hábiles, hallazgos por categoría y ranking por placa y conductor. La demo usa datos ficticios.",
+                      "herramientas":  [
+                                           "HTML",
+                                           "Excel",
+                                           "Chart.js"
+                                       ],
+                      "metricas":  [
+
+                                   ],
+                      "enlace":  null,
+                      "caso":  null,
+                      "demo":  "/demos/flota.html",
+                      "imagen":  "/proyectos/preoperacionales-flota.png",
+                      "ejemplo":  false
+                  },
+                  {
+                      "titulo":  "Estado de resultados por proyecto",
+                      "categoria":  "Tableros",
+                      "descripcion":  "Resumen ejecutivo financiero hecho en Power BI sobre una base contable en Excel: filtra cada proyecto y revisa ingresos, costos, utilidad y margen frente al año anterior. La demo usa datos ficticios.",
+                      "herramientas":  [
+                                           "Power BI",
+                                           "Excel",
+                                           "Finanzas"
+                                       ],
+                      "metricas":  [
+
+                                   ],
+                      "enlace":  null,
+                      "caso":  null,
+                      "demo":  "/demos/resultados.html",
+                      "imagen":  "/proyectos/estado-resultados.png",
+                      "ejemplo":  false
+                  },
+                  {
+                      "titulo":  "Página de presentación",
+                      "categoria":  "Web",
+                      "descripcion":  "Página web de presentación hecha con HTML y CSS.",
+                      "herramientas":  [
+                                           "HTML",
+                                           "CSS"
+                                       ],
+                      "metricas":  [
+
+                                   ],
+                      "enlace":  null,
+                      "caso":  null,
+                      "demo":  null,
+                      "imagen":  null,
+                      "ejemplo":  true
+                  },
+                  {
+                      "titulo":  "Este portafolio",
+                      "categoria":  "Web",
+                      "descripcion":  "Sitio personal hecho con Next.js, TypeScript y Tailwind, publicado en Vercel.",
+                      "herramientas":  [
+                                           "Next.js",
+                                           "TypeScript",
+                                           "Tailwind"
+                                       ],
+                      "metricas":  [
+
+                                   ],
+                      "enlace":  null,
+                      "caso":  null,
+                      "demo":  null,
+                      "imagen":  null,
+                      "ejemplo":  false
+                  }
+              ]
 }

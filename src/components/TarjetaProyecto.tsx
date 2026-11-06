@@ -70,7 +70,7 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
           )}
           {proyecto.demo && (
             <a href={proyecto.demo} target="_blank" rel="noopener" className="inline-flex min-h-10 items-center gap-2 text-sm font-medium text-acento">
-              <span className="subrayado pb-0.5">Abrir tablero interactivo</span>
+              <span className="subrayado pb-0.5">Abrir demo interactiva</span>
               <IconoFlechaDiagonal className="flecha flecha-diagonal h-4 w-4" />
             </a>
           )}
