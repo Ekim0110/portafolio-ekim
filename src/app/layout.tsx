@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist, Geist_Mono, Montserrat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -20,14 +20,23 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
+// Letra del logo de RumboLab (la misma del logo original), solo pesos fino y negrita.
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["300", "700"],
+});
+
 // SEO básico: el título y la descripción que muestran Google y las redes sociales.
 export const metadata: Metadata = {
+  // Dirección pública: sirve para que la imagen al compartir el enlace tenga la URL completa.
+  metadataBase: new URL("https://portafolio-ekim.vercel.app"),
   title: "RumboLab · Mike Bernal Gomez · Operaciones, procesos y datos",
   description:
-    "Portafolio de Mike Bernal Gomez: tableros en Power BI, mejora de procesos, finanzas y páginas web.",
+    "RumboLab, de Mike Bernal Gomez: del ruido a la decisión. Tableros en Power BI, informes, mejora de procesos y páginas web.",
   openGraph: {
     title: "RumboLab · Mike Bernal Gomez · Operaciones, procesos y datos",
-    description: "Tableros en Power BI, mejora de procesos, finanzas y páginas web.",
+    description: "Del ruido a la decisión. Tableros, informes, mejora de procesos y páginas web.",
     type: "website",
     locale: "es_ES",
   },
@@ -41,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${bricolage.variable} ${montserrat.variable} antialiased`}
       >
         {children}
         {/* Cuenta las visitas para el panel de estadísticas de Vercel. */}

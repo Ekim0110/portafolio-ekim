@@ -39,7 +39,7 @@ export default function Inicio() {
               <p className="entrada mt-8 max-w-[34ch] font-display text-xl font-medium leading-snug tracking-tight sm:text-2xl" style={orden(4)}>
                 {perfil.rol}.
               </p>
-              <p className="entrada mt-4 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(5)}>{perfil.frase}</p>
+              {perfil.frase && <p className="entrada mt-4 max-w-[48ch] text-base text-tenue sm:text-lg" style={orden(5)}>{perfil.frase}</p>}
               <div className="entrada mt-10 flex flex-wrap gap-3" style={orden(6)}>
                 <a href="#proyectos" className="presionable inline-flex min-h-12 items-center gap-2 rounded-full bg-acento px-6 text-sm font-semibold text-fondo hover:bg-tinta">
                   Ver proyectos

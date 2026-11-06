@@ -47,12 +47,34 @@ export function TarjetaProyecto({ proyecto, destacado = false }: { proyecto: Pro
         {proyecto.ejemplo && <EtiquetaEjemplo />}
       </h3>
       <p className={`mt-2 max-w-[62ch] text-tenue ${destacado ? "text-base" : "text-sm"}`}>{proyecto.descripcion}</p>
-      {/* Si el proyecto tiene caso de estudio, un enlace a su página completa. */}
-      {proyecto.caso && !proyecto.enlace && (
-        <Link href={proyecto.caso} className="mt-3 inline-flex min-h-10 items-center gap-2 self-start text-sm font-medium text-acento">
-          <span className="subrayado pb-0.5">Ver caso de estudio</span>
-          <IconoFlecha className="flecha h-4 w-4" />
-        </Link>
+      {/* Cifras reales del proyecto (se editan en el panel: "Cifras del proyecto"). */}
+      {proyecto.metricas.length > 0 && (
+        <dl className="mt-5 grid grid-cols-3 gap-3 border-y border-linea py-4">
+          {proyecto.metricas.slice(0, 3).map((m) => (
+            <div key={m.etiqueta}>
+              <dt className="sr-only">{m.etiqueta}</dt>
+              <dd className="tabular font-display text-xl font-semibold tracking-tight sm:text-2xl">{m.valor}</dd>
+              <dd className="mt-1 text-xs leading-snug text-tenue">{m.etiqueta}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {/* Enlaces: caso de estudio completo y/o versión interactiva del tablero. */}
+      {!proyecto.enlace && (proyecto.caso || proyecto.demo) && (
+        <div className="mt-3 flex flex-wrap gap-x-6">
+          {proyecto.caso && (
+            <Link href={proyecto.caso} className="inline-flex min-h-10 items-center gap-2 text-sm font-medium text-acento">
+              <span className="subrayado pb-0.5">Ver caso de estudio</span>
+              <IconoFlecha className="flecha h-4 w-4" />
+            </Link>
+          )}
+          {proyecto.demo && (
+            <a href={proyecto.demo} target="_blank" rel="noopener" className="inline-flex min-h-10 items-center gap-2 text-sm font-medium text-acento">
+              <span className="subrayado pb-0.5">Abrir tablero interactivo</span>
+              <IconoFlechaDiagonal className="flecha flecha-diagonal h-4 w-4" />
+            </a>
+          )}
+        </div>
       )}
       <ul className="mt-4 flex flex-wrap gap-2" aria-label="Herramientas">
         {proyecto.herramientas.map((h) => (

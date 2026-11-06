@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 /**
  * ✨ FONDO DE CONSTELACIONES (detrás de la portada)
  *  - Un cielo de estrellas pequeñas que titilan y se desplazan muy despacio.
- *  - Constelaciones reales (Cruz del Sur, Orión, Osa Mayor, Casiopea, Escorpio, Leo y Lira):
+ *  - Constelaciones reales (Cruz del Sur, Orión, Osa Mayor, Casiopea, Escorpio, Leo, Lira y la histórica Felis):
  *    sus líneas se dibujan, se quedan un rato con su nombre y se desvanecen,
  *    cada una a su propio ritmo.
  *  - Cometas con cola de color que cruzan el cielo cada pocos segundos.
@@ -72,6 +72,14 @@ const CONSTELACIONES: Constelacion[] = [
     x: 0.92, y: 0.3, tam: 0.06, desfase: 0.55,
     estrellas: [[0.5, 0], [0.35, 0.3], [0.62, 0.36], [0.3, 0.75], [0.58, 0.82]],
     lineas: [[0, 1], [0, 2], [1, 2], [1, 3], [2, 4], [3, 4]],
+  },
+  {
+    // Felis, "el gato": constelación histórica (de 1799) que hoy ya no es oficial.
+    // Silueta sencilla: orejas, cabeza, lomo, cola levantada y dos patas.
+    nombre: "Felis",
+    x: 0.24, y: 0.08, tam: 0.1, desfase: 0.75,
+    estrellas: [[0.06, 0.06], [0.2, 0], [0.14, 0.18], [0.3, 0.3], [0.55, 0.26], [0.76, 0.32], [0.9, 0.16], [1, 0.04], [0.3, 0.62], [0.74, 0.64]],
+    lineas: [[0, 2], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [3, 8], [5, 9]],
   },
   {
     // Libra, la constelación de Mike: la balanza (triángulo de arriba y sus dos platos).

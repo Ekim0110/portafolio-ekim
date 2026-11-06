@@ -5,12 +5,12 @@
   "eslogan": "Del ruido",
   "esloganAcento": "a la decisión.",
   "rol": "Operaciones, procesos y datos",
-  "frase": "Pruebas",
+  "frase": "Tableros, informes y procesos claros para equipos que necesitan decidir con datos.",
   "sobreMi": [
     "Perfil de operaciones, ingeniería de procesos, gestión de proyectos y finanzas.",
     "Me apasiona ordenar la información para que los equipos decidan mejor y construir mis propias herramientas."
   ],
-  "sobreMiEjemplo": true,
+  "sobreMiEjemplo": false,
   "ubicacion": "Tu ciudad, País",
   "email": "tu-correo@ejemplo.com",
   "linkedin": "https://www.linkedin.com/",

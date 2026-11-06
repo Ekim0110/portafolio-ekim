@@ -7,7 +7,7 @@ import { proyectos, type Proyecto } from "@/data/perfil";
 import { TarjetaProyecto } from "./TarjetaProyecto";
 
 type Filtro = "Todos" | Proyecto["categoria"];
-const filtros: Filtro[] = ["Todos", "Power BI", "HTML"];
+const filtros: Filtro[] = ["Todos", "Tableros", "Informes", "Web"];
 
 export function Proyectos() {
   // useState guarda qué filtro está activo; al cambiarlo, React redibuja la lista.

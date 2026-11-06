@@ -75,10 +75,11 @@ export default config({
             categoria: fields.select({
               label: "Categoría",
               options: [
-                { label: "Power BI", value: "Power BI" },
-                { label: "HTML", value: "HTML" },
+                { label: "Tableros", value: "Tableros" },
+                { label: "Informes", value: "Informes" },
+                { label: "Web", value: "Web" },
               ],
-              defaultValue: "Power BI",
+              defaultValue: "Tableros",
             }),
             descripcion: fields.text({ label: "Descripción", multiline: true }),
             herramientas: fields.array(fields.text({ label: "Herramienta" }), {
@@ -90,6 +91,21 @@ export default config({
               label: "Caso de estudio (opcional)",
               description: "Ruta de la página del caso, por ejemplo /proyectos/instalacion-equipos. Déjalo vacío si no tiene.",
             }),
+            demo: fields.text({
+              label: "Versión interactiva (opcional)",
+              description: "Ruta de un tablero que se puede usar, por ejemplo /demos/flota.html. Solo con datos anonimizados.",
+            }),
+            metricas: fields.array(
+              fields.object({
+                valor: fields.text({ label: "Cifra", description: "Por ejemplo 998 o 68,7 %." }),
+                etiqueta: fields.text({ label: "Qué mide", description: "Por ejemplo inspecciones analizadas." }),
+              }),
+              {
+                label: "Cifras del proyecto",
+                description: "Hasta 3 cifras reales que se ven en la tarjeta. Nunca inventadas.",
+                itemLabel: (m) => `${m.fields.valor.value} ${m.fields.etiqueta.value}`.trim() || "Cifra",
+              },
+            ),
             imagen: fields.image({
               label: "Imagen (opcional)",
               description: "Captura del proyecto. Mejor horizontal, en proporción 4:3. Revisa que no muestre datos privados.",

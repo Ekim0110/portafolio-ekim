@@ -12,11 +12,13 @@
 // Un "type" en TypeScript es como un molde: dice qué campos debe tener cada proyecto.
 export type Proyecto = {
   titulo: string;
-  categoria: "Power BI" | "HTML";
+  categoria: "Tableros" | "Informes" | "Web";
   descripcion: string;
   herramientas: string[];
   enlace?: string; // el "?" significa que es opcional
   caso?: string; // ruta de la página del caso de estudio, si tiene
+  demo?: string; // ruta de una versión interactiva (con datos anonimizados), si tiene
+  metricas: { valor: string; etiqueta: string }[]; // cifras reales del proyecto
   imagen?: string; // captura del proyecto, guardada en /public/proyectos/
   ejemplo?: boolean;
 };
@@ -43,7 +45,9 @@ export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
   descripcion: p.descripcion,
   herramientas: p.herramientas,
   enlace: p.enlace ?? undefined,
-  caso: ("caso" in p && typeof p.caso === "string" && p.caso) || undefined,
+  caso: p.caso ?? undefined,
+  demo: p.demo ?? undefined,
+  metricas: p.metricas ?? [],
   imagen: p.imagen ?? undefined,
   ejemplo: p.ejemplo,
 }));
