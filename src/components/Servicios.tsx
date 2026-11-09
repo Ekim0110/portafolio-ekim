@@ -1,8 +1,9 @@
-import { servicios } from "@/data/perfil";
+import { perfil, servicios } from "@/data/perfil";
 import { IconoFlecha } from "./Iconos";
 
 // Lista de servicios en filas grandes, al estilo editorial. Al pasar el mouse,
 // la fila se llena de naranja de abajo hacia arriba (ver .fila-servicio en globals.css).
+// Cada fila tiene "Cotizar", que abre un correo con el asunto ya escrito.
 export function Servicios() {
   return (
     <section id="servicios" className="scroll-mt-20 bg-superficie">
@@ -18,7 +19,15 @@ export function Servicios() {
                 {s.titulo}
               </h3>
               <p className="max-w-[56ch] text-tenue transition-colors duration-200">{s.descripcion}</p>
-              <IconoFlecha className="flecha hidden h-6 w-6 text-acento sm:block" />
+              {/* Abre el correo con el asunto ya escrito: "Cotización: <servicio>" */}
+              <a
+                href={`mailto:${perfil.email}?subject=${encodeURIComponent(`Cotización: ${s.titulo}`)}`}
+                aria-label={`Cotizar ${s.titulo}`}
+                className="inline-flex min-h-10 items-center gap-2 self-start text-sm font-medium text-acento transition-colors duration-200 sm:self-center"
+              >
+                Cotizar
+                <IconoFlecha className="flecha h-5 w-5" />
+              </a>
             </li>
           ))}
         </ul>

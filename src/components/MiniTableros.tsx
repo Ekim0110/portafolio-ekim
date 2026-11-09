@@ -189,6 +189,6 @@ export function MiniTablero({ titulo, categoria }: { titulo: string; categoria: 
   const t = titulo.toLowerCase();
   if (t.includes("portafolio")) return <MiniPortafolio />;
   if (t.includes("presentación") || t.includes("pagina") || t.includes("página")) return <MiniSitio />;
-  if (categoria === "Power BI" || t.includes("seguimiento")) return <MiniGantt />;
+  if (categoria === "Tableros" || t.includes("seguimiento")) return <MiniGantt />;
   return <MiniSitio />;
 }

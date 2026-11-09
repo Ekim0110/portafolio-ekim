@@ -7,7 +7,7 @@ import { proyectos, type Proyecto } from "@/data/perfil";
 import { TarjetaProyecto } from "./TarjetaProyecto";
 
 type Filtro = "Todos" | Proyecto["categoria"];
-const filtros: Filtro[] = ["Todos", "Power BI", "HTML"];
+const filtros: Filtro[] = ["Todos", "Tableros", "Informes", "Web"];
 
 export function Proyectos() {
   // useState guarda qué filtro está activo; al cambiarlo, React redibuja la lista.
@@ -18,6 +18,9 @@ export function Proyectos() {
   // Los demás se reparten en filas de tres, o de dos si así no queda un hueco.
   const restantes = visibles.filter((p) => !p.imagen).length;
   const anchoResto = restantes % 3 !== 0 && restantes % 2 === 0 ? "sm:col-span-3" : "sm:col-span-2";
+  // Con captura: dos por fila; si son 3 (o 6...), tres por fila para no dejar huecos.
+  const destacados = visibles.filter((p) => p.imagen).length;
+  const anchoDestacado = destacados % 2 !== 0 && destacados % 3 === 0 ? "sm:col-span-2" : "sm:col-span-3";
 
   // "Píldora" que se desliza detrás del botón activo. Medimos dónde está ese
   // botón y movemos la píldora hasta allí con una transición suave.
@@ -78,7 +81,7 @@ export function Proyectos() {
           {visibles.map((p, i) => (
             <div
               key={p.titulo}
-              className={`entrada ${p.imagen ? "sm:col-span-3" : anchoResto}`}
+              className={`entrada ${p.imagen ? anchoDestacado : anchoResto}`}
               style={{ "--i": i } as React.CSSProperties}
             >
               <TarjetaProyecto proyecto={p} destacado={!!p.imagen} />

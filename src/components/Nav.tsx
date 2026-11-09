@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { perfil } from "@/data/perfil";
-import { LogoMarca } from "./LogoMarca";
+import { LogoSimbolo, LogoTexto } from "./LogoMarca";
 
 // Menú superior. Es "sticky": se queda pegado arriba al hacer scroll.
 const enlaces = [
@@ -22,9 +22,9 @@ export function Nav() {
           aria-label={`${perfil.marca}, por ${perfil.nombre}: ir al inicio`}
           className="logo-rumbo presionable flex items-center gap-2.5"
         >
-          {/* Logo de la marca: aguja de brújula + nombre; "por Mike Bernal" solo en pantallas anchas */}
-          <LogoMarca />
-          <span className="font-display text-lg font-semibold tracking-[-0.02em]">{perfil.marca}</span>
+          {/* Logo de la marca: símbolo + nombre; "por Mike Bernal" solo en pantallas anchas */}
+          <LogoSimbolo id="logo-menu" />
+          <LogoTexto marca={perfil.marca} className="text-lg" />
           <span className="hidden border-l border-linea pl-2.5 text-xs text-tenue md:inline">
             por {perfil.nombre.split(" ").slice(0, 2).join(" ")}
           </span>

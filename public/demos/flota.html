@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="robots" content="noindex">
+<meta charset="UTF-8">
+<title>Cumplimiento preoperacional de flota · Demo RumboLab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#12161c;
+    --panel:#1a2029;
+    --panel-2:#212936;
+    --line:#2b3442;
+    --text:#e7ebf1;
+    --muted:#8996a8;
+    --amber:#f2a93b;
+    --green:#3fb68b;
+    --red:#e5533d;
+    --blue:#5b9bd9;
+    --mono: 'IBM Plex Mono', monospace;
+    --cond: 'Barlow Condensed', sans-serif;
+    --sans: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1360px;margin:0 auto;padding:28px 28px 60px;}
+
+  /* Header */
+  header{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;margin-bottom:22px;flex-wrap:wrap;gap:14px;
+  }
+  .htitle{font-family:var(--cond);font-weight:700;font-size:30px;letter-spacing:.2px;line-height:1.05;}
+  .htitle span{color:var(--amber);}
+  .hsub{color:var(--muted);font-size:13px;margin-top:5px;font-family:var(--mono);}
+  .hmeta{text-align:right;font-size:12px;color:var(--muted);font-family:var(--mono);}
+  .hmeta b{color:var(--text);}
+
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px;}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;position:relative;overflow:hidden;}
+  .kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--kc,var(--amber));}
+  .kpi .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+  .kpi .val{font-family:var(--cond);font-size:34px;font-weight:700;margin-top:4px;line-height:1;}
+  .kpi .sub{font-size:11.5px;color:var(--muted);margin-top:5px;}
+
+  /* Filter bar */
+  .filterbar{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);border-radius:6px;
+    padding:12px 16px;margin-bottom:22px;
+  }
+  .filterbar label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-right:6px;}
+  select{
+    background:var(--panel-2);color:var(--text);border:1px solid var(--line);
+    border-radius:4px;padding:7px 10px;font-family:var(--sans);font-size:13px;min-width:190px;
+  }
+  select:focus{outline:1px solid var(--amber);}
+  .fgroup{display:flex;align-items:center;}
+  #resetBtn{
+    margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--muted);
+    padding:7px 14px;border-radius:4px;font-size:12px;cursor:pointer;font-family:var(--sans);font-weight:600;
+  }
+  #resetBtn:hover{border-color:var(--amber);color:var(--amber);}
+  #scopeTag{font-family:var(--mono);font-size:12px;color:var(--amber);}
+
+  /* Grid layout */
+  .grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px;}
+  .panel h3{margin:0 0 3px;font-family:var(--cond);font-size:18px;font-weight:600;letter-spacing:.2px;}
+  .panel .pnote{font-size:11.5px;color:var(--muted);margin-bottom:12px;}
+  .chartbox{position:relative;height:260px;}
+  .chartbox.tall{height:340px;}
+
+  /* Table */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{
+    text-align:left;color:var(--muted);font-weight:600;font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none;
+  }
+  th:hover{color:var(--amber);}
+  td{padding:6px 8px;border-bottom:1px solid #232b37;font-family:var(--mono);}
+  td.name{font-family:var(--sans);}
+  tr:hover td{background:#1f2734;}
+  .bar-cell{display:flex;align-items:center;gap:8px;}
+  .bar-track{flex:1;height:6px;background:#232b37;border-radius:3px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;}
+  .badge{font-family:var(--sans);font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:10px;}
+  .badge.ok{background:rgba(63,182,139,.15);color:var(--green);}
+  .badge.warn{background:rgba(242,169,59,.15);color:var(--amber);}
+  .badge.bad{background:rgba(229,83,61,.15);color:var(--red);}
+
+  .tablewrap{max-height:360px;overflow-y:auto;}
+  .footnote{font-size:11px;color:var(--muted);margin-top:26px;border-top:1px solid var(--line);padding-top:14px;line-height:1.6;}
+  .footnote b{color:var(--text);}
+
+  @media (max-width:1000px){
+    .kpis{grid-template-columns:repeat(2,1fr);}
+    .grid, .grid3{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 20px;background:#0e1520;border-bottom:1px solid #263041;font:500 13px/1.3 system-ui,sans-serif;color:#c9cfd8"><a href="/#proyectos" style="color:#34e39a;text-decoration:none">← Volver a RumboLab</a><span>Demo con datos ficticios: muestra cómo funciona el tablero, no son resultados reales de un cliente.</span></div>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="htitle">Cumplimiento Pre-operacional <span>de Flota</span></div>
+      <div class="hsub">Inspección y alistamiento diario de automotores</div>
+    </div>
+    <div class="hmeta">
+      Periodo: <b id="mPeriodo">—</b><br>
+      Flota activa: <b id="mFlota">—</b> vehículos · <b id="mCond">—</b> conductores
+    </div>
+  </header>
+
+  <div class="kpis" id="kpiRow"></div>
+
+  <div class="filterbar">
+    <div class="fgroup">
+      <label for="fPlaca">Placa</label>
+      <select id="fPlaca"><option value="">Todas</option></select>
+    </div>
+    <div class="fgroup">
+      <label for="fConductor">Conductor</label>
+      <select id="fConductor"><option value="">Todos</option></select>
+    </div>
+    <div class="fgroup">
+      <label for="fProyecto">Proyecto</label>
+      <select id="fProyecto"><option value="">Todos</option></select>
+    </div>
+    <span id="scopeTag"></span>
+    <button id="resetBtn">Limpiar filtros ✕</button>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3 id="trendTitle">Reportes por mes</h3>
+      <div class="pnote">Volumen de inspecciones diligenciadas mes a mes según el filtro activo</div>
+      <div class="chartbox tall"><canvas id="chartTrend"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Cumplimiento vs. días hábiles</h3>
+      <div class="pnote"><b>% cumplimiento</b> = reportes realizados / días hábiles del mes (1 reporte esperado por día hábil)</div>
+      <div class="chartbox tall"><canvas id="chartCumpl"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3 id="hallazgosTrendTitle">Hallazgos detectados por mes</h3>
+      <div class="pnote">Cantidad de ítems no conformes (documentos vencidos, dotación/equipo en mal estado, condición del conductor) — reacciona al filtro activo</div>
+      <div class="chartbox"><canvas id="chartHallazgosMes"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Hallazgos por categoría</h3>
+      <div class="pnote">Ítem del checklist que más se repite como no conforme, todo el periodo jun-ago</div>
+      <div class="chartbox"><canvas id="chartHallazgosCat"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="panel">
+      <h3>Inspecciones realizadas vs. esperadas</h3>
+      <div class="pnote">Esperadas = vehículos activos en el mes × días hábiles (lun-vie) del mes</div>
+      <div class="chartbox"><canvas id="chartBizVsRep"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Distribución por tipo de vehículo</h3>
+      <div class="pnote">Reportes totales del periodo</div>
+      <div class="chartbox"><canvas id="chartTipo"></canvas></div>
+    </div>
+    <div class="panel">
+      <h3>Distribución por proyecto</h3>
+      <div class="pnote">Reportes totales del periodo</div>
+      <div class="chartbox"><canvas id="chartProyecto"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr;">
+    <div class="panel">
+      <h3>Ranking por placa</h3>
+      <div class="pnote">Total de reportes y % de cumplimiento en el periodo — clic en encabezado para ordenar</div>
+      <div class="tablewrap">
+        <table id="tblPlaca">
+          <thead><tr>
+            <th data-k="id">Placa</th><th data-k="tipo">Tipo</th><th data-k="total">Reportes</th><th data-k="hallazgos">Hallazgos</th><th data-k="cump">Cumplimiento</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Ranking por conductor</h3>
+      <div class="pnote">Total de reportes y % de cumplimiento en el periodo — clic en encabezado para ordenar</div>
+      <div class="tablewrap">
+        <table id="tblConductor">
+          <thead><tr>
+            <th data-k="id">Conductor</th><th data-k="proy">Proyecto</th><th data-k="total">Reportes</th><th data-k="hallazgos">Hallazgos</th><th data-k="cump">Cumplimiento</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <b>Formato de referencia:</b> HSEQ-FM-039 V06 · <b>Datos:</b> ficticios, solo para demostración. <b>Metodología:</b> días hábiles = lunes a viernes (no se descuentan festivos). <b>Inspecciones esperadas</b> (panel "Realizadas vs. esperadas") = vehículos activos en el mes × días hábiles del mes; <b>cumplimiento global</b> = inspecciones realizadas / inspecciones esperadas. <b>Hallazgo</b> = cualquier ítem del checklist marcado "Regular Estado" o "Deficiente", documento (SOAT/licencia/tarjeta de propiedad/rev. técnico-mecánica) reportado como no vigente, o respuesta del conductor que señale una condición de salud que impide su labor; un mismo reporte puede sumar varios hallazgos. <b>Septiembre-26 se excluyó del análisis</b> por ser un mes parcial (datos incompletos) — el periodo cubierto es jun-ago 2026.
+    El cumplimiento por placa/conductor individual asume 1 reporte esperado por día hábil; valores &gt;100% reflejan turnos dobles o más de un reporte el mismo día; valores muy bajos pueden corresponder a vehículos/conductores que entraron o salieron de la flota a mitad de periodo, no necesariamente a incumplimiento. Fuente: formulario HSEQ-FM-039 V06, base "jun_sept" (998 registros jun-ago).
+  </div>
+
+</div>
+
+<script>
+const DATA = {"meses": ["2026-06", "2026-07", "2026-08"], "mes_labels": ["Jun-26", "Jul-26", "Ago-26"], "biz_days": [22, 23, 21], "active_placas_mes": [19, 21, 27], "inspecciones_esperadas_mes": [418, 483, 567], "inspecciones_realizadas_mes": [307, 350, 341], "cumplimiento_global_mes": [73.4, 72.5, 60.1], "placas": ["Placa 01", "Placa 02", "Placa 03", "Placa 04", "Placa 05", "Placa 06", "Placa 07", "Placa 08", "Placa 09", "Placa 10", "Placa 11", "Placa 12", "Placa 13", "Placa 14", "Placa 15", "Placa 16", "Placa 17", "Placa 18", "Placa 19", "Placa 20", "Placa 21", "Placa 22", "Placa 23", "Placa 24", "Placa 25", "Placa 26", "Placa 27", "Placa 28", "Placa 29"], "conductores": ["Conductor 01", "Conductor 02", "Conductor 03", "Conductor 04", "Conductor 05", "Conductor 06", "Conductor 07", "Conductor 08", "Conductor 09", "Conductor 10", "Conductor 11", "Conductor 12", "Conductor 13", "Conductor 14", "Conductor 15", "Conductor 16", "Conductor 17", "Conductor 18", "Conductor 19", "Conductor 20", "Conductor 21", "Conductor 22", "Conductor 23", "Conductor 24", "Conductor 25", "Conductor 26", "Conductor 27", "Conductor 28", "Conductor 29"], "plate_driver": {"Placa 23": "Conductor 05", "Placa 20": "Conductor 17", "Placa 18": "Conductor 10", "Placa 25": "Conductor 05", "Placa 24": "Conductor 11", "Placa 22": "Conductor 20", "Placa 27": "Conductor 14", "Placa 06": "Conductor 28", "Placa 14": "Conductor 06", "Placa 16": "Conductor 19", "Placa 01": "Conductor 15", "Placa 07": "Conductor 18", "Placa 10": "Conductor 22", "Placa 08": "Conductor 07", "Placa 17": "Conductor 25", "Placa 11": "Conductor 08", "Placa 09": "Conductor 27", "Placa 05": "Conductor 29", "Placa 19": "Conductor 25", "Placa 02": "Conductor 01", "Placa 28": "Conductor 21", "Placa 03": "Conductor 09", "Placa 26": "Conductor 01", "Placa 21": "Conductor 04", "Placa 13": "Conductor 24", "Placa 04": "Conductor 03", "Placa 12": "Conductor 02", "Placa 15": "Conductor 16", "Placa 29": "Conductor 26"}, "reportes_mes": [307, 350, 341], "reportes_mes_placa": {"Placa 01": [15, 20, 16], "Placa 02": [12, 2, 0], "Placa 03": [0, 7, 0], "Placa 04": [0, 0, 1], "Placa 05": [0, 11, 17], "Placa 06": [21, 18, 15], "Placa 07": [13, 17, 15], "Placa 08": [10, 12, 11], "Placa 09": [19, 24, 25], "Placa 10": [0, 17, 17], "Placa 11": [18, 12, 2], "Placa 12": [0, 0, 1], "Placa 13": [0, 0, 2], "Placa 14": [16, 17, 20], "Placa 15": [0, 0, 1], "Placa 16": [14, 18, 20], "Placa 17": [6, 10, 17], "Placa 18": [20, 23, 22], "Placa 19": [8, 8, 2], "Placa 20": [20, 25, 24], "Placa 21": [0, 0, 2], "Placa 22": [19, 19, 22], "Placa 23": [25, 25, 23], "Placa 24": [20, 21, 21], "Placa 25": [21, 23, 21], "Placa 26": [0, 0, 2], "Placa 27": [18, 21, 20], "Placa 28": [12, 0, 1], "Placa 29": [0, 0, 1]}, "reportes_mes_conductor": {"Conductor 01": [12, 2, 2], "Conductor 02": [0, 0, 1], "Conductor 03": [0, 0, 1], "Conductor 04": [0, 0, 2], "Conductor 05": [45, 48, 44], "Conductor 06": [16, 17, 20], "Conductor 07": [10, 12, 11], "Conductor 08": [18, 12, 2], "Conductor 09": [0, 7, 0], "Conductor 10": [20, 23, 22], "Conductor 11": [20, 21, 21], "Conductor 12": [1, 0, 0], "Conductor 13": [9, 5, 0], "Conductor 14": [18, 21, 20], "Conductor 15": [15, 20, 16], "Conductor 16": [0, 0, 1], "Conductor 17": [20, 25, 24], "Conductor 18": [13, 17, 15], "Conductor 19": [14, 18, 20], "Conductor 20": [19, 19, 22], "Conductor 21": [12, 0, 1], "Conductor 22": [0, 17, 17], "Conductor 23": [3, 14, 8], "Conductor 24": [0, 0, 2], "Conductor 25": [14, 18, 19], "Conductor 26": [0, 0, 1], "Conductor 27": [7, 5, 17], "Conductor 28": [21, 18, 15], "Conductor 29": [0, 11, 17]}, "cumplimiento_placa": {"Placa 01": [68.2, 87.0, 76.2], "Placa 02": [54.5, 8.7, 0.0], "Placa 03": [0.0, 30.4, 0.0], "Placa 04": [0.0, 0.0, 4.8], "Placa 05": [0.0, 47.8, 81.0], "Placa 06": [95.5, 78.3, 71.4], "Placa 07": [59.1, 73.9, 71.4], "Placa 08": [45.5, 52.2, 52.4], "Placa 09": [86.4, 104.3, 119.0], "Placa 10": [0.0, 73.9, 81.0], "Placa 11": [81.8, 52.2, 9.5], "Placa 12": [0.0, 0.0, 4.8], "Placa 13": [0.0, 0.0, 9.5], "Placa 14": [72.7, 73.9, 95.2], "Placa 15": [0.0, 0.0, 4.8], "Placa 16": [63.6, 78.3, 95.2], "Placa 17": [27.3, 43.5, 81.0], "Placa 18": [90.9, 100.0, 104.8], "Placa 19": [36.4, 34.8, 9.5], "Placa 20": [90.9, 108.7, 114.3], "Placa 21": [0.0, 0.0, 9.5], "Placa 22": [86.4, 82.6, 104.8], "Placa 23": [113.6, 108.7, 109.5], "Placa 24": [90.9, 91.3, 100.0], "Placa 25": [95.5, 100.0, 100.0], "Placa 26": [0.0, 0.0, 9.5], "Placa 27": [81.8, 91.3, 95.2], "Placa 28": [54.5, 0.0, 4.8], "Placa 29": [0.0, 0.0, 4.8]}, "cumplimiento_conductor": {"Conductor 01": [54.5, 8.7, 9.5], "Conductor 02": [0.0, 0.0, 4.8], "Conductor 03": [0.0, 0.0, 4.8], "Conductor 04": [0.0, 0.0, 9.5], "Conductor 05": [204.5, 208.7, 209.5], "Conductor 06": [72.7, 73.9, 95.2], "Conductor 07": [45.5, 52.2, 52.4], "Conductor 08": [81.8, 52.2, 9.5], "Conductor 09": [0.0, 30.4, 0.0], "Conductor 10": [90.9, 100.0, 104.8], "Conductor 11": [90.9, 91.3, 100.0], "Conductor 12": [4.5, 0.0, 0.0], "Conductor 13": [40.9, 21.7, 0.0], "Conductor 14": [81.8, 91.3, 95.2], "Conductor 15": [68.2, 87.0, 76.2], "Conductor 16": [0.0, 0.0, 4.8], "Conductor 17": [90.9, 108.7, 114.3], "Conductor 18": [59.1, 73.9, 71.4], "Conductor 19": [63.6, 78.3, 95.2], "Conductor 20": [86.4, 82.6, 104.8], "Conductor 21": [54.5, 0.0, 4.8], "Conductor 22": [0.0, 73.9, 81.0], "Conductor 23": [13.6, 60.9, 38.1], "Conductor 24": [0.0, 0.0, 9.5], "Conductor 25": [63.6, 78.3, 90.5], "Conductor 26": [0.0, 0.0, 4.8], "Conductor 27": [31.8, 21.7, 81.0], "Conductor 28": [95.5, 78.3, 71.4], "Conductor 29": [0.0, 47.8, 81.0]}, "total_placa": {"Placa 01": 51, "Placa 02": 14, "Placa 03": 7, "Placa 04": 1, "Placa 05": 28, "Placa 06": 54, "Placa 07": 45, "Placa 08": 33, "Placa 09": 68, "Placa 10": 34, "Placa 11": 32, "Placa 12": 1, "Placa 13": 2, "Placa 14": 53, "Placa 15": 1, "Placa 16": 52, "Placa 17": 33, "Placa 18": 65, "Placa 19": 18, "Placa 20": 69, "Placa 21": 2, "Placa 22": 60, "Placa 23": 73, "Placa 24": 62, "Placa 25": 65, "Placa 26": 2, "Placa 27": 59, "Placa 28": 13, "Placa 29": 1}, "total_conductor": {"Conductor 01": 16, "Conductor 02": 1, "Conductor 03": 1, "Conductor 04": 2, "Conductor 05": 137, "Conductor 06": 53, "Conductor 07": 33, "Conductor 08": 32, "Conductor 09": 7, "Conductor 10": 65, "Conductor 11": 62, "Conductor 12": 1, "Conductor 13": 14, "Conductor 14": 59, "Conductor 15": 51, "Conductor 16": 1, "Conductor 17": 69, "Conductor 18": 45, "Conductor 19": 52, "Conductor 20": 60, "Conductor 21": 13, "Conductor 22": 34, "Conductor 23": 25, "Conductor 24": 2, "Conductor 25": 51, "Conductor 26": 1, "Conductor 27": 29, "Conductor 28": 54, "Conductor 29": 28}, "cumplimiento_total_placa": {"Placa 01": 77.3, "Placa 02": 21.2, "Placa 03": 10.6, "Placa 04": 1.5, "Placa 05": 42.4, "Placa 06": 81.8, "Placa 07": 68.2, "Placa 08": 50.0, "Placa 09": 103.0, "Placa 10": 51.5, "Placa 11": 48.5, "Placa 12": 1.5, "Placa 13": 3.0, "Placa 14": 80.3, "Placa 15": 1.5, "Placa 16": 78.8, "Placa 17": 50.0, "Placa 18": 98.5, "Placa 19": 27.3, "Placa 20": 104.5, "Placa 21": 3.0, "Placa 22": 90.9, "Placa 23": 110.6, "Placa 24": 93.9, "Placa 25": 98.5, "Placa 26": 3.0, "Placa 27": 89.4, "Placa 28": 19.7, "Placa 29": 1.5}, "cumplimiento_total_conductor": {"Conductor 01": 24.2, "Conductor 02": 1.5, "Conductor 03": 1.5, "Conductor 04": 3.0, "Conductor 05": 207.6, "Conductor 06": 80.3, "Conductor 07": 50.0, "Conductor 08": 48.5, "Conductor 09": 10.6, "Conductor 10": 98.5, "Conductor 11": 93.9, "Conductor 12": 1.5, "Conductor 13": 21.2, "Conductor 14": 89.4, "Conductor 15": 77.3, "Conductor 16": 1.5, "Conductor 17": 104.5, "Conductor 18": 68.2, "Conductor 19": 78.8, "Conductor 20": 90.9, "Conductor 21": 19.7, "Conductor 22": 51.5, "Conductor 23": 37.9, "Conductor 24": 3.0, "Conductor 25": 77.3, "Conductor 26": 1.5, "Conductor 27": 43.9, "Conductor 28": 81.8, "Conductor 29": 42.4}, "tipo_dist": {"Motocicleta": 545, "Furgón": 225, "Minivan": 210, "Camioneta": 16, "Camión": 2}, "proyecto_dist": {"Cliente A": 525, "Cliente B": 466, "Otros": 7}, "total_reportes": 998, "total_placas": 29, "total_conductores": 29, "total_biz_days": 66, "fecha_min": "2026-06-01", "fecha_max": "2026-08-31", "pairs": [{"placa": "Placa 23", "conductor": "Conductor 05", "n": 73}, {"placa": "Placa 20", "conductor": "Conductor 17", "n": 69}, {"placa": "Placa 18", "conductor": "Conductor 10", "n": 65}, {"placa": "Placa 25", "conductor": "Conductor 05", "n": 64}, {"placa": "Placa 24", "conductor": "Conductor 11", "n": 62}, {"placa": "Placa 22", "conductor": "Conductor 20", "n": 60}, {"placa": "Placa 27", "conductor": "Conductor 14", "n": 59}, {"placa": "Placa 06", "conductor": "Conductor 28", "n": 54}, {"placa": "Placa 14", "conductor": "Conductor 06", "n": 53}, {"placa": "Placa 16", "conductor": "Conductor 19", "n": 52}, {"placa": "Placa 01", "conductor": "Conductor 15", "n": 51}, {"placa": "Placa 07", "conductor": "Conductor 18", "n": 45}, {"placa": "Placa 10", "conductor": "Conductor 22", "n": 34}, {"placa": "Placa 08", "conductor": "Conductor 07", "n": 33}, {"placa": "Placa 17", "conductor": "Conductor 25", "n": 33}, {"placa": "Placa 11", "conductor": "Conductor 08", "n": 32}, {"placa": "Placa 09", "conductor": "Conductor 27", "n": 29}, {"placa": "Placa 05", "conductor": "Conductor 29", "n": 28}, {"placa": "Placa 09", "conductor": "Conductor 23", "n": 25}, {"placa": "Placa 19", "conductor": "Conductor 25", "n": 18}, {"placa": "Placa 09", "conductor": "Conductor 13", "n": 14}, {"placa": "Placa 02", "conductor": "Conductor 01", "n": 14}, {"placa": "Placa 28", "conductor": "Conductor 21", "n": 13}, {"placa": "Placa 03", "conductor": "Conductor 09", "n": 7}, {"placa": "Placa 26", "conductor": "Conductor 01", "n": 2}, {"placa": "Placa 21", "conductor": "Conductor 04", "n": 2}, {"placa": "Placa 13", "conductor": "Conductor 24", "n": 2}, {"placa": "Placa 04", "conductor": "Conductor 03", "n": 1}, {"placa": "Placa 12", "conductor": "Conductor 02", "n": 1}, {"placa": "Placa 15", "conductor": "Conductor 16", "n": 1}, {"placa": "Placa 25", "conductor": "Conductor 12", "n": 1}, {"placa": "Placa 29", "conductor": "Conductor 26", "n": 1}], "placa_tipo": {"Placa 01": "Motocicleta", "Placa 02": "Motocicleta", "Placa 03": "Minivan", "Placa 04": "Minivan", "Placa 05": "Furgón", "Placa 06": "Furgón", "Placa 07": "Motocicleta", "Placa 08": "Motocicleta", "Placa 09": "Furgón", "Placa 10": "Minivan", "Placa 11": "Motocicleta", "Placa 12": "Motocicleta", "Placa 13": "Motocicleta", "Placa 14": "Minivan", "Placa 15": "Furgón", "Placa 16": "Motocicleta", "Placa 17": "Motocicleta", "Placa 18": "Minivan", "Placa 19": "Motocicleta", "Placa 20": "Motocicleta", "Placa 21": "Furgón", "Placa 22": "Motocicleta", "Placa 23": "Furgón", "Placa 24": "Motocicleta", "Placa 25": "Minivan", "Placa 26": "Camioneta", "Placa 27": "Motocicleta", "Placa 28": "Motocicleta", "Placa 29": "Motocicleta"}, "placa_proyecto": {"Placa 01": "Cliente B", "Placa 02": "Cliente A", "Placa 03": "Cliente A", "Placa 04": "Otros", "Placa 05": "Cliente A", "Placa 06": "Cliente A", "Placa 07": "Cliente A", "Placa 08": "Cliente A", "Placa 09": "Cliente B", "Placa 10": "Cliente B", "Placa 11": "Cliente A", "Placa 12": "Cliente A", "Placa 13": "Cliente A", "Placa 14": "Cliente A", "Placa 15": "Cliente A", "Placa 16": "Cliente B", "Placa 17": "Cliente A", "Placa 18": "Cliente B", "Placa 19": "Cliente A", "Placa 20": "Cliente B", "Placa 21": "Cliente A", "Placa 22": "Cliente A", "Placa 23": "Cliente A", "Placa 24": "Cliente A", "Placa 25": "Cliente B", "Placa 26": "Cliente A", "Placa 27": "Cliente B", "Placa 28": "Cliente A", "Placa 29": "Cliente A"}, "conductor_proyecto": {"Conductor 01": "Cliente A", "Conductor 02": "Cliente A", "Conductor 03": "Otros", "Conductor 04": "Cliente A", "Conductor 05": "Cliente A", "Conductor 06": "Cliente A", "Conductor 07": "Cliente A", "Conductor 08": "Cliente A", "Conductor 09": "Cliente A", "Conductor 10": "Cliente B", "Conductor 11": "Cliente A", "Conductor 12": "Cliente B", "Conductor 13": "Cliente B", "Conductor 14": "Cliente B", "Conductor 15": "Cliente B", "Conductor 16": "Cliente A", "Conductor 17": "Cliente B", "Conductor 18": "Cliente A", "Conductor 19": "Cliente B", "Conductor 20": "Cliente A", "Conductor 21": "Cliente A", "Conductor 22": "Cliente B", "Conductor 23": "Cliente B", "Conductor 24": "Cliente A", "Conductor 25": "Cliente A", "Conductor 26": "Cliente A", "Conductor 27": "Cliente B", "Conductor 28": "Cliente A", "Conductor 29": "Cliente A"}, "hallazgos_total": 536, "reportes_con_hallazgo": 268, "tasa_reportes_con_hallazgo": 26.9, "hallazgos_por_categoria": {"Impermeable": 176, "Uniforme corporativo": 81, "Botas seguridad": 73, "Condición de salud que impide labor": 67, "Guantes": 65, "Botas dieléctricas": 60, "Llantas": 5, "Suspensión": 3, "Refrigeración": 3, "Licencia vencida": 2, "Motor": 1}, "hallazgos_mes": [176, 193, 167], "reportes_con_hallazgo_mes": [85, 90, 93], "hallazgos_placa": {"Placa 01": 0, "Placa 02": 14, "Placa 03": 0, "Placa 04": 0, "Placa 05": 1, "Placa 06": 3, "Placa 07": 53, "Placa 08": 144, "Placa 09": 4, "Placa 10": 4, "Placa 11": 151, "Placa 12": 0, "Placa 13": 1, "Placa 14": 56, "Placa 15": 0, "Placa 16": 3, "Placa 17": 34, "Placa 18": 0, "Placa 19": 18, "Placa 20": 0, "Placa 21": 0, "Placa 22": 0, "Placa 23": 2, "Placa 24": 0, "Placa 25": 1, "Placa 26": 0, "Placa 27": 46, "Placa 28": 0, "Placa 29": 1}, "hallazgos_conductor": {"Conductor 01": 14, "Conductor 02": 0, "Conductor 03": 0, "Conductor 04": 0, "Conductor 05": 3, "Conductor 06": 56, "Conductor 07": 144, "Conductor 08": 151, "Conductor 09": 0, "Conductor 10": 0, "Conductor 11": 0, "Conductor 12": 0, "Conductor 13": 3, "Conductor 14": 46, "Conductor 15": 0, "Conductor 16": 0, "Conductor 17": 0, "Conductor 18": 53, "Conductor 19": 3, "Conductor 20": 0, "Conductor 21": 0, "Conductor 22": 4, "Conductor 23": 1, "Conductor 24": 1, "Conductor 25": 52, "Conductor 26": 1, "Conductor 27": 0, "Conductor 28": 3, "Conductor 29": 1}, "reportes_hallazgo_placa": {"Placa 01": 0, "Placa 02": 14, "Placa 03": 0, "Placa 04": 0, "Placa 05": 1, "Placa 06": 3, "Placa 07": 45, "Placa 08": 33, "Placa 09": 4, "Placa 10": 4, "Placa 11": 32, "Placa 12": 0, "Placa 13": 1, "Placa 14": 53, "Placa 15": 0, "Placa 16": 2, "Placa 17": 32, "Placa 18": 0, "Placa 19": 18, "Placa 20": 0, "Placa 21": 0, "Placa 22": 0, "Placa 23": 2, "Placa 24": 0, "Placa 25": 1, "Placa 26": 0, "Placa 27": 22, "Placa 28": 0, "Placa 29": 1}, "reportes_hallazgo_conductor": {"Conductor 01": 14, "Conductor 02": 0, "Conductor 03": 0, "Conductor 04": 0, "Conductor 05": 3, "Conductor 06": 53, "Conductor 07": 33, "Conductor 08": 32, "Conductor 09": 0, "Conductor 10": 0, "Conductor 11": 0, "Conductor 12": 0, "Conductor 13": 3, "Conductor 14": 22, "Conductor 15": 0, "Conductor 16": 0, "Conductor 17": 0, "Conductor 18": 45, "Conductor 19": 2, "Conductor 20": 0, "Conductor 21": 0, "Conductor 22": 4, "Conductor 23": 1, "Conductor 24": 1, "Conductor 25": 50, "Conductor 26": 1, "Conductor 27": 0, "Conductor 28": 3, "Conductor 29": 1}, "hallazgos_mes_placa": {"Placa 01": [0, 0, 0], "Placa 02": [12, 2, 0], "Placa 03": [0, 0, 0], "Placa 04": [0, 0, 0], "Placa 05": [0, 1, 0], "Placa 06": [0, 2, 1], "Placa 07": [13, 23, 17], "Placa 08": [29, 60, 55], "Placa 09": [0, 4, 0], "Placa 10": [0, 1, 3], "Placa 11": [90, 54, 7], "Placa 12": [0, 0, 0], "Placa 13": [0, 0, 1], "Placa 14": [16, 20, 20], "Placa 15": [0, 0, 0], "Placa 16": [0, 2, 1], "Placa 17": [6, 11, 17], "Placa 18": [0, 0, 0], "Placa 19": [8, 8, 2], "Placa 20": [0, 0, 0], "Placa 21": [0, 0, 0], "Placa 22": [0, 0, 0], "Placa 23": [2, 0, 0], "Placa 24": [0, 0, 0], "Placa 25": [0, 1, 0], "Placa 26": [0, 0, 0], "Placa 27": [0, 4, 42], "Placa 28": [0, 0, 0], "Placa 29": [0, 0, 1]}, "hallazgos_mes_conductor": {"Conductor 01": [12, 2, 0], "Conductor 02": [0, 0, 0], "Conductor 03": [0, 0, 0], "Conductor 04": [0, 0, 0], "Conductor 05": [2, 1, 0], "Conductor 06": [16, 20, 20], "Conductor 07": [29, 60, 55], "Conductor 08": [90, 54, 7], "Conductor 09": [0, 0, 0], "Conductor 10": [0, 0, 0], "Conductor 11": [0, 0, 0], "Conductor 12": [0, 0, 0], "Conductor 13": [0, 3, 0], "Conductor 14": [0, 4, 42], "Conductor 15": [0, 0, 0], "Conductor 16": [0, 0, 0], "Conductor 17": [0, 0, 0], "Conductor 18": [13, 23, 17], "Conductor 19": [0, 2, 1], "Conductor 20": [0, 0, 0], "Conductor 21": [0, 0, 0], "Conductor 22": [0, 1, 3], "Conductor 23": [0, 1, 0], "Conductor 24": [0, 0, 1], "Conductor 25": [14, 19, 19], "Conductor 26": [0, 0, 1], "Conductor 27": [0, 0, 0], "Conductor 28": [0, 2, 1], "Conductor 29": [0, 1, 0]}};
+
+/* DEMO CON DATOS FICTICIOS: recalcula todas las cifras del tablero para mostrar
+   un caso de ejemplo (cumplimiento que mejora mes a mes y hallazgos que bajan).
+   No son resultados reales. Se generan siempre iguales (semilla fija). */
+(function () {
+  let s = 20260901;
+  const azar = () => { s |= 0; s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const meta = [0.86, 0.92, 0.96];      // cumplimiento objetivo por mes
+  const tasaHallazgo = [0.15, 0.09, 0.05]; // reportes con hallazgo por mes
+  const D = DATA, biz = D.biz_days, M = biz.length;
+  const viejoHall = D.hallazgos_total, viejoTotal = D.total_reportes;
+
+  function recalcular(reportes, cumpl, total, cumplTotal, rHall, hallMes, hall) {
+    for (const k of Object.keys(reportes)) {
+      const nuevo = reportes[k].map((n, m) => n > 0 ? Math.min(biz[m], Math.round(biz[m] * (meta[m] - 0.07 + azar() * 0.11))) : 0);
+      reportes[k] = nuevo;
+      cumpl[k] = nuevo.map((n, m) => n > 0 ? r1(n / biz[m] * 100) : 0);
+      total[k] = nuevo.reduce((a, b) => a + b, 0);
+      const bizActivos = nuevo.reduce((a, n, m) => a + (n > 0 ? biz[m] : 0), 0);
+      cumplTotal[k] = bizActivos ? r1(total[k] / bizActivos * 100) : 0;
+      const conHall = nuevo.map((n, m) => Math.round(n * tasaHallazgo[m] * (0.5 + azar())));
+      rHall[k] = conHall.reduce((a, b) => a + b, 0);
+      hallMes[k] = conHall.map((h) => Math.round(h * (1.3 + azar() * 0.6)));
+      hall[k] = hallMes[k].reduce((a, b) => a + b, 0);
+    }
+  }
+  recalcular(D.reportes_mes_placa, D.cumplimiento_placa, D.total_placa, D.cumplimiento_total_placa, D.reportes_hallazgo_placa, D.hallazgos_mes_placa, D.hallazgos_placa);
+  recalcular(D.reportes_mes_conductor, D.cumplimiento_conductor, D.total_conductor, D.cumplimiento_total_conductor, D.reportes_hallazgo_conductor, D.hallazgos_mes_conductor, D.hallazgos_conductor);
+
+  const sumaMes = (obj) => Array.from({ length: M }, (_, m) => Object.values(obj).reduce((a, arr) => a + arr[m], 0));
+  D.reportes_mes = sumaMes(D.reportes_mes_placa);
+  D.inspecciones_realizadas_mes = D.reportes_mes.slice();
+  D.cumplimiento_global_mes = D.reportes_mes.map((n, m) => r1(n / D.inspecciones_esperadas_mes[m] * 100));
+  D.total_reportes = D.reportes_mes.reduce((a, b) => a + b, 0);
+  D.hallazgos_mes = sumaMes(D.hallazgos_mes_placa);
+  D.hallazgos_total = D.hallazgos_mes.reduce((a, b) => a + b, 0);
+  D.reportes_con_hallazgo = Object.values(D.reportes_hallazgo_placa).reduce((a, b) => a + b, 0);
+  D.reportes_con_hallazgo_mes = D.hallazgos_mes.map((h) => Math.round(h / 1.6));
+  D.tasa_reportes_con_hallazgo = r1(D.reportes_con_hallazgo / D.total_reportes * 100);
+
+  const fh = D.hallazgos_total / viejoHall;
+  for (const c of Object.keys(D.hallazgos_por_categoria)) D.hallazgos_por_categoria[c] = Math.round(D.hallazgos_por_categoria[c] * fh);
+  for (const t of Object.keys(D.tipo_dist)) D.tipo_dist[t] = 0;
+  for (const c of Object.keys(D.proyecto_dist)) D.proyecto_dist[c] = 0;
+  for (const p of Object.keys(D.total_placa)) {
+    if (D.placa_tipo[p] in D.tipo_dist) D.tipo_dist[D.placa_tipo[p]] += D.total_placa[p];
+    if (D.placa_proyecto[p] in D.proyecto_dist) D.proyecto_dist[D.placa_proyecto[p]] += D.total_placa[p];
+  }
+  const ft = D.total_reportes / viejoTotal;
+  for (const par of D.pairs) par.n = Math.round(par.n * ft);
+})();
+
+</script>
+<script>
+const fmt = n => n.toLocaleString('es-CO');
+const pal = {amber:'#f2a93b', green:'#3fb68b', red:'#e5533d', blue:'#5b9bd9', muted:'#8996a8', line:'#2b3442'};
+
+let state = { placa:'', conductor:'', proyecto:'' };
+let charts = {};
+
+Chart.defaults.color = '#8996a8';
+Chart.defaults.font.family = "Inter";
+Chart.defaults.borderColor = '#2b3442';
+
+function cumplColor(v){
+  if(v>=90) return pal.green;
+  if(v>=60) return pal.amber;
+  return pal.red;
+}
+function badgeClass(v){
+  if(v>=90) return 'ok';
+  if(v>=60) return 'warn';
+  return 'bad';
+}
+
+function initFilters(){
+  const fp = document.getElementById('fPlaca');
+  const fc = document.getElementById('fConductor');
+  const fpr = document.getElementById('fProyecto');
+
+  fp.addEventListener('change', e=>{
+    state.placa = e.target.value;
+    refreshFilterOptions();
+    render();
+  });
+  fc.addEventListener('change', e=>{
+    state.conductor = e.target.value;
+    refreshFilterOptions();
+    render();
+  });
+  fpr.addEventListener('change', e=>{
+    state.proyecto = e.target.value;
+    refreshFilterOptions();
+    render();
+  });
+  document.getElementById('resetBtn').addEventListener('click', ()=>{
+    state = {placa:'',conductor:'',proyecto:''};
+    refreshFilterOptions();
+    render();
+  });
+
+  refreshFilterOptions();
+}
+
+function titleCase(s){
+  return s.toLowerCase().replace(/\b\w/g, c=>c.toUpperCase());
+}
+
+function validPlacasFor(conductor, proyecto){
+  let list = DATA.placas.slice();
+  if(conductor){ list = list.filter(p => DATA.pairs.some(pr=>pr.placa===p && pr.conductor===conductor)); }
+  if(proyecto){ list = list.filter(p => DATA.placa_proyecto[p]===proyecto); }
+  return list;
+}
+function validConductoresFor(placa, proyecto){
+  let list = DATA.conductores.slice();
+  if(placa){ list = list.filter(c => DATA.pairs.some(pr=>pr.placa===placa && pr.conductor===c)); }
+  if(proyecto){ list = list.filter(c => DATA.conductor_proyecto[c]===proyecto); }
+  return list;
+}
+function validProyectosFor(placa, conductor){
+  let list = Object.keys(DATA.proyecto_dist);
+  if(placa){ list = list.filter(pr => DATA.placa_proyecto[placa]===pr); }
+  if(conductor){ list = list.filter(pr => DATA.conductor_proyecto[conductor]===pr); }
+  return list;
+}
+
+// Rebuilds each <select>'s option list based on the OTHER two active filters (cascading),
+// dropping the current selection if it's no longer a valid combination.
+function refreshFilterOptions(){
+  const fp = document.getElementById('fPlaca');
+  const fc = document.getElementById('fConductor');
+  const fpr = document.getElementById('fProyecto');
+
+  const placaOptions = validPlacasFor(state.conductor, state.proyecto);
+  const conductorOptions = validConductoresFor(state.placa, state.proyecto);
+  const proyectoOptions = validProyectosFor(state.placa, state.conductor);
+
+  if(state.placa && !placaOptions.includes(state.placa)){ state.placa=''; }
+  if(state.conductor && !conductorOptions.includes(state.conductor)){ state.conductor=''; }
+  if(state.proyecto && !proyectoOptions.includes(state.proyecto)){ state.proyecto=''; }
+
+  fillSelect(fp, placaOptions, 'Todas', v=>v, state.placa);
+  fillSelect(fc, conductorOptions, 'Todos', titleCase, state.conductor);
+  fillSelect(fpr, proyectoOptions, 'Todos', v=>v, state.proyecto);
+}
+
+function fillSelect(selectEl, values, allLabel, labelFn, currentValue){
+  selectEl.innerHTML = `<option value="">${allLabel}</option>` +
+    values.map(v=>`<option value="${v}"${v===currentValue?' selected':''}>${labelFn(v)}</option>`).join('');
+  selectEl.value = currentValue || '';
+}
+
+function getScopeIds(){
+  // returns list of placas and conductores matching current filters, using pairs table for intersection
+  let placas = validPlacasFor(state.conductor, state.proyecto);
+  let conductores = validConductoresFor(state.placa, state.proyecto);
+  if(state.placa){ placas = [state.placa]; }
+  if(state.conductor){ conductores = [state.conductor]; }
+  return {placas, conductores};
+}
+
+function monthlySeriesForPlacas(placaList){
+  const sums = [0,0,0,0];
+  placaList.forEach(p=>{
+    const arr = DATA.reportes_mes_placa[p] || [0,0,0,0];
+    arr.forEach((v,i)=> sums[i]+=v);
+  });
+  return sums;
+}
+function monthlySeriesForConductores(condList){
+  const sums = [0,0,0,0];
+  condList.forEach(c=>{
+    const arr = DATA.reportes_mes_conductor[c] || [0,0,0,0];
+    arr.forEach((v,i)=> sums[i]+=v);
+  });
+  return sums;
+}
+
+function render(){
+  const {placas, conductores} = getScopeIds();
+
+  // decide "primary" series: if a single placa selected use its own series (avoid double counting with conductor union)
+  let repMes;
+  let scopeLabel;
+  if(state.placa && !state.conductor){
+    repMes = DATA.reportes_mes_placa[state.placa] || [0,0,0,0];
+    scopeLabel = `Placa ${state.placa}`;
+  } else if(state.conductor && !state.placa){
+    repMes = DATA.reportes_mes_conductor[state.conductor] || [0,0,0,0];
+    scopeLabel = titleCase(state.conductor);
+  } else if(state.placa && state.conductor){
+    // intersection: reports of that exact placa (already scoped to the driver via data reality)
+    repMes = DATA.reportes_mes_placa[state.placa] || [0,0,0,0];
+    scopeLabel = `${state.placa} · ${titleCase(state.conductor)}`;
+  } else if(state.proyecto){
+    repMes = monthlySeriesForPlacas(placas);
+    scopeLabel = `Proyecto ${state.proyecto}`;
+  } else {
+    repMes = DATA.reportes_mes;
+    scopeLabel = 'Toda la flota';
+  }
+
+  document.getElementById('scopeTag').textContent = 'Alcance: ' + scopeLabel;
+  document.getElementById('mPeriodo').textContent = `${DATA.fecha_min} → ${DATA.fecha_max}`;
+  document.getElementById('mFlota').textContent = fmt(placas.length);
+  document.getElementById('mCond').textContent = fmt(conductores.length);
+  document.getElementById('trendTitle').textContent = 'Reportes por mes — ' + scopeLabel;
+
+  renderKPIs(repMes, placas, conductores);
+  renderTrend(repMes);
+  renderCumpl(placas, conductores);
+  renderBizVsRep(placas);
+  renderHallazgos(placas, scopeLabel);
+  renderDonuts(placas);
+  renderTables();
+}
+
+function renderKPIs(repMes, placas, conductores){
+  const total = repMes.reduce((a,b)=>a+b,0);
+  const totalBiz = DATA.total_biz_days;
+  const nUnits = state.placa || (!state.conductor && !state.proyecto) ? Math.max(placas.length,1) : Math.max(placas.length,1);
+  // average monthly compliance for scope
+  let avgCompl;
+  if(state.placa){
+    const arr = DATA.cumplimiento_placa[state.placa];
+    avgCompl = arr.reduce((a,b)=>a+b,0)/arr.length;
+  } else if(state.conductor){
+    const arr = DATA.cumplimiento_conductor[state.conductor];
+    avgCompl = arr.reduce((a,b)=>a+b,0)/arr.length;
+  } else {
+    avgCompl = DATA.cumplimiento_global_mes.reduce((a,b)=>a+b,0)/DATA.cumplimiento_global_mes.length;
+  }
+
+  const hallazgosScope = getHallazgosScope(placas, total);
+
+  const kpis = [
+    {lbl:'Reportes en el alcance', val: fmt(total), sub: `${DATA.total_reportes.toLocaleString('es-CO')} en toda la flota`, c:pal.blue},
+    {lbl:'Vehículos en alcance', val: fmt(placas.length), sub: `${DATA.total_placas} placas en la flota`, c:pal.amber},
+    {lbl:'Conductores en alcance', val: fmt(conductores.length), sub: `${DATA.total_conductores} conductores activos`, c:pal.amber},
+    {lbl:'Cumplimiento promedio', val: avgCompl.toFixed(1)+'%', sub: 'reportes / días hábiles esperados', c: cumplColor(avgCompl)},
+    {lbl:'Hallazgos detectados', val: fmt(hallazgosScope.total), sub: `${hallazgosScope.pct}% de los reportes con ≥1 hallazgo`, c: hallazgosScope.pct>=30?pal.red:(hallazgosScope.pct>=15?pal.amber:pal.green)},
+  ];
+  const row = document.getElementById('kpiRow');
+  row.innerHTML = kpis.map(k=>`
+    <div class="kpi" style="--kc:${k.c}">
+      <div class="lbl">${k.lbl}</div>
+      <div class="val">${k.val}</div>
+      <div class="sub">${k.sub}</div>
+    </div>`).join('');
+}
+
+function getHallazgosScope(placas, totalReportesScope){
+  let hTotal, reportesConHallazgo;
+  if(state.placa){
+    hTotal = DATA.hallazgos_placa[state.placa] || 0;
+    reportesConHallazgo = DATA.reportes_hallazgo_placa[state.placa] || 0;
+  } else if(state.conductor){
+    hTotal = DATA.hallazgos_conductor[state.conductor] || 0;
+    reportesConHallazgo = DATA.reportes_hallazgo_conductor[state.conductor] || 0;
+  } else if(state.proyecto){
+    hTotal = placas.reduce((s,p)=> s+(DATA.hallazgos_placa[p]||0), 0);
+    reportesConHallazgo = placas.reduce((s,p)=> s+(DATA.reportes_hallazgo_placa[p]||0), 0);
+  } else {
+    hTotal = DATA.hallazgos_total;
+    reportesConHallazgo = DATA.reportes_con_hallazgo;
+  }
+  const pct = totalReportesScope ? Math.round((reportesConHallazgo/totalReportesScope)*1000)/10 : 0;
+  return {total: hTotal, conHallazgo: reportesConHallazgo, pct};
+}
+
+function hallazgosMonthlySeries(placas){
+  if(state.placa){ return DATA.hallazgos_mes_placa[state.placa] || DATA.meses.map(()=>0); }
+  if(state.conductor){ return DATA.hallazgos_mes_conductor[state.conductor] || DATA.meses.map(()=>0); }
+  if(state.proyecto){
+    const sums = DATA.meses.map(()=>0);
+    placas.forEach(p=>{
+      const arr = DATA.hallazgos_mes_placa[p] || DATA.meses.map(()=>0);
+      arr.forEach((v,i)=> sums[i]+=v);
+    });
+    return sums;
+  }
+  return DATA.hallazgos_mes;
+}
+
+function renderHallazgos(placas, scopeLabel){
+  destroy('hallazgosMes'); destroy('hallazgosCat');
+
+  document.getElementById('hallazgosTrendTitle').textContent = 'Hallazgos detectados por mes — ' + scopeLabel;
+  const serie = hallazgosMonthlySeries(placas);
+
+  charts.hallazgosMes = new Chart(document.getElementById('chartHallazgosMes'), {
+    type:'bar',
+    data:{
+      labels: DATA.mes_labels,
+      datasets:[{ label:'Hallazgos', data: serie, backgroundColor: pal.red, borderRadius:4, maxBarThickness:46 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ y:{beginAtZero:true, grid:{color:'#232b37'}}, x:{grid:{display:false}} }
+    }
+  });
+
+  // category breakdown stays fleet-wide (checklist-level detail not tracked per plate/driver)
+  const cats = DATA.hallazgos_por_categoria;
+  const labels = Object.keys(cats), values = Object.values(cats);
+  charts.hallazgosCat = new Chart(document.getElementById('chartHallazgosCat'), {
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{ label:'Hallazgos', data: values, backgroundColor: pal.amber, borderRadius:4, maxBarThickness:18 }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x:{beginAtZero:true, grid:{color:'#232b37'}}, y:{grid:{display:false}} }
+    }
+  });
+}
+
+function destroy(id){ if(charts[id]){ charts[id].destroy(); } }
+
+function renderTrend(repMes){
+  destroy('trend');
+  const ctx = document.getElementById('chartTrend');
+  charts.trend = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: DATA.mes_labels,
+      datasets:[{
+        label:'Reportes',
+        data: repMes,
+        backgroundColor: pal.blue,
+        borderRadius:4,
+        maxBarThickness:46,
+        order:2
+      },{
+        type:'line',
+        label:'Tendencia',
+        data: repMes,
+        borderColor: pal.amber,
+        backgroundColor:'transparent',
+        tension:.35,
+        pointBackgroundColor: pal.amber,
+        pointRadius:4,
+        order:1
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{beginAtZero:true, grid:{color:'#232b37'}},
+        x:{grid:{display:false}}
+      }
+    }
+  });
+}
+
+function renderCumpl(placas, conductores){
+  destroy('cumpl');
+  let series;
+  if(state.placa){ series = DATA.cumplimiento_placa[state.placa]; }
+  else if(state.conductor){ series = DATA.cumplimiento_conductor[state.conductor]; }
+  else { series = DATA.cumplimiento_global_mes; }
+
+  const ctx = document.getElementById('chartCumpl');
+  charts.cumpl = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels: DATA.mes_labels,
+      datasets:[{
+        label:'% Cumplimiento',
+        data: series,
+        borderColor: pal.green,
+        backgroundColor:'rgba(63,182,139,.12)',
+        fill:true,
+        tension:.3,
+        pointRadius:5,
+        pointBackgroundColor: series.map(cumplColor)
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        annotation:undefined
+      },
+      scales:{
+        y:{ grid:{color:'#232b37'}, ticks:{callback:v=>v+'%'} },
+        x:{grid:{display:false}}
+      }
+    }
+  });
+}
+
+function renderBizVsRep(placas){
+  destroy('bizrep');
+
+  let esperadas, realizadas;
+  if(state.placa){
+    // one vehicle: expected = 1 x business days/month
+    esperadas = DATA.biz_days.slice();
+    realizadas = DATA.reportes_mes_placa[state.placa] || DATA.meses.map(()=>0);
+  } else if(state.conductor){
+    esperadas = DATA.biz_days.slice();
+    realizadas = DATA.reportes_mes_conductor[state.conductor] || DATA.meses.map(()=>0);
+  } else if(state.proyecto){
+    // approximation: vehicles in scope (constant) x business days/month
+    const n = placas.length;
+    esperadas = DATA.biz_days.map(b=>b*n);
+    realizadas = monthlySeriesForPlacas(placas);
+  } else {
+    esperadas = DATA.inspecciones_esperadas_mes;
+    realizadas = DATA.inspecciones_realizadas_mes;
+  }
+
+  const ctx = document.getElementById('chartBizVsRep');
+  charts.bizrep = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: DATA.mes_labels,
+      datasets:[
+        {label:'Esperadas (flota × días hábiles)', data: esperadas, backgroundColor:'#3a4658', borderRadius:4, maxBarThickness:34},
+        {label:'Realizadas', data: realizadas, backgroundColor: pal.amber, borderRadius:4, maxBarThickness:34}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:10, font:{size:10.5}}}},
+      scales:{ y:{beginAtZero:true, grid:{color:'#232b37'}}, x:{grid:{display:false}} }
+    }
+  });
+}
+
+function renderDonuts(placas){
+  destroy('tipo'); destroy('proyecto');
+
+  // recompute tipo/proyecto distribution constrained to scope placas when a filter is active
+  let tipoData, proyData;
+  if(state.placa || state.conductor || state.proyecto){
+    const tipoCount = {}, proyCount = {};
+    placas.forEach(p=>{
+      const t = DATA.placa_tipo[p]; tipoCount[t] = (tipoCount[t]||0) + (DATA.total_placa[p]||0);
+      const pr = DATA.placa_proyecto[p]; proyCount[pr] = (proyCount[pr]||0) + 0;
+    });
+    tipoData = tipoCount;
+    proyData = DATA.proyecto_dist; // proyecto distribution kept as global reference when drilling by type
+  } else {
+    tipoData = DATA.tipo_dist;
+    proyData = DATA.proyecto_dist;
+  }
+
+  const donutColors = ['#5b9bd9','#f2a93b','#3fb68b','#e5533d','#9b7ede','#5ed3d3'];
+
+  charts.tipo = new Chart(document.getElementById('chartTipo'), {
+    type:'doughnut',
+    data:{ labels:Object.keys(tipoData), datasets:[{data:Object.values(tipoData), backgroundColor:donutColors, borderColor:'#1a2029', borderWidth:2}] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10, font:{size:10.5}}}} }
+  });
+  charts.proyecto = new Chart(document.getElementById('chartProyecto'), {
+    type:'doughnut',
+    data:{ labels:Object.keys(proyData), datasets:[{data:Object.values(proyData), backgroundColor:donutColors, borderColor:'#1a2029', borderWidth:2}] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:10, font:{size:10.5}}}} }
+  });
+}
+
+let sortState = {placa:{k:'total',dir:-1}, conductor:{k:'total',dir:-1}};
+
+function renderTables(){
+  const {placas, conductores} = getScopeIds();
+
+  let rowsP = placas.map(p=>({
+    id:p, tipo: DATA.placa_tipo[p]||'—', total: DATA.total_placa[p]||0, cump: DATA.cumplimiento_total_placa[p]||0, hallazgos: DATA.hallazgos_placa[p]||0
+  }));
+  let rowsC = conductores.map(c=>({
+    id:c, proy: DATA.conductor_proyecto[c]||'—', total: DATA.total_conductor[c]||0, cump: DATA.cumplimiento_total_conductor[c]||0, hallazgos: DATA.hallazgos_conductor[c]||0
+  }));
+
+  sortRows(rowsP,'placa'); sortRows(rowsC,'conductor');
+
+  const maxP = Math.max(...rowsP.map(r=>r.total),1);
+  document.querySelector('#tblPlaca tbody').innerHTML = rowsP.map(r=>`
+    <tr>
+      <td class="name">${r.id}</td>
+      <td>${r.tipo}</td>
+      <td>
+        <div class="bar-cell">
+          <span>${fmt(r.total)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(r.total/maxP*100).toFixed(0)}%;background:${pal.blue}"></div></div>
+        </div>
+      </td>
+      <td>${r.hallazgos>0?`<span class="badge bad">${r.hallazgos}</span>`:'<span style="color:var(--muted)">0</span>'}</td>
+      <td><span class="badge ${badgeClass(r.cump)}">${r.cump.toFixed(1)}%</span></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="color:var(--muted)">Sin datos para este filtro</td></tr>';
+
+  const maxC = Math.max(...rowsC.map(r=>r.total),1);
+  document.querySelector('#tblConductor tbody').innerHTML = rowsC.map(r=>`
+    <tr>
+      <td class="name">${titleCase(r.id)}</td>
+      <td>${r.proy}</td>
+      <td>
+        <div class="bar-cell">
+          <span>${fmt(r.total)}</span>
+          <div class="bar-track"><div class="bar-fill" style="width:${(r.total/maxC*100).toFixed(0)}%;background:${pal.blue}"></div></div>
+        </div>
+      </td>
+      <td>${r.hallazgos>0?`<span class="badge bad">${r.hallazgos}</span>`:'<span style="color:var(--muted)">0</span>'}</td>
+      <td><span class="badge ${badgeClass(r.cump)}">${r.cump.toFixed(1)}%</span></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="color:var(--muted)">Sin datos para este filtro</td></tr>';
+}
+
+function sortRows(rows, which){
+  const {k,dir} = sortState[which];
+  rows.sort((a,b)=> (a[k]>b[k]?1:a[k]<b[k]?-1:0)*dir );
+}
+
+document.querySelectorAll('#tblPlaca th').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const k = th.dataset.k;
+    sortState.placa.dir = sortState.placa.k===k ? -sortState.placa.dir : -1;
+    sortState.placa.k = k;
+    renderTables();
+  });
+});
+document.querySelectorAll('#tblConductor th').forEach(th=>{
+  th.addEventListener('click', ()=>{
+    const k = th.dataset.k;
+    sortState.conductor.dir = sortState.conductor.k===k ? -sortState.conductor.dir : -1;
+    sortState.conductor.k = k;
+    renderTables();
+  });
+});
+
+initFilters();
+render();
+</script>
+</body>
+</html>
