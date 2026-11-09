@@ -7,6 +7,7 @@ import { EtiquetaEjemplo } from "@/components/Etiqueta";
 import { GloboRed } from "@/components/GloboRed";
 import { FondoConstelaciones } from "@/components/FondoConstelaciones";
 import { FlujoDatos } from "@/components/FlujoDatos";
+import { TableroVivo } from "@/components/TableroVivo";
 import { CicloSenal } from "@/components/CicloSenal";
 import { Pie } from "@/components/Pie";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
@@ -59,8 +60,11 @@ export default function Inicio() {
         {/* 2. Banda animada */}
         <Marquesina />
 
-        {/* 3. De dato a decisión: diagrama + herramientas */}
+        {/* 3. De dato a decisión: diagrama */}
         <FlujoDatos />
+
+        {/* 3b. Tu operación, en un tablero: bento con gráfica, bitácora y herramientas */}
+        <TableroVivo />
 
         {/* 4. Proyectos con filtro */}
         <Proyectos />
