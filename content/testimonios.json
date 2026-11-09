@@ -1,3 +1,6 @@
 {
-  "lista": []
+  "lista": [
+    { "frase": "Texto de prueba para revisar cómo se ve la tarjeta sobre el globo. Se borra antes de publicar.", "nombre": "Persona de prueba", "cargo": "Cargo de prueba", "ciudad": "Bogotá", "pais": "Colombia", "foto": null, "permiso": true },
+    { "frase": "Segundo texto de prueba para ver el cambio entre tarjetas y el giro del globo.", "nombre": "Otra prueba", "cargo": "Cargo de prueba", "ciudad": "Madrid", "pais": "España", "foto": null, "permiso": true }
+  ]
 }
