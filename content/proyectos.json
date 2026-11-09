@@ -48,24 +48,6 @@
                       "ejemplo":  false
                   },
                   {
-                      "titulo":  "Estado de resultados por proyecto",
-                      "categoria":  "Tableros",
-                      "descripcion":  "Resumen ejecutivo financiero hecho en Power BI sobre una base contable en Excel: filtra cada proyecto y revisa ingresos, costos, utilidad y margen frente al año anterior. La demo usa datos ficticios.",
-                      "herramientas":  [
-                                           "Power BI",
-                                           "Excel",
-                                           "Finanzas"
-                                       ],
-                      "metricas":  [
-
-                                   ],
-                      "enlace":  null,
-                      "caso":  null,
-                      "demo":  "/demos/resultados.html",
-                      "imagen":  "/proyectos/estado-resultados.png",
-                      "ejemplo":  false
-                  },
-                  {
                       "titulo":  "Página de presentación",
                       "categoria":  "Web",
                       "descripcion":  "Página web de presentación hecha con HTML y CSS.",
