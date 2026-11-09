@@ -57,11 +57,6 @@
   -webkit-text-stroke: 1.25px color-mix(in oklab, var(--tinta) 40%, transparent);
 }
 
-/* FILA DE HERRAMIENTAS: los bordes se desvanecen y se pausa al pasar el mouse. */
-.fila-herramientas {
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-}
-.fila-herramientas:hover .animate-herramientas { animation-play-state: paused; }
 
 /* DIAGRAMA "DE DATO A DECISIÓN" */
 .nodo { fill: var(--superficie); stroke: var(--linea); stroke-width: 1; }
@@ -321,3 +316,38 @@ p { text-wrap: pretty; }
   .logo-rumbo:hover .flecha-logo { transform: translate(1.5px, -1.5px); }
 }
 @media (prefers-reduced-motion: reduce) { .flecha-logo { transition: none; } }
+
+/* TU OPERACIÓN, EN UN TABLERO (TableroVivo.tsx)
+   - Borde que se ilumina en verde cerca del mouse (como el bento de 21st.dev).
+   - Punto que late en "En vivo", líneas de la bitácora que aparecen y barras que crecen. */
+.tarjeta-vivo { position: relative; isolation: isolate; }
+.tarjeta-vivo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(260px circle at var(--mx, -999px) var(--my, -999px), rgb(52 216 168 / 0.65), transparent 65%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .bento-vivo:hover .tarjeta-vivo::before { opacity: 1; }
+  .tarjeta-vivo:hover .anillo-vivo { filter: drop-shadow(0 0 6px rgb(52 216 168 / 0.45)); }
+}
+.anillo-vivo { transition: filter 200ms var(--ease-out); }
+.pulso-vivo { animation: pulso-vivo 1.8s ease-in-out infinite; }
+@keyframes pulso-vivo { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgb(52 216 168 / 0.6); } 50% { opacity: 0.6; box-shadow: 0 0 0 4px rgb(52 216 168 / 0); } }
+.linea-log { animation: linea-log 260ms var(--ease-out) both; }
+@keyframes linea-log { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.cursor-log { animation: cursor-log 1s steps(2) infinite; }
+@keyframes cursor-log { 50% { opacity: 0; } }
+.barra-vivo { transition: height 400ms var(--ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .pulso-vivo, .linea-log, .cursor-log { animation: none; }
+  .barra-vivo { transition: none; }
+}

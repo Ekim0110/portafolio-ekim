@@ -1,24 +1,10 @@
-import Image from "next/image";
-
 /**
  * 🔀 DE DATO A DECISIÓN
  * Un diagrama que cuenta el trabajo en segundos, en cuatro columnas:
  *   fuentes (Excel, SharePoint) → análisis y modelo (Power BI) →
  *   entregables (tableros en Power BI y HTML, informe, reporte) → decisión.
  * Unos pulsos de luz recorren las líneas cada 3,2 s, de izquierda a derecha.
- * Debajo, una fila con los logos reales de las herramientas que uso.
  */
-
-// Herramientas con su logo oficial (guardados en /public/herramientas).
-const herramientas = [
-  { nombre: "Power BI", logo: "/herramientas/power-bi.svg" },
-  { nombre: "Excel", logo: "/herramientas/excel.svg" },
-  { nombre: "HTML", logo: "/herramientas/html.svg" },
-  { nombre: "Next.js", logo: "/herramientas/nextjs.svg" },
-  { nombre: "TypeScript", logo: "/herramientas/typescript.svg" },
-  { nombre: "Tailwind", logo: "/herramientas/tailwind.svg" },
-  { nombre: "Vercel", logo: "/herramientas/vercel.svg" },
-];
 
 // Lo que sale del análisis. "logo" usa un logo real; "icono" un dibujo simple de línea.
 const entregables: { texto: string; logo?: string; icono?: "documento" | "repetir" }[] = [
@@ -157,12 +143,9 @@ function DiagramaAngosto() {
 }
 
 export function FlujoDatos() {
-  // La fila se repite dos veces para que el deslizamiento no tenga saltos.
-  const fila = [...herramientas, ...herramientas];
-
   return (
     <section id="como-trabajo" className="scroll-mt-20">
-      <div className="mx-auto max-w-6xl px-4 pb-10 pt-24 sm:px-6 lg:pb-12 lg:pt-32">
+      <div className="mx-auto max-w-6xl px-4 pb-10 pt-24 sm:px-6 lg:pt-32">
         <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-end">
           <h2 id="flujo-titulo" className="titulo-seccion">De dato a decisión</h2>
           <p className="max-w-[48ch] text-base text-tenue sm:text-lg">
@@ -177,23 +160,6 @@ export function FlujoDatos() {
         </div>
       </div>
 
-      {/* Fila de herramientas: logos oficiales, se pausa al pasar el mouse */}
-      <div className="fila-herramientas overflow-hidden py-2">
-        <ul aria-label="Herramientas con las que trabajo" className="animate-herramientas flex w-max gap-4">
-          {fila.map((h, i) => (
-            <li
-              key={i}
-              aria-hidden={i >= herramientas.length}
-              className="flex items-center gap-3 rounded-2xl border border-linea bg-superficie py-3 pl-3 pr-5 font-medium whitespace-nowrap transition-[border-color,transform] duration-200 ease-[var(--ease-out)] hover:-translate-y-0.5 hover:border-acento/50"
-            >
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-tinta">
-                <Image src={h.logo} alt="" width={24} height={24} className="h-6 w-6 object-contain" />
-              </span>
-              {h.nombre}
-            </li>
-          ))}
-        </ul>
-      </div>
     </section>
   );
 }
