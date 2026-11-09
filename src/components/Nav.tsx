@@ -32,7 +32,7 @@ export function Nav() {
         <div className="flex items-center gap-3 sm:gap-7">
           <ul className="flex items-center gap-4 text-sm sm:gap-7">
             {enlaces.map((e) => (
-              <li key={e.href} className={e.href === "/#proyectos" ? "" : "hidden sm:block"}>
+              <li key={e.href} className="hidden sm:block">
                 <Link href={e.href} className="group inline-flex min-h-10 items-center text-tenue transition-colors duration-200 hover:text-tinta">
                   <span className="subrayado pb-0.5">{e.texto}</span>
                 </Link>

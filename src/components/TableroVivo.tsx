@@ -143,7 +143,7 @@ function GraficaCumplimiento() {
         )}
         <circle cx={x(i)} cy={y(semanas[i])} r="5" fill={SENAL} stroke="var(--fondo)" strokeWidth="2" />
       </svg>
-      <ul className="mt-auto grid grid-cols-2 gap-x-6 gap-y-2 pt-5 text-sm">
+      <ul className="mt-auto grid gap-x-6 gap-y-2 pt-5 text-sm sm:grid-cols-2">
         {proyectos.map((p) => (
           <li key={p.nombre} className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2 text-tenue">
