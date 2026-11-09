@@ -64,6 +64,59 @@ export default config({
         ),
       },
     }),
+    compromisos: singleton({
+      label: "Cómo es trabajar conmigo",
+      path: "content/compromisos",
+      format: { data: "json" },
+      schema: {
+        lista: fields.array(
+          fields.object({
+            valor: fields.text({ label: "Cifra grande", description: "Corta, por ejemplo 24 h o 100 %." }),
+            titulo: fields.text({ label: "Compromiso" }),
+            descripcion: fields.text({ label: "Explicación", multiline: true }),
+          }),
+          { label: "Compromisos", itemLabel: (c) => `${c.fields.valor.value} · ${c.fields.titulo.value}` },
+        ),
+      },
+    }),
+    testimonios: singleton({
+      label: "Testimonios",
+      path: "content/testimonios",
+      format: { data: "json" },
+      schema: {
+        lista: fields.array(
+          fields.object({
+            frase: fields.text({ label: "Lo que dijo", description: "2 o 3 líneas, con sus palabras.", multiline: true }),
+            nombre: fields.text({ label: "Nombre" }),
+            cargo: fields.text({ label: "Cargo y empresa", description: "Por ejemplo: Jefe de operaciones, Empresa X." }),
+            ciudad: fields.text({ label: "Ciudad" }),
+            pais: fields.select({
+              label: "País (para girar el globo)",
+              options: [
+                { label: "Colombia", value: "Colombia" },
+                { label: "México", value: "México" },
+                { label: "Brasil", value: "Brasil" },
+                { label: "Chile", value: "Chile" },
+                { label: "España", value: "España" },
+                { label: "EE. UU.", value: "EE. UU." },
+              ],
+              defaultValue: "Colombia",
+            }),
+            foto: fields.image({
+              label: "Foto (opcional)",
+              description: "Cuadrada. Si no hay, se muestran sus iniciales.",
+              directory: "public/testimonios",
+              publicPath: "/testimonios/",
+            }),
+            permiso: fields.checkbox({
+              label: "Tengo su permiso para publicarlo",
+              description: "Solo se muestran los testimonios con esta casilla marcada.",
+            }),
+          }),
+          { label: "Testimonios", itemLabel: (t) => t.fields.nombre.value || "Testimonio" },
+        ),
+      },
+    }),
     proyectos: singleton({
       label: "Proyectos",
       path: "content/proyectos",

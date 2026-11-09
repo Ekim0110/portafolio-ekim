@@ -1,0 +1,24 @@
+{
+  "lista": [
+    {
+      "valor": "24 h",
+      "titulo": "Respuesta en un día",
+      "descripcion": "Contesto cada mensaje en menos de un día hábil, también durante el proyecto."
+    },
+    {
+      "valor": "7 días",
+      "titulo": "Avances cada semana",
+      "descripcion": "Ves el tablero o el informe crecer semana a semana, no solo el día de la entrega."
+    },
+    {
+      "valor": "100 %",
+      "titulo": "Datos confidenciales",
+      "descripcion": "Tu información solo se usa para tu proyecto. Lo que muestro en público va anonimizado."
+    },
+    {
+      "valor": "1 guía",
+      "titulo": "Tu equipo, sin depender de mí",
+      "descripcion": "Entrego el trabajo documentado para que tu equipo lo use y lo actualice por su cuenta."
+    }
+  ]
+}

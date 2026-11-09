@@ -351,3 +351,15 @@ p { text-wrap: pretty; }
   .pulso-vivo, .linea-log, .cursor-log { animation: none; }
   .barra-vivo { transition: none; }
 }
+
+/* CÓMO ES TRABAJAR CONMIGO: al pasar el mouse, la cifra se corre un poco hacia la derecha. */
+.compromiso-valor { transition: transform 300ms var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .compromiso:hover .compromiso-valor { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) { .compromiso-valor { transition: none; } }
+
+/* TESTIMONIOS EN EL GLOBO: cada tarjeta entra con un leve desenfoque (cambio de estado). */
+.testimonio-entra { animation: testimonio-entra 400ms var(--ease-out) both; }
+@keyframes testimonio-entra { from { opacity: 0; filter: blur(4px); transform: translateY(4px); } to { opacity: 1; filter: none; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .testimonio-entra { animation: none; } }
