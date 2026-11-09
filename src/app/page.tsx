@@ -1,14 +1,15 @@
-import { perfil } from "@/data/perfil";
+import { perfil, testimonios } from "@/data/perfil";
 import { Nav } from "@/components/Nav";
 import { Marquesina } from "@/components/Marquesina";
 import { Proyectos } from "@/components/Proyectos";
 import { Servicios } from "@/components/Servicios";
 import { EtiquetaEjemplo } from "@/components/Etiqueta";
-import { GloboRed } from "@/components/GloboRed";
+import { TestimoniosGlobo } from "@/components/TestimoniosGlobo";
 import { FondoConstelaciones } from "@/components/FondoConstelaciones";
 import { FlujoDatos } from "@/components/FlujoDatos";
 import { TableroVivo } from "@/components/TableroVivo";
 import { CicloSenal } from "@/components/CicloSenal";
+import { TrabajarConmigo } from "@/components/TrabajarConmigo";
 import { Pie } from "@/components/Pie";
 import { CopiarCorreo } from "@/components/CopiarCorreo";
 import { IconoFlechaAbajo, IconoFlechaDiagonal } from "@/components/Iconos";
@@ -52,7 +53,7 @@ export default function Inicio() {
               </div>
             </div>
             <div className="llega-globo flex justify-center">
-              <GloboRed />
+              <TestimoniosGlobo testimonios={testimonios} />
             </div>
           </div>
         </section>
@@ -74,6 +75,9 @@ export default function Inicio() {
 
         {/* 6. Mi método: Ciclo Señal */}
         <CicloSenal />
+
+        {/* 6b. Cómo es trabajar conmigo: compromisos propios */}
+        <TrabajarConmigo />
 
         {/* 7. Sobre mí */}
         <section id="sobre-mi" className="scroll-mt-20">

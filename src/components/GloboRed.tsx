@@ -100,8 +100,14 @@ function puntosTierra(n: number) {
   return pts;
 }
 
-export function GloboRed() {
+// "enfoque": nombre de un país de la lista; si se indica, el globo gira hasta
+// dejarlo de frente y lo resalta (lo usan los testimonios de la portada).
+export function GloboRed({ enfoque }: { enfoque?: string } = {}) {
   const lienzoRef = useRef<HTMLCanvasElement>(null);
+  const enfoqueRef = useRef<string | undefined>(enfoque);
+  useEffect(() => {
+    enfoqueRef.current = enfoque;
+  }, [enfoque]);
 
   useEffect(() => {
     const lienzo = lienzoRef.current;
@@ -420,6 +426,14 @@ export function GloboRed() {
         ctx.beginPath();
         ctx.arc(px, py, 3, 0, Math.PI * 2);
         ctx.fill();
+        if (ciudades[i].nombre === enfoqueRef.current) {
+          ctx.globalAlpha = 1;
+          ctx.strokeStyle = "#f08a5d";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(px, py, 9, 0, Math.PI * 2);
+          ctx.stroke();
+        }
         // El nombre va a la izquierda o a la derecha según el lado del globo.
         const derecha = x >= 0;
         ctx.textAlign = derecha ? "left" : "right";
@@ -439,7 +453,16 @@ export function GloboRed() {
 
     // Bucle de animación: unas 60 veces por segundo.
     const animar = (t: number) => {
-      if (!arrastrando) {
+      const foco = enfoqueRef.current ? ciudades.find((c) => c.nombre === enfoqueRef.current) : undefined;
+      if (foco && !arrastrando) {
+        // Gira suave hasta dejar el país de frente (rotY = su longitud en radianes).
+        const meta = (foco.lon * Math.PI) / 180;
+        let dif = (meta - rotY) % (Math.PI * 2);
+        if (dif > Math.PI) dif -= Math.PI * 2;
+        if (dif < -Math.PI) dif += Math.PI * 2;
+        rotY += dif * (menosMovimiento ? 1 : 0.045);
+        velY = 0;
+      } else if (!arrastrando) {
         rotY += velY;
         // Tras soltar, la velocidad vuelve poco a poco al giro automático.
         velY += (giroBase - velY) * 0.02;

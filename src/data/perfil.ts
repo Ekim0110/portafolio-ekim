@@ -33,10 +33,15 @@ import perfilJson from "../../content/perfil.json";
 import serviciosJson from "../../content/servicios.json";
 import proyectosJson from "../../content/proyectos.json";
 import casoInstalacionJson from "../../content/casos/instalacion-equipos.json";
+import compromisosJson from "../../content/compromisos.json";
+import testimoniosJson from "../../content/testimonios.json";
 
 export const perfil = perfilJson;
 
 export const servicios: Servicio[] = serviciosJson.lista;
+
+// Compromisos de "Cómo es trabajar conmigo" (se editan en el panel: "Cómo es trabajar conmigo").
+export const compromisos: { valor: string; titulo: string; descripcion: string }[] = compromisosJson.lista;
 
 // El panel guarda "null" cuando un campo opcional está vacío; aquí lo convertimos en "sin dato".
 export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
@@ -54,3 +59,16 @@ export const proyectos: Proyecto[] = proyectosJson.lista.map((p) => ({
 
 // Caso de estudio de instalación de equipos (se edita en el panel: "Caso de estudio: Instalación de equipos").
 export const casoInstalacion = casoInstalacionJson;
+
+// Testimonios (se editan en el panel: "Testimonios"). Solo se publican los que
+// tienen marcada la casilla de permiso; si no hay ninguno, no se muestra nada.
+export type Testimonio = {
+  frase: string;
+  nombre: string;
+  cargo: string;
+  ciudad: string;
+  pais: string;
+  foto?: string | null;
+  permiso: boolean;
+};
+export const testimonios: Testimonio[] = (testimoniosJson.lista as Testimonio[]).filter((t) => t.permiso && t.frase && t.nombre);
